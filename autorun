@@ -1,0 +1,2 @@
+#!/bin/bash
+find src lib|entr -r -s "/home/psy/.platformio/penv/bin/platformio run -t build;/home/psy/.platformio/penv/bin/platformio run -t upload"

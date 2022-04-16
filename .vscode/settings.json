@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "*.yml": "ansible",
+        "*.kshlib": "shellscript",
+        "streambuf": "cpp"
+    }
+}
