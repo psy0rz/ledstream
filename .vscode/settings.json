@@ -2,6 +2,7 @@
     "files.associations": {
         "*.yml": "ansible",
         "*.kshlib": "shellscript",
-        "streambuf": "cpp"
+        "streambuf": "cpp",
+        "*.tcc": "cpp"
     }
 }
