@@ -11,6 +11,9 @@
 #define STRIPS 2
 CRGB leds[STRIPS][NUM_LEDS];
 
+
+
+
 void
 wificheck()
 {
@@ -26,7 +29,6 @@ wificheck()
 
     Serial.print("Attempting to connect to WPA SSID: ");
     Serial.println(ssid);
-    // WiFi.begin(ssid, pass);
   }
   Serial.println(WiFi.localIP());
 }
@@ -43,6 +45,34 @@ setup()
   wificheck();
 }
 
+
+ char pbuf[1500];
+
 void
 loop()
-{}
+{
+  WiFiUDP udp;
+
+  udp.begin(65000);
+  int lasttime;
+
+  while(1)
+  {
+    int plen=udp.parsePacket();
+    Serial.println(ESP.getFreeHeap());
+    // Serial.println("kk");
+    if (plen!=0)
+    {
+      Serial.printf("delta %d, recv %d\n", plen, millis()-lasttime);
+      lasttime=millis();
+      udp.read(pbuf, sizeof(pbuf));
+    }
+    else
+    {
+      delay(1000);
+    }
+
+  }
+
+
+}
