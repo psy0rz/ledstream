@@ -9,8 +9,9 @@
 
 #define NUM_LEDS 300
 #define CHANNELS 2
-// nr of packets to buffer. higher is smoother but more lag.
-#define BUFFER 10 * CHANNELS
+// nr of frames to buffer. marquee tries to keep buffer at 50% to decrease jitter
+#define BUFFER_FRAMES 10
+#define BUFFER BUFFER_FRAMES * CHANNELS
 
 CRGB leds[CHANNELS][NUM_LEDS];
 
@@ -48,8 +49,6 @@ public:
     readIndex = 0;
     recvIndex = 0;
     lastFrame = 0;
-    avgDelay = 16666; // start with 60fps
-    lastFrameTime = micros();
   }
 
   // receive and store next udp packet if its available.
@@ -76,10 +75,6 @@ public:
         // next frame? calc frame delay
         if (packet.frame != lastFrame) {
 
-          // calc delay
-          unsigned long now = micros();
-          avgDelay = (avgDelay * 0.99) + (now - lastFrameTime) * 0.01;
-          lastFrameTime = now;
           lastFrame = packet.frame;
         }
 
@@ -206,14 +201,20 @@ loop()
           lastFrame=packet->frame;
 
           //pid 
-          float error=(BUFFER/2)-udpBuffer.available(); //try to keep buffer at 50%
+          // float error=(BUFFER/2)-udpBuffer.available(); //try to keep buffer at 50%
+          int  delta=(int)udpBuffer.lastFrame-(int)lastFrame;
+          if (delta<-128)
+            delta=delta+256;
+
+          float error=(BUFFER_FRAMES/2)-delta;
 
           pidDelay=pidDelay+(error*0.1);
           nextDelay=pidDelay+(error*100);
 
 
-          if (lastFrame%60==0)
+          // if (lastFrame%60==0)
             Serial.printf("avail=%d, error=%f, pidDelay=%f, nextDelay=%f\n", udpBuffer.available(), error, pidDelay, nextDelay);
+          // Serial.printf("lastrecvv=%d lastshow=%d delta=%d\n", udpBuffer.lastFrame, lastFrame, delta);
 
         }
         else
