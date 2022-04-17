@@ -9,6 +9,9 @@
 
 #define NUM_LEDS 300
 #define CHANNELS 2
+// nr of packets to buffer. higher is smoother but more lag.
+#define BUFFER 10 * CHANNELS
+
 CRGB leds[CHANNELS][NUM_LEDS];
 
 struct packetStruct
@@ -16,7 +19,112 @@ struct packetStruct
   byte frame;
   byte channel;
   CRGB pixels[NUM_LEDS];
-} ;
+};
+
+// circular udp packet buffer
+class UdpBuffer
+{
+public:
+  packetStruct packets[BUFFER];
+  byte readIndex;
+  byte recvIndex;
+
+  byte lastFrame;
+  unsigned long avgDelay;
+  unsigned long lastFrameTime;
+
+  WiFiUDP udp;
+
+  UdpBuffer()
+   {  }
+
+  void begin(int port)
+  {
+    udp.begin(port);
+  }
+
+  void reset()
+  {
+    readIndex = 0;
+    recvIndex = 0;
+    lastFrame = 0;
+    avgDelay = 16666; // start with 60fps
+    lastFrameTime = micros();
+  }
+
+  // receive and store next udp packet if its available.
+  // returns true if new packet
+  bool recvNext()
+  {
+    int plen = udp.parsePacket();
+    if (plen) {
+      if (plen != sizeof(packetStruct)) {
+        Serial.printf("Ignored packet with length %d\n", plen);
+        udp.flush();
+      } else {
+        const packetStruct& packet = packets[recvIndex];
+
+        // read and store packet
+        udp.read((char*)&packet, sizeof(packetStruct));
+
+        if (packet.channel >= CHANNELS) {
+          Serial.printf("Illegal channel number %d\n", packet.channel);
+          return false;
+        }
+
+
+        // next frame? calc frame delay
+        if (packet.frame != lastFrame) {
+
+          // calc delay
+          unsigned long now = micros();
+          avgDelay = (avgDelay * 0.99) + (now - lastFrameTime) * 0.01;
+          lastFrameTime = now;
+          lastFrame = packet.frame;
+        }
+
+        // update indexes
+        recvIndex++;
+        if (recvIndex == BUFFER)
+          recvIndex = 0;
+
+        if (readIndex == recvIndex) {
+          // set to oldest unread packet
+          readIndex = recvIndex + 1;
+          if (readIndex == BUFFER)
+            readIndex = 0;
+        }
+
+        // Serial.printf("recv frame %d channel %d, recvindex=%d readindex=%d\n", packet.frame, packet.channel, recvIndex, readIndex);
+
+        return (true);
+      }
+    }
+    return (false);
+  }
+
+  packetStruct* readNext()
+  {
+    int ret = readIndex;
+    readIndex++;
+    if (readIndex == BUFFER)
+      readIndex = 0;
+
+    return (&packets[ret]);
+  }
+
+  // current amount of buffered packets available
+  byte available()
+  {
+    int diff = (recvIndex - readIndex);
+    if (diff < 0)
+      diff = diff + BUFFER;
+
+    return (diff);
+  }
+};
+
+UdpBuffer udpBuffer = UdpBuffer();
 
 void
 wificheck()
@@ -44,6 +152,8 @@ setup()
 {
   Serial.begin(115200);
   Serial.println("Booted\n");
+  Serial.printf("CPU=%dMhz\n", getCpuFrequencyMhz());
+
   Serial.println(sizeof(packetStruct));
   FastLED.addLeds<NEOPIXEL, 12>(leds[0], NUM_LEDS);
   FastLED.addLeds<NEOPIXEL, 13>(leds[1], NUM_LEDS);
@@ -55,55 +165,50 @@ setup()
 void
 loop()
 {
-  WiFiUDP udp;
-  udp.begin(65000);
+  udpBuffer.begin(65000);
+  udpBuffer.reset();
+  unsigned long lastTime = micros();
+  unsigned long now;
+  byte lastFrame = 0;
 
-  byte lastFrame=0;
-  packetStruct packet;
-  word plen;
-
-  unsigned long avgDelay=0;
-  unsigned long lastFrameTime=0;
+  packetStruct* packet = NULL;
+  bool ready = false;
 
 
   while (1) {
-    plen = udp.parsePacket();
 
-    if (plen)
-    {
-      if (plen != sizeof(packet)) {
-        Serial.printf("Ignored packet with length %d\n", plen);
-        udp.flush();
+    // recv packets and calc framerate
+    udpBuffer.recvNext();
+
+    // ready to show next?
+    if (ready) {
+      now = micros();
+      if (now - lastTime >= udpBuffer.avgDelay) {
+        FastLED.show();
+        lastTime = now;
+        ready = false;
+
       }
-      else
-      {
-        udp.read((char*)&packet, sizeof(packet));
-        if (packet.channel>=CHANNELS)
+    }
+    // prepare next
+    else {
+      if (udpBuffer.available() > 0) {
+        if (packet==NULL)
+          packet = udpBuffer.readNext();
+
+
+        if (packet->frame!=lastFrame)
         {
-          Serial.printf("Illegal channel number %d\n", packet.channel);
+          ready=true;
+          lastFrame=packet->frame;
+          Serial.printf("avail=%d, time=%d\n", udpBuffer.available(), micros()-lastTime);
+
         }
         else
         {
-          // Serial.printf("Frame %d, channel %d\n", packet.frame, packet.channel);
-          if (packet.frame!=lastFrame)
-          {
-
-            //calc delay
-            unsigned long now=micros();
-            avgDelay=(avgDelay*0.99)+(now-lastFrameTime)*0.01;
-            // Serial.printf("avg=%d\n", avgDelay);
-            lastFrameTime=now;
-
-            FastLED.show();
-            lastFrame=packet.frame;
-            byte diff=packet.frame-lastFrame;
-            if (diff>1)
-            {
-              Serial.printf("Missed %d frames\n", diff);
-            }
-
-          }
-          memcpy(leds[packet.channel], packet.pixels, sizeof(packet.pixels));
+          //update led array
+          memcpy(leds[packet->channel], packet->pixels, sizeof(packet->pixels));
+          packet=NULL;
         }
       }
     }
