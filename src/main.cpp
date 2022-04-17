@@ -8,11 +8,15 @@
 #include <FastLED.h>
 
 #define NUM_LEDS 300
-#define STRIPS 2
-CRGB leds[STRIPS][NUM_LEDS];
+#define CHANNELS 2
+CRGB leds[CHANNELS][NUM_LEDS];
 
-
-
+struct packetStruct
+{
+  byte frame;
+  byte channel;
+  CRGB pixels[NUM_LEDS];
+} ;
 
 void
 wificheck()
@@ -38,6 +42,7 @@ setup()
 {
   Serial.begin(115200);
   Serial.println("Booted\n");
+  Serial.println(sizeof(packetStruct));
   FastLED.addLeds<NEOPIXEL, 12>(leds[0], NUM_LEDS);
   FastLED.addLeds<NEOPIXEL, 13>(leds[1], NUM_LEDS);
   FastLED.clear();
@@ -45,34 +50,46 @@ setup()
   wificheck();
 }
 
-
- char pbuf[1500];
-
 void
 loop()
 {
   WiFiUDP udp;
-
   udp.begin(65000);
-  int lasttime;
 
-  while(1)
-  {
-    int plen=udp.parsePacket();
-    Serial.println(ESP.getFreeHeap());
-    // Serial.println("kk");
-    if (plen!=0)
-    {
-      Serial.printf("delta %d, recv %d\n", plen, millis()-lasttime);
-      lasttime=millis();
-      udp.read(pbuf, sizeof(pbuf));
-    }
-    else
-    {
-      delay(1000);
-    }
+  byte lastFrame=0;
+  packetStruct packet;
+  word plen;
 
+  while (1) {
+    plen = udp.parsePacket();
+    if (plen)
+    {
+      if (plen != sizeof(packet)) {
+        Serial.printf("Ignored packet with length %d\n", plen);
+        udp.flush();
+      }
+      else
+      {
+        udp.read((char*)&packet, sizeof(packet));
+        if (packet.channel>=CHANNELS)
+        {
+          Serial.printf("Illegal channel number %d\n", packet.channel);
+        }
+        else
+        {
+          if (packet.frame!=lastFrame)
+          {
+            FastLED.show();
+            lastFrame=packet.frame;
+            byte diff=packet.frame-lastFrame;
+            if (diff!=1)
+            {
+              Serial.printf("Missed %d frames\n", diff);
+            }
+          }
+          memcpy(leds[packet.channel], packet.pixels, sizeof(packet.pixels));
+        }
+      }
+    }
   }
-
-
 }
