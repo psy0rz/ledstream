@@ -62,6 +62,9 @@ loop()
   packetStruct packet;
   word plen;
 
+  unsigned long avgDelay=0;
+  unsigned long lastFrameTime=0;
+
 
   while (1) {
     plen = udp.parsePacket();
@@ -84,13 +87,21 @@ loop()
           // Serial.printf("Frame %d, channel %d\n", packet.frame, packet.channel);
           if (packet.frame!=lastFrame)
           {
+
+            //calc delay
+            unsigned long now=micros();
+            avgDelay=(avgDelay*0.99)+(now-lastFrameTime)*0.01;
+            // Serial.printf("avg=%d\n", avgDelay);
+            lastFrameTime=now;
+
             FastLED.show();
             lastFrame=packet.frame;
             byte diff=packet.frame-lastFrame;
-            if (diff!=1)
+            if (diff>1)
             {
               Serial.printf("Missed %d frames\n", diff);
             }
+
           }
           memcpy(leds[packet.channel], packet.pixels, sizeof(packet.pixels));
         }
