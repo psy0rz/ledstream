@@ -34,6 +34,8 @@ wificheck()
     Serial.print("Attempting to connect to WPA SSID: ");
     Serial.println(ssid);
   }
+  leds[0][0] = CRGB::Green;
+  FastLED.show();
   Serial.println(WiFi.localIP());
 }
 
@@ -60,8 +62,10 @@ loop()
   packetStruct packet;
   word plen;
 
+
   while (1) {
     plen = udp.parsePacket();
+
     if (plen)
     {
       if (plen != sizeof(packet)) {
@@ -77,6 +81,7 @@ loop()
         }
         else
         {
+          // Serial.printf("Frame %d, channel %d\n", packet.frame, packet.channel);
           if (packet.frame!=lastFrame)
           {
             FastLED.show();
