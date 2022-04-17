@@ -174,6 +174,8 @@ loop()
   packetStruct* packet = NULL;
   bool ready = false;
 
+  float pidDelay=16300;
+  float nextDelay=pidDelay;
 
   while (1) {
 
@@ -183,7 +185,7 @@ loop()
     // ready to show next?
     if (ready) {
       now = micros();
-      if (now - lastTime >= udpBuffer.avgDelay) {
+      if (now - lastTime >= nextDelay) {
         FastLED.show();
         lastTime = now;
         ready = false;
@@ -192,6 +194,7 @@ loop()
     }
     // prepare next
     else {
+
       if (udpBuffer.available() > 0) {
         if (packet==NULL)
           packet = udpBuffer.readNext();
@@ -201,7 +204,16 @@ loop()
         {
           ready=true;
           lastFrame=packet->frame;
-          Serial.printf("avail=%d, time=%d\n", udpBuffer.available(), micros()-lastTime);
+
+          //pid 
+          float error=(BUFFER/2)-udpBuffer.available(); //try to keep buffer at 50%
+
+          pidDelay=pidDelay+(error*0.1);
+          nextDelay=pidDelay+(error*100);
+
+
+          if (lastFrame%60==0)
+            Serial.printf("avail=%d, error=%f, pidDelay=%f, nextDelay=%f\n", udpBuffer.available(), error, pidDelay, nextDelay);
 
         }
         else
