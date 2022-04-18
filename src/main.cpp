@@ -7,11 +7,12 @@
 // #define FASTLED_ESP32_I2S true
 #include <FastLED.h>
 #include <udpbuffer.hpp>
-
+#include <multicastsync.hpp>
 
 CRGB leds[CHANNELS][NUM_LEDS];
 
 UdpBuffer udpBuffer = UdpBuffer();
+MulticastSync multicastSync=MulticastSync();
 
 void
 wificheck()
@@ -52,6 +53,9 @@ setup()
 void
 loop()
 {
+
+  multicastSync.begin();
+
   udpBuffer.begin(65000);
   udpBuffer.reset();
   unsigned long lastTime = micros();
@@ -65,6 +69,8 @@ loop()
   float nextDelay=pidDelay;
 
   while (1) {
+
+    multicastSync.recv();
 
     // recv packets and calc framerate
     udpBuffer.recvNext();
@@ -105,8 +111,8 @@ loop()
 
           // unsigned long d=(micros()-udpBuffer.lastFrameTime) delta
 
-          if (lastFrame%60==0)
-            Serial.printf("avail=%d, error=%f, pidDelay=%f, nextDelay=%f\n", udpBuffer.available(), error, pidDelay, nextDelay);
+          // if (lastFrame%60==0)
+          //   Serial.printf("avail=%d, error=%f, pidDelay=%f, nextDelay=%f\n", udpBuffer.available(), error, pidDelay, nextDelay);
           // Serial.printf("lastrecvv=%d lastshow=%d delta=%d\n", udpBuffer.lastFrame, lastFrame, delta);
 
         }

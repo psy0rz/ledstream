@@ -50,7 +50,7 @@ class UdpBuffer
     int plen = udp.parsePacket();
     if (plen) {
       if (plen != sizeof(packetStruct)) {
-        Serial.printf("Ignored packet with length %d\n", plen);
+        Serial.printf("Ignored data packet with length %d\n", plen);
         udp.flush();
       } else {
         const packetStruct& packet = packets[recvIndex];
