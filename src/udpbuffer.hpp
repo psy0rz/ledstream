@@ -49,7 +49,7 @@ class UdpBuffer
     int plen = udp.parsePacket();
     if (plen) {
       if (plen != sizeof(packetStruct)) {
-        Serial.printf("Ignored data packet with length %d (expected %d)\n", plen, sizeof(packetStruct));
+        Serial.printf("udpbuffer: Ignored packet with length %d (expected %d)\n", plen, sizeof(packetStruct));
         udp.flush();
       } else {
         const packetStruct& packet = packets[recvIndex];
@@ -58,7 +58,7 @@ class UdpBuffer
         udp.read((char*)&packet, sizeof(packetStruct));
 
         if (packet.channel >= CHANNELS) {
-          Serial.printf("Illegal channel number %d\n", packet.channel);
+          Serial.printf("udpbuffer: Illegal channel number %d\n", packet.channel);
           return false;
         }
 
@@ -69,6 +69,7 @@ class UdpBuffer
           recvIndex = 0;
 
         if (readIndex == recvIndex) {
+          Serial.println("udpbuffer: Buffer overrun");
           // set to oldest unread packet
           readIndex = recvIndex + 1;
           if (readIndex == BUFFER)
@@ -92,6 +93,10 @@ class UdpBuffer
     readIndex++;
     if (readIndex == BUFFER)
       readIndex = 0;
+
+    if (available()==0)
+        Serial.println("udpbuffer: Buffer underrun");
+
 
     return (&packets[ret]);
   }
