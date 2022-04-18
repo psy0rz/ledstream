@@ -84,7 +84,7 @@ loop()
 
     // ready to show next?
     if (ready) {
-      if (multicastSync.remoteMillis() >=showTime+(16*10)) {
+      if (multicastSync.remoteMillis() >=showTime) {
         FastLED.show();
           // Serial.printf("avail=%d, showtime=%d \n", udpBuffer.available(),showTime);
 
@@ -109,7 +109,7 @@ loop()
 
 
           // Serial.printf("%d diff\n", lastTime-showTime);
-          showTime=lastTime;
+          showTime=lastTime+LAG;
 
           lastTime=packet->time;
 
