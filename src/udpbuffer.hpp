@@ -72,10 +72,9 @@ class UdpBuffer
 
         if (readIndex == recvIndex) {
           Serial.println("udpbuffer: Buffer overrun");
-          // set to oldest unread packet
-          readIndex = recvIndex + 1;
-          if (readIndex == BUFFER)
-            readIndex = 0;
+          //shouldnt happen normally..just clear
+          reset();
+          return(false);
         }
 
         // Serial.printf("recv frame %d channel %d, recvindex=%d
