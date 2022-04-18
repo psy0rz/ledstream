@@ -10,6 +10,8 @@
 // jitter
 #define BUFFER_FRAMES 25
 #define BUFFER BUFFER_FRAMES* CHANNELS
+//lag at 60fps will be so that the buffer will be at 80%
+#define LAG BUFFER_FRAMES*0.8*16
 
 struct packetStruct
 {
