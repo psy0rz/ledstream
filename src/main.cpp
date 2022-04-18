@@ -59,62 +59,36 @@ loop()
   udpBuffer.begin(65000);
   udpBuffer.reset();
   // unsigned long lastTime = multicastSync.remoteMicros();
-  unsigned long nextTime;
+  unsigned long showTime=0;
   uint32_t lastTime=0;
 
   packetStruct* packet = NULL;
   bool ready = false;
 
-  unsigned long interval=16000;
 
   // float pidDelay=16300;
   // float nextDelay=pidDelay;
 
 
   // nextTime=multicastSync.remoteMicros()+interval*(BUFFER_FRAMES/2);
-  nextTime=0;
 
-  byte waitFrames=0;
+  // byte waitFrames=0;
 
   while (1) {
 
     multicastSync.recv();
-    continue;
 
-    // recv packets and calc framerate
+    // // recv packets and calc framerate
     udpBuffer.recvNext();
-
-    //overrun
-    if (udpBuffer.available()==BUFFER-1)
-    {
-      Serial.println("Buffer overrun\n");
-      while(udpBuffer.available()>BUFFER/2)
-      {
-        udpBuffer.recvNext();
-        udpBuffer.readNext();
-      }
-      ready=false;
-      nextTime=multicastSync.remoteMillis();
-    }
-
-    //underrun
-    if (udpBuffer.available()==0)
-    {
-      Serial.println("Buffer underrun\n");
-      while(udpBuffer.available()<BUFFER/2)
-      {
-        udpBuffer.recvNext();
-      }
-      ready=false;
-      nextTime=multicastSync.remoteMillis();
-    }
 
 
     // ready to show next?
     if (ready) {
-      if (multicastSync.remoteMillis() >=nextTime) {
+      if (multicastSync.remoteMillis() >=showTime+(16*10)) {
         FastLED.show();
-        nextTime=nextTime+(interval*waitFrames);
+          // Serial.printf("avail=%d, showtime=%d \n", udpBuffer.available(),showTime);
+
+        // nextTime=nextTime+(interval*waitFrames);
         // Serial.println(waitFrames);
         ready = false;
 
@@ -132,31 +106,13 @@ loop()
         if (packet->time!=lastTime)
         {
           ready=true;
-          // if (waitFrames==0) //startup
-          //   waitFrames=1;
-          // else
-          // {
-          //   waitFrames=packet->frame-lastFrame;
-          //   if (waitFrames>5)
-          //     waitFrames=1;
-          // }
-          waitFrames=1;
-          // Serial.printf("%d - %d = %d \n ", packet->frame, lastFrame, waitFrames);
+
+
+          // Serial.printf("%d diff\n", lastTime-showTime);
+          showTime=lastTime;
+
           lastTime=packet->time;
 
-          //pid 
-          // int  delta=(int)udpBuffer.lastFrame-(int)lastFrame;
-          // if (delta<-128)
-          //   delta=delta+256;
-
-          // float error=(BUFFER_FRAMES/2)-delta;
-
-          // pidDelay=pidDelay+(error*0.1);
-          // nextDelay=pidDelay+(error*100);
-
-          // if (lastFrame%60==0)
-            Serial.printf("avail=%d, \n", udpBuffer.available());
-          // Serial.printf("lastrecvv=%d lastshow=%d delta=%d\n", udpBuffer.lastFrame, lastFrame, delta);
 
         }
         else
