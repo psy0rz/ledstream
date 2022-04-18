@@ -19,7 +19,8 @@ class MulticastSync
 
   unsigned long localStartTime;
   unsigned long remoteStartTime;
-  float correctionFactor = 1;
+  // float correctionFactor = 1;
+  int correction;
 
 public:
   void begin()
@@ -45,11 +46,11 @@ public:
         unsigned long remoteDelta=packet.time-remoteStartTime;
 
 
-        unsigned long correctedLocalDelta=localDelta*correctionFactor;
+        unsigned long correctedLocalDelta=localDelta+correction;
         int diff=remoteDelta-correctedLocalDelta;
 
         
-        Serial.printf("Time packet: diff=%d mS correctionfactor=%f\n",  diff,  correctionFactor);
+        Serial.printf("Time packet: diff=%d mS correction=%d mS\n",  diff,  correction);
 
         // unsigned long calcedRemote=correctedLocalDelta+remoteStartTime;
         // int echtediff=packet.time-calcedRemote;
@@ -58,13 +59,18 @@ public:
         if (abs(diff)>10000)
         {
           Serial.printf("Reset time. (diff is %d)\n",  diff);
-          correctionFactor=1;
+          correction=0;
           localStartTime=now;
           remoteStartTime=packet.time;
         }
         else
         {
-          correctionFactor = (float)remoteDelta / (float)localDelta;
+          if (diff>0)
+            correction++;
+          else
+            correction--;
+          //NOTE: correction factors give jittery rounding errors. so we use a correction offset.
+          // correctionFactor = (float)remoteDelta / (float)localDelta;
         }
 
       }
@@ -73,6 +79,6 @@ public:
 
   unsigned long remoteMillis()
   {
-    return (((millis()- localStartTime)*correctionFactor)+remoteStartTime);
+    return (millis()- localStartTime+remoteStartTime+correction);
   }
 };
