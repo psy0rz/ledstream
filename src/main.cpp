@@ -10,7 +10,7 @@
 #define NUM_LEDS 300
 #define CHANNELS 2
 // nr of frames to buffer. marquee tries to keep buffer at 50% to decrease jitter
-#define BUFFER_FRAMES 10
+#define BUFFER_FRAMES 25
 #define BUFFER BUFFER_FRAMES * CHANNELS
 
 CRGB leds[CHANNELS][NUM_LEDS];
@@ -76,6 +76,7 @@ public:
         if (packet.frame != lastFrame) {
 
           lastFrame = packet.frame;
+          lastFrameTime=micros();
         }
 
         // update indexes
@@ -211,9 +212,10 @@ loop()
           pidDelay=pidDelay+(error*0.1);
           nextDelay=pidDelay+(error*100);
 
+          unsigned long d=(micros()-udpBuffer.lastFrameTime) delta
 
-          // if (lastFrame%60==0)
-            Serial.printf("avail=%d, error=%f, pidDelay=%f, nextDelay=%f\n", udpBuffer.available(), error, pidDelay, nextDelay);
+          if (lastFrame%60==0)
+            Serial.printf("avail=%d, error=%f, pidDelay=%f, nextDelay=%f\n", udpBuffer.available(), error, pidDelay, nextDelay, d);
           // Serial.printf("lastrecvv=%d lastshow=%d delta=%d\n", udpBuffer.lastFrame, lastFrame, delta);
 
         }
