@@ -13,8 +13,11 @@
 
 struct packetStruct
 {
-  byte frame;
+  uint32_t time;
   byte channel;
+  byte unused1;
+  byte unused2;
+  byte unused3;
   CRGB pixels[NUM_LEDS];
 };
 
@@ -26,9 +29,6 @@ class UdpBuffer
   byte readIndex;
   byte recvIndex;
 
-  byte lastFrame;
-  unsigned long avgDelay;
-  unsigned long lastFrameTime;
 
   WiFiUDP udp;
 
@@ -40,7 +40,6 @@ class UdpBuffer
   {
     readIndex = 0;
     recvIndex = 0;
-    lastFrame = 0;
   }
 
   // receive and store next udp packet if its available.
@@ -50,7 +49,7 @@ class UdpBuffer
     int plen = udp.parsePacket();
     if (plen) {
       if (plen != sizeof(packetStruct)) {
-        Serial.printf("Ignored data packet with length %d\n", plen);
+        Serial.printf("Ignored data packet with length %d (expected %d)\n", plen, sizeof(packetStruct));
         udp.flush();
       } else {
         const packetStruct& packet = packets[recvIndex];
@@ -63,12 +62,6 @@ class UdpBuffer
           return false;
         }
 
-        // next frame? calc frame delay
-        if (packet.frame != lastFrame) {
-
-          lastFrame = packet.frame;
-          lastFrameTime = micros();
-        }
 
         // update indexes
         recvIndex++;
