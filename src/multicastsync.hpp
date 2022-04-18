@@ -5,24 +5,28 @@
 
 struct syncPacketStruct
 {
-  uint16_t interval;
+  uint32_t time;
 };
 
 class MulticastSync
 {
   WiFiUDP udp;
   syncPacketStruct packet;
-  unsigned long lastTime;
+  // unsigned long lastTime;
 
-  unsigned long remoteTime;
-  unsigned long startTime;
-  float correctionFactor=1;
+  // unsigned long remoteTime;
+  // unsigned long localOffset;
+
+  unsigned long localStartTime;
+  unsigned long remoteStartTime;
+  float correctionFactor = 1;
 
 public:
   void begin()
   {
     udp.beginMulticast(IPAddress(239, 137, 111, 222), 65001);
-    remoteTime = 0;
+    // remoteTime = 0;
+    // localOffset=0;
   };
 
   void recv()
@@ -30,35 +34,45 @@ public:
     int plen = udp.parsePacket();
     if (plen) {
       if (plen != sizeof(syncPacketStruct)) {
-        Serial.printf("Ignored sync packet with length %d\n", plen);
+        Serial.printf("Ignored sync packet with length %d (should be %d)\n", plen, sizeof(syncPacketStruct));
         udp.flush();
 
       } else {
-        unsigned long now = micros();
+        unsigned long now = millis();
         udp.read((char*)&packet, sizeof(syncPacketStruct));
 
+        unsigned long localDelta=now-localStartTime;
+        unsigned long remoteDelta=packet.time-remoteStartTime;
 
-        // error in uS
-        // int error = diff - (int)(packet.interval * 1000);
 
-        if (remoteTime==0)
+        unsigned long correctedLocalDelta=localDelta*correctionFactor;
+        int diff=remoteDelta-correctedLocalDelta;
+
+        
+        Serial.printf("Time packet: diff=%d mS correctionfactor=%f\n",  diff,  correctionFactor);
+
+        // unsigned long calcedRemote=correctedLocalDelta+remoteStartTime;
+        // int echtediff=packet.time-calcedRemote;
+        // Serial.printf("echte diff: %u - %u  =  %d mS\n", packet.time, calcedRemote, echtediff);
+
+        if (abs(diff)>10000)
         {
-            startTime=now-1000000;
+          Serial.printf("Reset time. (diff is %d)\n",  diff);
+          correctionFactor=1;
+          localStartTime=now;
+          remoteStartTime=packet.time;
+        }
+        else
+        {
+          correctionFactor = (float)remoteDelta / (float)localDelta;
         }
 
-        remoteTime = remoteTime + packet.interval*1000;
-        unsigned long localTime=(now-startTime);
-
-
-        unsigned long guessedRemoteTime=localTime*correctionFactor;
-        unsigned long diff=guessedRemoteTime-remoteTime;
-
-        correctionFactor=(float)remoteTime/(float)localTime;
-
-
-        Serial.printf(
-          "Sync packet %d mS, diff= %d uS, correction=%f\n", packet.interval, diff, correctionFactor);
       }
     }
-  };
+  }
+
+  unsigned long remoteMillis()
+  {
+    return (((millis()- localStartTime)*correctionFactor)+remoteStartTime);
+  }
 };
