@@ -21,6 +21,7 @@ class MulticastSync
   unsigned long remoteStartTime;
   // float correctionFactor = 1;
   int correction;
+  byte startup;
 
 public:
   void begin()
@@ -28,6 +29,7 @@ public:
     udp.beginMulticast(IPAddress(239, 137, 111, 222), 65001);
     // remoteTime = 0;
     // localOffset=0;
+    startup = 10;
   };
 
   void recv()
@@ -35,50 +37,54 @@ public:
     int plen = udp.parsePacket();
     if (plen) {
       if (plen != sizeof(syncPacketStruct)) {
-        Serial.printf("Ignored sync packet with length %d (should be %d)\n", plen, sizeof(syncPacketStruct));
+        Serial.printf("Ignored sync packet with length %d (should be %d)\n",
+                      plen,
+                      sizeof(syncPacketStruct));
         udp.flush();
 
       } else {
         unsigned long now = millis();
         udp.read((char*)&packet, sizeof(syncPacketStruct));
 
-        unsigned long localDelta=now-localStartTime;
-        unsigned long remoteDelta=packet.time-remoteStartTime;
+        unsigned long localDelta = now - localStartTime;
+        unsigned long remoteDelta = packet.time - remoteStartTime;
+
+        unsigned long correctedLocalDelta = localDelta + correction;
+        int diff = remoteDelta - correctedLocalDelta;
 
 
-        unsigned long correctedLocalDelta=localDelta+correction;
-        int diff=remoteDelta-correctedLocalDelta;
+        if (startup) {
+          correction = 0;
+          localStartTime = now;
+          remoteStartTime = packet.time;
+          startup = startup - 1;
+          Serial.printf("timesync: starting %d\n", startup);
+        } else {
+        Serial.printf(
+          "timesync: diff=%d mS correction=%d mS\n", diff, correction);
 
-        
-        Serial.printf("Time packet: diff=%d mS correction=%d mS\n",  diff,  correction);
+          if (abs(diff) > 10000) {
+            Serial.printf(
+              "timesync: Restart, difference too big. (diff is %d)\n", diff);
+            startup = 10;
 
-        // unsigned long calcedRemote=correctedLocalDelta+remoteStartTime;
-        // int echtediff=packet.time-calcedRemote;
-        // Serial.printf("echte diff: %u - %u  =  %d mS\n", packet.time, calcedRemote, echtediff);
+          } else {
 
-        if (abs(diff)>10000)
-        {
-          Serial.printf("Reset time. (diff is %d)\n",  diff);
-          correction=0;
-          localStartTime=now;
-          remoteStartTime=packet.time;
+            // NOTE: correction factors give jittery rounding errors. so we use
+            // a correction offset. correctionFactor = (float)remoteDelta /
+            // (float)localDelta;
+            if (diff > 0)
+              correction++;
+            else
+              correction--;
+          }
         }
-        else
-        {
-          if (diff>0)
-            correction++;
-          else
-            correction--;
-          //NOTE: correction factors give jittery rounding errors. so we use a correction offset.
-          // correctionFactor = (float)remoteDelta / (float)localDelta;
-        }
-
       }
     }
   }
 
   unsigned long remoteMillis()
   {
-    return (millis()- localStartTime+remoteStartTime+correction);
+    return (millis() - localStartTime + remoteStartTime + correction);
   }
 };
