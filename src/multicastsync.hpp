@@ -45,7 +45,7 @@ public:
 
       } else {
         unsigned long now = millis();
-        lastRecvTime=now;
+        lastRecvTime = now;
 
         udp.read((char*)&packet, sizeof(syncPacketStruct));
 
@@ -55,7 +55,6 @@ public:
         unsigned long correctedLocalDelta = localDelta + correction;
         int diff = remoteDelta - correctedLocalDelta;
 
-
         if (startup) {
           correction = 0;
           localStartTime = now;
@@ -63,12 +62,12 @@ public:
           startup = startup - 1;
           Serial.printf("timesync: starting %d\n", startup);
         } else {
-        Serial.printf(
-          "timesync: diff=%d mS correction=%d mS\n", diff, correction);
+          Serial.printf(
+            "timesync: diff=%d mS correction=%d mS\n", diff, correction);
 
-          if (abs(diff) > 10000) {
+          if (abs(diff) > 10000 || !synced()) {
             Serial.printf(
-              "timesync: Restart, difference too big. (diff is %d)\n", diff);
+              "timesync: Desynced, restarting\n");
             startup = 10;
 
           } else {
@@ -93,7 +92,7 @@ public:
 
   bool synced()
   {
-    if (millis()-lastRecvTime<3000)
+    if (millis() - lastRecvTime < 3000)
       return true;
     else
       return false;
