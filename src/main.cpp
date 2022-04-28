@@ -10,7 +10,7 @@
 #include <multicastsync.hpp>
 #include "utils.h"
 
-CRGB leds[CHANNELS][NUM_LEDS];
+CRGB leds[CHANNELS][LEDS_PER_CHAN];
 
 UdpBuffer udpBuffer = UdpBuffer();
 MulticastSync multicastSync=MulticastSync();
@@ -65,8 +65,22 @@ setup()
   Serial.printf("CPU=%dMhz\n", getCpuFrequencyMhz());
 
   Serial.println(sizeof(packetStruct));
-  FastLED.addLeds<NEOPIXEL, 12>(leds[0], NUM_LEDS);
-  FastLED.addLeds<NEOPIXEL, 13>(leds[1], NUM_LEDS);
+
+#ifdef CHANNEL0_PIN
+  FastLED.addLeds<NEOPIXEL, CHANNEL0_PIN>(leds[0], LEDS_PER_CHAN);
+#endif
+#ifdef CHANNEL1_PIN
+  FastLED.addLeds<NEOPIXEL, CHANNEL1_PIN>(leds[1], LEDS_PER_CHAN);
+#endif
+#ifdef CHANNEL2_PIN
+  FastLED.addLeds<NEOPIXEL, CHANNEL2_PIN>(leds[2], LEDS_PER_CHAN);
+#endif
+#ifdef CHANNEL3_PIN
+  FastLED.addLeds<NEOPIXEL, CHANNEL3_PIN>(leds[3], LEDS_PER_CHAN);
+#endif
+
+
+
   FastLED.clear();
   FastLED.show();
   FastLED.setBrightness(255);
@@ -137,8 +151,10 @@ loop()
       }
       else
       {
-        notify(CRGB::Green,1000,2000);
-
+        if (multicastSync.synced())
+         notify(CRGB::Green,1000,2000);
+        else
+         notify(CRGB::Yellow,500,1000);
       }
     }
   }

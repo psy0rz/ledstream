@@ -3,12 +3,20 @@
 #include <FastLED.h>
 #include <WiFiUdp.h>
 
-#define NUM_LEDS 300
+#ifndef LEDS_PER_CHAN
+#define LEDS_PER_CHAN 300
+#endif
+
+#ifndef CHANNELS
 #define CHANNELS 2
+#endif
 
 // nr of frames to buffer. marquee tries to keep buffer at 50% to decrease
 // jitter
+#ifndef BUFFER_FRAMES
 #define BUFFER_FRAMES 25
+#endif
+
 #define BUFFER BUFFER_FRAMES* CHANNELS
 //lag at 60fps will be so that the buffer will be at 80%
 #define LAG BUFFER_FRAMES*0.8*16
@@ -20,7 +28,7 @@ struct packetStruct
   byte unused1;
   byte unused2;
   byte unused3;
-  CRGB pixels[NUM_LEDS];
+  CRGB pixels[LEDS_PER_CHAN];
 };
 
 // circular udp packet buffer

@@ -19,6 +19,7 @@ class MulticastSync
 
   unsigned long localStartTime;
   unsigned long remoteStartTime;
+  unsigned long lastRecvTime;
   // float correctionFactor = 1;
   int correction;
   byte startup;
@@ -44,6 +45,8 @@ public:
 
       } else {
         unsigned long now = millis();
+        lastRecvTime=now;
+
         udp.read((char*)&packet, sizeof(syncPacketStruct));
 
         unsigned long localDelta = now - localStartTime;
@@ -86,5 +89,13 @@ public:
   unsigned long remoteMillis()
   {
     return (millis() - localStartTime + remoteStartTime + correction);
+  }
+
+  bool synced()
+  {
+    if (millis()-lastRecvTime<3000)
+      return true;
+    else
+      return false;
   }
 };
