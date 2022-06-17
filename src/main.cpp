@@ -36,25 +36,15 @@ void notify(CRGB rgb, int on, int total)
     {
       lastState=!lastState;
 
-      FastLED.clear();
       if (lastState)
         leds[0][0]=rgb;
+      else
+        leds[0][0]=CRGB::Black;
       FastLED.show();
     }
 }
 
 
-void
-wificheck()
-{
-  WiFi.begin(ssid, pass);
-  Serial.printf("Attempting to connect to WPA SSID: %s\n", ssid);
-  while (WiFi.status() != WL_CONNECTED) {
-    notify(CRGB::Red,125,250);
-
-  }
-  Serial.println(WiFi.localIP());
-}
 
 
 void
@@ -84,14 +74,29 @@ setup()
   FastLED.clear();
   FastLED.show();
   FastLED.setBrightness(255);
-  wificheck();
+  WiFi.begin(ssid, pass);
+
+
+}
+
+void wificheck()
+{
+  if (WiFi.status() == WL_CONNECTED)
+    return;
+
+  Serial.printf("Attempting to connect to WPA SSID: %s\n", ssid);
+  while (WiFi.status() != WL_CONNECTED) {
+    notify(CRGB::Red,125,250);
+  }
+  Serial.println(WiFi.localIP());
+  multicastSync.begin();
+
 }
 
 void
 loop()
 {
 
-  multicastSync.begin();
 
   udpBuffer.begin(65000);
   udpBuffer.reset();
@@ -104,6 +109,8 @@ loop()
 
 
   while (1) {
+
+    wificheck();
 
     multicastSync.recv();
 

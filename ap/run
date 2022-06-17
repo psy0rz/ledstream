@@ -1,0 +1,7 @@
+nmcli n off
+hostapd ./hostapd.conf &
+sleep 3
+ip a a 10.10.10.1/24 dev wlp2s0
+ip r a 239.0.0.0/8 dev wlp2s0
+dnsmasq -i wlp2s0 -d --bind-interface --dhcp-range 10.10.10.10,10.10.10.20
+
