@@ -28,9 +28,7 @@ public:
   void begin()
   {
 
-#ifdef MCAST_GROUP
     udp.beginMulticast(IPAddress(MCAST_GROUP), 65001);
-#endif
     // remoteTime = 0;
     // localOffset=0;
     startup = 10;
