@@ -54,7 +54,6 @@ setup()
   Serial.println("ledstream: Booted\n");
   Serial.printf("ledstream: CPU=%dMhz\n", getCpuFrequencyMhz());
 
-
 #ifdef CHANNEL0_PIN
   FastLED.addLeds<NEOPIXEL, CHANNEL0_PIN>(leds[0], LEDS_PER_CHAN);
 #endif
@@ -93,6 +92,17 @@ wificheck()
   multicastSync.begin();
 }
 
+void decodePacket(packetStruct &packet)
+{
+  uint8_t channel=0;
+  uint16_t led=0;
+  uint16_t i=0;
+  while(i<)
+  {
+
+  }
+}
+
 void
 loop()
 {
@@ -108,7 +118,7 @@ loop()
   while (1) {
 
     wificheck();
-  ArduinoOTA.handle();
+    ArduinoOTA.handle();
 
     multicastSync.recv();
 
@@ -142,7 +152,8 @@ loop()
           lastTime = packet->time;
 
         } else {
-          // update led array
+          // decode packet
+          decodePacket(packet)
           memcpy(leds[packet->channel], packet->pixels, sizeof(packet->pixels));
           packet = NULL;
         }

@@ -17,18 +17,16 @@
 #define BUFFER_FRAMES 25
 #endif
 
-#define BUFFER BUFFER_FRAMES* CHANNELS
+#define BUFFER BUFFER_FRAMES
 //lag at 60fps will be so that the buffer will be at 80%
 #define LAG BUFFER_FRAMES*0.8*16
+
+#define DATA_LEN 1000
 
 struct packetStruct
 {
   uint32_t time;
-  byte channel;
-  byte unused1;
-  byte unused2;
-  byte unused3;
-  CRGB pixels[LEDS_PER_CHAN];
+  uint8_t data[DATA_LEN];
 };
 
 // circular udp packet buffer
@@ -57,21 +55,17 @@ class UdpBuffer
   bool recvNext()
   {
     int plen = udp.parsePacket();
+
     if (plen) {
-      if (plen != sizeof(packetStruct)) {
-        Serial.printf("udpbuffer: Ignored packet with length %d (expected %d)\n", plen, sizeof(packetStruct));
+      if (plen > sizeof(packetStruct)) {
+        Serial.printf("udpbuffer: Packet length %d too big (expected %d)\n", plen, sizeof(packetStruct));
         udp.flush();
       } else {
         const packetStruct& packet = packets[recvIndex];
 
         // read and store packet
+        memset((char*)&packet, 0, sizeof(packetStruct));
         udp.read((char*)&packet, sizeof(packetStruct));
-
-        if (packet.channel >= CHANNELS) {
-          Serial.printf("udpbuffer: Illegal channel number %d\n", packet.channel);
-          return false;
-        }
-
 
         // update indexes
         recvIndex++;
