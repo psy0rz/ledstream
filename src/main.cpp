@@ -54,7 +54,6 @@ setup()
   Serial.println("ledstream: Booted\n");
   Serial.printf("ledstream: CPU=%dMhz\n", getCpuFrequencyMhz());
 
-  Serial.println(sizeof(packetStruct));
 
 #ifdef CHANNEL0_PIN
   FastLED.addLeds<NEOPIXEL, CHANNEL0_PIN>(leds[0], LEDS_PER_CHAN);
@@ -75,6 +74,7 @@ setup()
   WiFi.begin(ssid, pass);
 
   ArduinoOTA.begin();
+  // ArduinoOTA.setPassword("dsf09845jxczvjcxf"); doesnt work?
 }
 
 void
@@ -87,7 +87,7 @@ wificheck()
   while (WiFi.status() != WL_CONNECTED) {
     notify(CRGB::Red, 125, 250);
   }
-  Serial.printf("MDNS mdns name is %s\n", ArduinoOTA.getHostname());
+  Serial.printf("MDNS mdns name is %s\n", ArduinoOTA.getHostname().c_str());
   Serial.println(WiFi.localIP());
 
   multicastSync.begin();
@@ -96,7 +96,6 @@ wificheck()
 void
 loop()
 {
-  ArduinoOTA.handle();
 
   udpBuffer.begin(65000);
   udpBuffer.reset();
@@ -109,6 +108,7 @@ loop()
   while (1) {
 
     wificheck();
+  ArduinoOTA.handle();
 
     multicastSync.recv();
 
