@@ -75,7 +75,6 @@ setup()
   WiFi.begin(ssid, pass);
 
   ArduinoOTA.begin();
-  Serial.printf("ledstream: mdns name is %s\n", ArduinoOTA.getHostname());
 }
 
 void
@@ -88,7 +87,9 @@ wificheck()
   while (WiFi.status() != WL_CONNECTED) {
     notify(CRGB::Red, 125, 250);
   }
+  Serial.printf("MDNS mdns name is %s\n", ArduinoOTA.getHostname());
   Serial.println(WiFi.localIP());
+
   multicastSync.begin();
 }
 
