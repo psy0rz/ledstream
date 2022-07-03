@@ -27,8 +27,10 @@ class MulticastSync
 public:
   void begin()
   {
-    
-    udp.beginMulticast(IPAddress(239, 137, 111, 222), 65001);
+
+#ifdef MCAST_GROUP
+    udp.beginMulticast(IPAddress(MCAST_GROUP), 65001);
+#endif
     // remoteTime = 0;
     // localOffset=0;
     startup = 10;
@@ -66,7 +68,7 @@ public:
           Serial.printf(
             "timesync: diff=%d mS correction=%d mS\n", diff, correction);
 
-          if (abs(diff) > 10000 || !synced()) {
+          if (abs(diff) > 100 || !synced()) {
             Serial.printf(
               "timesync: Desynced, restarting\n");
             startup = 10;
