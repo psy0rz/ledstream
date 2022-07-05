@@ -11,6 +11,8 @@
 #define CHANNELS 2
 #endif
 
+#define LED_COUNT LEDS_PER_CHAN * CHANNELS
+
 // nr of frames to buffer. marquee tries to keep buffer at 50% to decrease
 // jitter
 #ifndef BUFFER_FRAMES
