@@ -1,2 +1,4 @@
 #!/bin/bash
-find src lib|entr -r -s "/home/psy/.platformio/penv/bin/platformio run -t build;/home/psy/.platformio/penv/bin/platformio run -t upload"
+#find src lib|entr -r -s "/home/psy/.platformio/penv/bin/platformio run -t build;/home/psy/.platformio/penv/bin/platformio run -t upload"
+echo .pio/build/initialize/firmware.elf |entr -r -s "pio run -e initialize -t upload && gnome-terminal pio device monitor"
+
