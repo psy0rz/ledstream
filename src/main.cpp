@@ -18,13 +18,6 @@ UdpBuffer udpBuffer = UdpBuffer();
 MulticastSync multicastSync = MulticastSync();
 
 
-//compression stuff
-#define VALUE_MASK      0b00111111
-#define TYPE_MASK       0b11000000
-#define COLOR_FULL_TYPE 0b00000000
-#define SKIP_TYPE       0b01000000
-#define REPEAT_TYPE     0b10000000
-#define COLOR_REF_TYPE  0b11000000
 
 CRGB &getLed(uint16_t ledNr) {
     return (leds[ledNr / LEDS_PER_CHAN][ledNr % LEDS_PER_CHAN]);
