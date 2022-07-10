@@ -8,19 +8,22 @@
 #include <FastLED.h>
 #include <multicastsync.hpp>
 #include <udpbuffer.hpp>
+#include <qois.hpp>
 
 CRGB leds[CHANNELS][LEDS_PER_CHAN];
 
 UdpBuffer udpBuffer = UdpBuffer();
 MulticastSync multicastSync = MulticastSync();
+Qois qois=Qois();
 
 
 CRGB &getLed(uint16_t ledNr) {
     return (leds[ledNr / LEDS_PER_CHAN][ledNr % LEDS_PER_CHAN]);
 }
 
-void parsePacket(packetStruct *packet) {
-}
+
+
+
 
 bool duty_cycle(unsigned long on, unsigned long total, unsigned long starttime = 0) {
     if (!starttime)
@@ -96,8 +99,9 @@ void loop() {
     unsigned long showTime = 0;
     uint32_t lastTime = 0;
 
-    packetStruct *packet = NULL;
+    udpPacketStruct *packet = NULL;
     bool ready = false;
+
 
     while (1) {
 
@@ -118,14 +122,14 @@ void loop() {
                 ready = false;
             }
         } else {
-            // parse next packet and prepare leds buffer
+            // parse next frame and prepare leds buffer
 
             if (udpBuffer.available() > 0) {
                 packet = udpBuffer.readNext();
 
-                Serial.printf("packet time %u\n", packet->time);
-                showTime = packet->time + LAG;
-                parsePacket(packet);
+                Serial.printf("frame time %u\n", packet->frame.time);
+                showTime = packet->frame.time + LAG;
+                qois.decode(packet->frame.data, packet->plen-sizeof(packet->frame.time), &leds[0][0], LED_COUNT);
                 ready = true;
 
             } else {
