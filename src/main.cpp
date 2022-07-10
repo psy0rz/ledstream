@@ -128,9 +128,9 @@ void loop() {
                 packet = udpBuffer.readNext();
 
 //                Serial.printf("frame time %u\n", packet->frame.time);
-                showTime = packet->frame.time + LAG;
-                qois.decode(packet->frame.data, packet->plen-sizeof(packet->frame.time), &leds[0][0], LED_COUNT);
-                ready = true;
+//                showTime = packet->frame.time + LAG;
+//                qois.decode(packet->frame.data, packet->plen-sizeof(packet->frame.time), &leds[0][0], LED_COUNT);
+//                ready = true;
 
             } else {
                 if (multicastSync.synced())

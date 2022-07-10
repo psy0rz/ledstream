@@ -19,21 +19,25 @@
 #define BUFFER_FRAMES 60
 #endif
 
-#define BUFFER BUFFER_FRAMES
+#define BUFFER 10
 //lag at 60fps will be so that the buffer will be at 80%
 #define LAG BUFFER_FRAMES*0.8*16
 
-#define DATA_LEN 1000
+//#define DATA_LEN 1472-4
+#define DATA_LEN 1460-4
 
-struct frameStruct {
-    uint32_t time;
-    uint8_t data[DATA_LEN];
-};
+//struct frameStruct {
+//    uint16_t frameLength;
+//    uint32_t time;
+//    //data...
+//};
 
 struct udpPacketStruct {
-    int plen; //frame length
-    struct frameStruct frame;
+    uint8_t packetNr;
+    uint16_t syncOffset;
+    uint8_t data[DATA_LEN]; //contains multiple framestructs, with the first complete one starting at syncOffset
 };
+
 
 // circular udp frame buffer
 class UdpBuffer {
@@ -41,8 +45,7 @@ public:
     udpPacketStruct packets[BUFFER];
     byte readIndex;
     byte recvIndex;
-    uint32_t lastTime;
-
+    uint8_t lastPacketNr;
 
     WiFiUDP udp;
 
@@ -55,7 +58,7 @@ public:
     void reset() {
         readIndex = 0;
         recvIndex = 0;
-        lastTime = 0;
+        lastPacketNr = 0;
     }
 
     // receive and store next udp frame if its available.
@@ -63,35 +66,31 @@ public:
         int plen = udp.parsePacket();
 
         if (plen) {
-            if (plen > sizeof(frameStruct)) {
-                Serial.printf("udpbuffer: Packet length %d too big (expected %d)\n", plen, sizeof(frameStruct));
+            if (plen != sizeof(udpPacketStruct)) {
+                Serial.printf("udpbuffer: Incorrect packet length:  %d (expected %d)\n", plen, sizeof(udpPacketStruct));
                 udp.flush();
             } else {
                 udpPacketStruct &udpPacket = packets[recvIndex];
+                udp.read((char *) &udpPacket, plen);
 
-
-                // read and store udpPacket
-//        memset((char*)&udpPacket.frame, 0, sizeof(frameStruct));
-                udp.read((char *) &udpPacket.frame, sizeof(frameStruct));
-                udpPacket.plen = plen;
-
-                if (udpPacket.frame.time == lastTime) {
+                if (udpPacket.packetNr == lastPacketNr) {
                     Serial.printf("udpbuffer: Dropped duplicate packet.\n");
                     return;
                 }
 
 
                 //drop out of order packet?
-                if (udpPacket.frame.time < lastTime) {
-                    Serial.printf("udpbuffer: Dropped out of order packet.\n");
+                if (udpPacket.packetNr!=0 && udpPacket.packetNr < lastPacketNr) {
+                    Serial.printf("udpbuffer: Dropped out of order packet. (packet nr %d, last was %d) \n", udpPacket.packetNr, lastPacketNr);
                     return;
                 }
 
-                uint32_t diff = udpPacket.frame.time - lastTime;
-                if (diff > 16)
-                    Serial.printf("udpbuffer: Lost %u mS of packets.\n", diff);
+                const int diff=udpPacket.packetNr-lastPacketNr;
+                if (diff>1)
+                    Serial.printf("udpbuffer: Lost %d packets.\n", diff);
 
-                lastTime=udpPacket.frame.time;
+
+                lastPacketNr=udpPacket.packetNr;
 
                 // update indexes
                 recvIndex++;
@@ -111,7 +110,7 @@ public:
                 return;
             }
         }
-        return;
+
     }
 
 
@@ -129,7 +128,7 @@ public:
     }
 
     // current amount of buffered packets available
-    byte available() {
+    byte available() const {
         int diff = (recvIndex - readIndex);
         if (diff < 0)
             diff = diff + BUFFER;
