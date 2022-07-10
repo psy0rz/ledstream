@@ -16,7 +16,7 @@
 // nr of frames to buffer. marquee tries to keep buffer at 50% to decrease
 // jitter
 #ifndef BUFFER_FRAMES
-#define BUFFER_FRAMES 25
+#define BUFFER_FRAMES 60
 #endif
 
 #define BUFFER BUFFER_FRAMES

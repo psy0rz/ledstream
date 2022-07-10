@@ -87,8 +87,8 @@ public:
 
 
             pixels[px_pos].r = px.rgba.r;
-            pixels[px_pos].g = px.rgba.r;
-            pixels[px_pos].b = px.rgba.r;
+            pixels[px_pos].g = px.rgba.g;
+            pixels[px_pos].b = px.rgba.b;
 
 
         }
