@@ -8,6 +8,7 @@
 
 // #define FASTLED_ESP32_I2S true
 #include "utils.h"
+#include "util.hpp"
 #include <FastLED.h>
 #include <multicastsync.hpp>
 #include <udpbuffer.hpp>
@@ -23,69 +24,9 @@ CRGB &getLed(uint16_t ledNr) {
     return (leds[ledNr / LEDS_PER_CHAN][ledNr % LEDS_PER_CHAN]);
 }
 
-//TODO: bounds checking
 void parsePacket(packetStruct *packet) {
-    uint16_t ledNr = 0;
-    uint16_t cmdNr = 0;
-
-
-    while (cmdNr < DATA_LEN && ledNr < LED_COUNT) {
-        uint8_t cmdType = packet->data[cmdNr] & TYPE_MASK;
-        uint8_t cmdValue = packet->data[cmdNr] & VALUE_MASK;
-        switch (cmdType) {
-            case SKIP_TYPE: {
-                ledNr = ledNr + cmdValue;
-                cmdNr++;
-                break;
-            }
-            case REPEAT_TYPE: {
-                CRGB sourceRgb = getLed(ledNr - 1);
-                while (cmdValue > 0) {
-                    CRGB targetRgb = getLed(ledNr);
-                    memcpy(targetRgb.raw, sourceRgb.raw, 3);
-                    ledNr++;
-                    cmdValue--;
-                }
-                cmdNr++;
-                break;
-            }
-            case COLOR_REF_TYPE: {
-                CRGB sourceRgb = getLed(ledNr - cmdValue);
-                CRGB targetRgb = getLed(ledNr);
-                memcpy(targetRgb.raw, sourceRgb.raw, 3);
-                cmdNr++;
-                ledNr++;
-                break;
-            }
-            case COLOR_FULL_TYPE: {
-                Serial.printf("full led=%d, cmd=%d r=%d, g=%d, b=%d\n", ledNr, cmdNr,
-                              packet->data[cmdNr + 1],
-                              packet->data[cmdNr + 2],
-                              packet->data[cmdNr + 3]
-                              );
-                CRGB targetRgb = getLed(ledNr);
-                memcpy(targetRgb.raw, &packet->data[cmdNr + 1], 3);
-                ledNr++;
-                cmdNr = cmdNr + 4; // skip 3 color bytes as well
-                break;
-            }
-            default:
-                Serial.printf("%s: wtf\n", __FUNCTION__);
-                break;
-        }
-    }
 }
 
-
-// dutycycle function to make stuff blink without using memory
-// returns true during 'on' ms, with total periode time 'total' ms.
-bool
-duty_cycle(unsigned long on, unsigned long total, unsigned long starttime = 0) {
-    if (!starttime)
-        return ((multicastSync.remoteMillis() % total) < on);
-    else
-        return (((multicastSync.remoteMillis() - starttime) % total) < on);
-}
 
 // notify user via led and clearing display
 // also note that blinking should be in sync between different display via
