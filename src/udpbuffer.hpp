@@ -25,24 +25,32 @@
 
 #define DATA_LEN 1000
 
-struct packetStruct
+struct frameStruct
 {
   uint32_t time;
   uint8_t data[DATA_LEN];
 };
 
-// circular udp packet buffer
+struct udpPacketStruct
+{
+    int plen; //frame length
+    struct frameStruct frame;
+};
+
+// circular udp frame buffer
 class UdpBuffer
 {
   public:
-  packetStruct packets[BUFFER];
+  udpPacketStruct packets[BUFFER];
   byte readIndex;
   byte recvIndex;
 
 
   WiFiUDP udp;
 
-  UdpBuffer() {}
+  UdpBuffer() {
+      reset();
+  }
 
   void begin(int port) { udp.begin(port); }
 
@@ -52,22 +60,24 @@ class UdpBuffer
     recvIndex = 0;
   }
 
-  // receive and store next udp packet if its available.
-  // returns true if new packet
+  // receive and store next udp frame if its available.
+  // returns true if new frame
   bool recvNext()
   {
     int plen = udp.parsePacket();
 
     if (plen) {
-      if (plen > sizeof(packetStruct)) {
-        Serial.printf("udpbuffer: Packet length %d too big (expected %d)\n", plen, sizeof(packetStruct));
+      if (plen > sizeof(frameStruct)) {
+        Serial.printf("udpbuffer: Packet length %d too big (expected %d)\n", plen, sizeof(frameStruct));
         udp.flush();
       } else {
-        const packetStruct& packet = packets[recvIndex];
+        udpPacketStruct& udpPacket = packets[recvIndex];
 
-        // read and store packet
-        memset((char*)&packet, 0, sizeof(packetStruct));
-        udp.read((char*)&packet, sizeof(packetStruct));
+
+        // read and store udpPacket
+//        memset((char*)&udpPacket.frame, 0, sizeof(frameStruct));
+        udp.read((char*)&udpPacket.frame, sizeof(frameStruct));
+        udpPacket.plen=plen;
 
         // update indexes
         recvIndex++;
@@ -82,7 +92,7 @@ class UdpBuffer
         }
 
         // Serial.printf("recv frame %d channel %d, recvindex=%d
-        // readindex=%d\n", packet.frame, packet.channel, recvIndex, readIndex);
+        // readindex=%d\n", udpPacket.frame, udpPacket.channel, recvIndex, readIndex);
 
         return (true);
       }
@@ -92,7 +102,7 @@ class UdpBuffer
 
 
 
-  packetStruct* readNext()
+  udpPacketStruct* readNext()
   {
     int ret = readIndex;
     readIndex++;

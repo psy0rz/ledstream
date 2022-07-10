@@ -39,7 +39,7 @@ public:
     int plen = udp.parsePacket();
     if (plen) {
       if (plen != sizeof(syncPacketStruct)) {
-        Serial.printf("Ignored sync packet with length %d (should be %d)\n",
+        Serial.printf("Ignored sync frame with length %d (should be %d)\n",
                       plen,
                       sizeof(syncPacketStruct));
         udp.flush();
