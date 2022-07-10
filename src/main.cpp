@@ -127,7 +127,7 @@ void loop() {
             if (udpBuffer.available() > 0) {
                 packet = udpBuffer.readNext();
 
-                Serial.printf("frame time %u\n", packet->frame.time);
+//                Serial.printf("frame time %u\n", packet->frame.time);
                 showTime = packet->frame.time + LAG;
                 qois.decode(packet->frame.data, packet->plen-sizeof(packet->frame.time), &leds[0][0], LED_COUNT);
                 ready = true;
