@@ -2,13 +2,9 @@
 
 #include <Arduino.h>
 #include <ArduinoOTA.h>
-#include <ESPmDNS.h>
 #include <WiFi.h>
-#include <WiFiUdp.h>
 
 // #define FASTLED_ESP32_I2S true
-#include "utils.h"
-#include "util.hpp"
 #include <FastLED.h>
 #include <multicastsync.hpp>
 #include <udpbuffer.hpp>
@@ -19,7 +15,6 @@ UdpBuffer udpBuffer = UdpBuffer();
 MulticastSync multicastSync = MulticastSync();
 
 
-
 CRGB &getLed(uint16_t ledNr) {
     return (leds[ledNr / LEDS_PER_CHAN][ledNr % LEDS_PER_CHAN]);
 }
@@ -27,12 +22,17 @@ CRGB &getLed(uint16_t ledNr) {
 void parsePacket(packetStruct *packet) {
 }
 
+bool duty_cycle(unsigned long on, unsigned long total, unsigned long starttime = 0) {
+    if (!starttime)
+        return ((multicastSync.remoteMillis() % total) < on);
+    else
+        return (((multicastSync.remoteMillis() - starttime) % total) < on);
+}
 
 // notify user via led and clearing display
 // also note that blinking should be in sync between different display via
 // multicastsync
-void
-notify(CRGB rgb, int on, int total) {
+void notify(CRGB rgb, int on, int total) {
     static bool lastState = false;
 
     if (duty_cycle(on, total) != lastState) {
@@ -74,8 +74,7 @@ setup() {
     // ArduinoOTA.setPassword("dsf09845jxczvjcxf"); doesnt work?
 }
 
-void
-wificheck() {
+void wificheck() {
     if (WiFi.status() == WL_CONNECTED)
         return;
 
@@ -90,8 +89,7 @@ wificheck() {
 }
 
 
-void
-loop() {
+void loop() {
 
     udpBuffer.begin(65000);
     udpBuffer.reset();
