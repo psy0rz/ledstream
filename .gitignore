@@ -6,3 +6,4 @@
 src/config.h
 /CMakeLists.txt
 /CMakeListsPrivate.txt
+cmake-build-*
