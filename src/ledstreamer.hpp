@@ -37,19 +37,19 @@ public:
             // its time to output the prepared leds buffer?
 //            if (multicastSync.remoteMillis() >= qois.show_time+1200) {
             if (true) {
-                FastLED.show();
+//                FastLED.show();
                 qois.startFrame();
 
                 // Serial.printf("avail=%d, showtime=%d \n",
                 // udpBuffer.available(),showTime);
                 ready = false;
 
+                currentByteNr++;
                 if (currentPacket->data[currentByteNr]!=0xff) {
                     ESP_LOGE(TAG, "next byte wasnt sync?");
                     currentPacket = nullptr;
                     currentByteNr = UINT16_MAX;
                 }
-                currentByteNr++;
 
 
                 }
