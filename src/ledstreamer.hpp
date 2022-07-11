@@ -31,11 +31,11 @@ public:
         multicastSync.handle();
         udpBuffer.handle();
 
-        return;
 
         if (ready) {
             // its time to output the prepared leds buffer?
-            if (multicastSync.remoteMillis() >= qois.show_time) {
+            //if (multicastSync.remoteMillis() >= qois.show_time) {
+            if (true) {
                 FastLED.show();
                 // Serial.printf("avail=%d, showtime=%d \n",
                 // udpBuffer.available(),showTime);
@@ -69,10 +69,14 @@ public:
             } else {
                 if (currentByteNr < QOIS_DATA_LEN)
                 {
+//                    ESP_LOGD(TAG, "currentbyte=%d", currentByteNr);
+
+
                     if (!qois.decodeByte(currentPacket->data[currentByteNr]))
                     {
                         //frame is complete, its showtime :)
                         ready=true;
+                        ESP_LOGD(TAG, "time=%u, showtime=%u", multicastSync.remoteMillis(), qois.show_time);
 
                     }
                     currentByteNr++;

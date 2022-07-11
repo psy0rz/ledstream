@@ -1,0 +1,6 @@
+#!/bin/bash
+
+while sleep 1; do
+	pgrep  esptool.py && continue
+	picocom /dev/ttyUSB0 -b 115200 
+done

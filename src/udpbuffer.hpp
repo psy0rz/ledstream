@@ -81,10 +81,10 @@ public:
 
 
                 //drop out of order packet?
-                if (udpPacket.packetNr!=0 && udpPacket.packetNr < lastPacketNr) {
-                    ESP_LOGD(TAG, "Dropped out of order packet. (packet nr %d, last was %d) ", udpPacket.packetNr, lastPacketNr);
-                    return;
-                }
+//                if (udpPacket.packetNr!=0 && udpPacket.packetNr < lastPacketNr) {
+//                    ESP_LOGD(TAG, "Dropped out of order packet. (packet nr %d, last was %d) ", udpPacket.packetNr, lastPacketNr);
+//                    return;
+//                }
 
                 const int diff=udpPacket.packetNr-lastPacketNr;
                 if (diff>1)
