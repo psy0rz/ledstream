@@ -34,17 +34,23 @@ class Qois {
     qoi_rgba_t index[64];
     qoi_rgba_t px;
     int px_pos;
-    unsigned char bytes[3];
+    unsigned char bytes[4];
     int bytes_needed;
     int bytes_received;
     int op;
     boolean wait_for_op;
 
+    CRGB * pixels;
+    int px_len;
+    boolean wait_for_show_time;
 
 public:
+    uint32_t show_time;
 
 
-    Qois() {
+    Qois(CRGB * pixels, int px_len) {
+        this->px_len=px_len;
+        this->pixels=pixels;
         QOI_ZEROARR(index);
         startFrame();
     }
@@ -58,14 +64,15 @@ public:
         px_pos = 0;
 
         //stuff added to make QOI byte based
-        wait_for_op = true;
-        bytes_needed = 0;
+        wait_for_op = false;
+        wait_for_show_time=true;
+        bytes_needed = 4;
         bytes_received = 0;
 
     }
 
     //returns true when we need more data. false means frame is complete
-    bool decodeByte(uint8_t data, CRGB pixels[], int px_len) {
+    bool decodeByte(uint8_t data) {
 
         //wait for next operation
         if (wait_for_op) {
@@ -95,7 +102,16 @@ public:
                 return true;
         }
 
-        //from this point on we know the operation and we have all the bytes we need.
+        //store show time?
+        if (wait_for_show_time)
+        {
+            wait_for_show_time=false;
+            wait_for_op=true;
+            show_time= reinterpret_cast<uint32_t>(bytes);
+            return true;
+        }
+
+        //from this point on we know the operation and we have all the bytes we need for QOI
 
         if (op == QOI_OP_RGB) {
             px.rgba.r = bytes[0];

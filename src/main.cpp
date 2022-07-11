@@ -1,20 +1,29 @@
+#include "esp_log.h"
+
+
 #include "config.h"
+#include "ledstreamer.hpp"
 
 #include <Arduino.h>
 #include <ArduinoOTA.h>
 #include <WiFi.h>
 
+
 // #define FASTLED_ESP32_I2S true
 #include <FastLED.h>
-#include <multicastsync.hpp>
-#include <udpbuffer.hpp>
-#include <qois.hpp>
+//#include <multicastsync.hpp>
+//#include <udpbuffer.hpp>
+//#include <qois.hpp>
+
+static const char* TAG = "main";
+
 
 CRGB leds[CHANNELS][LEDS_PER_CHAN];
 
-UdpBuffer udpBuffer = UdpBuffer();
-MulticastSync multicastSync = MulticastSync();
-Qois qois=Qois();
+//UdpBuffer udpBuffer = UdpBuffer();
+//MulticastSync multicastSync = MulticastSync();
+//Qois qois = Qois();
+Ledstreamer ledstreamer = Ledstreamer(reinterpret_cast<CRGB *>(leds), CHANNELS * LEDS_PER_CHAN);
 
 
 CRGB &getLed(uint16_t ledNr) {
@@ -22,14 +31,11 @@ CRGB &getLed(uint16_t ledNr) {
 }
 
 
-
-
-
 bool duty_cycle(unsigned long on, unsigned long total, unsigned long starttime = 0) {
     if (!starttime)
-        return ((multicastSync.remoteMillis() % total) < on);
+        return ((ledstreamer.multicastSync.remoteMillis() % total) < on);
     else
-        return (((multicastSync.remoteMillis() - starttime) % total) < on);
+        return (((ledstreamer.multicastSync.remoteMillis() - starttime) % total) < on);
 }
 
 // notify user via led and clearing display
@@ -49,11 +55,38 @@ void notify(CRGB rgb, int on, int total) {
     }
 }
 
+void wificheck() {
+    if (WiFi.status() == WL_CONNECTED)
+        return;
+
+//    Serial.printf("Attempting to connect to WPA SSID: %s\n", ssid);
+    ESP_LOGI(TAG, "Connecting to wifi...");
+    while (WiFi.status() != WL_CONNECTED) {
+        yield();
+        notify(CRGB::Red, 125, 250);
+    }
+    ESP_LOGI(TAG, "Wifi connected.");
+
+
+
+//    Serial.printf("MDNS mdns name is %s\n", ArduinoOTA.getHostname().c_str());
+//    Serial.println(WiFi.localIP());
+
+//    multicastSync.begin();
+}
+
 void
 setup() {
     Serial.begin(115200);
-    Serial.println("ledstream: Booted\n");
-    Serial.printf("ledstream: CPU=%dMhz\n", getCpuFrequencyMhz());
+//    Serial.println("ledstream: Booted\n");
+//
+//    ESP_LOGI(TAG, "info");
+//    ESP_LOGD(TAG, "debub");
+//
+//    ESP_LOGE(TAG, "error2");
+//
+//
+//    Serial.printf("ledstream: CPU=%dMhz\n", getCpuFrequencyMhz());
 
 #ifdef CHANNEL0_PIN
     FastLED.addLeds<NEOPIXEL, CHANNEL0_PIN>(leds[0], LEDS_PER_CHAN);
@@ -73,71 +106,74 @@ setup() {
     FastLED.setBrightness(255);
     WiFi.begin(ssid, pass);
 
+    wificheck();
     ArduinoOTA.begin();
     // ArduinoOTA.setPassword("dsf09845jxczvjcxf"); doesnt work?
-}
-
-void wificheck() {
-    if (WiFi.status() == WL_CONNECTED)
-        return;
-
-    Serial.printf("Attempting to connect to WPA SSID: %s\n", ssid);
-    while (WiFi.status() != WL_CONNECTED) {
-        notify(CRGB::Red, 125, 250);
-    }
-    Serial.printf("MDNS mdns name is %s\n", ArduinoOTA.getHostname().c_str());
-    Serial.println(WiFi.localIP());
-
-    multicastSync.begin();
+    ledstreamer.begin();
 }
 
 
 void loop() {
 
-    udpBuffer.begin(65000);
-    udpBuffer.reset();
-    unsigned long showTime = 0;
-    uint32_t lastTime = 0;
+//    udpBuffer.begin(65000);
+//    udpBuffer.reset();
+//    unsigned long showTime = 0;
+//    uint32_t lastTime = 0;
 
-    udpPacketStruct *packet = NULL;
-    bool ready = false;
-
-
-    while (1) {
+//    udpPacketStruct *packet = nullptr;
+//    bool ready = false;
 
 
-        //backgrond processes:
-        wificheck();
-        ArduinoOTA.handle();
-        multicastSync.recv();
-        udpBuffer.recvNext();
+//    while (1) {
 
-        if (ready) {
-            // its time to output the prepared leds buffer?
-            if (multicastSync.remoteMillis() >= showTime) {
-                FastLED.show();
-                // Serial.printf("avail=%d, showtime=%d \n",
-                // udpBuffer.available(),showTime);
 
-                ready = false;
-            }
-        } else {
-            // parse next frame and prepare leds buffer
+    //backgrond processes:
+    wificheck();
+    ArduinoOTA.handle();
+    ledstreamer.handle();
 
-            if (udpBuffer.available() > 0) {
-                packet = udpBuffer.readNext();
+//        multicastSync.handle();
+//        udpBuffer.handle();
+
+//        if (ready) {
+//            // its time to output the prepared leds buffer?
+//            if (multicastSync.remoteMillis() >= showTime) {
+//                FastLED.show();
+//                // Serial.printf("avail=%d, showtime=%d \n",
+//                // udpBuffer.available(),showTime);
+//
+//                ready = false;
+//            }
+//        } else {
+//            //prepare next frame
+//
+//
+//            //need new packet
+//            if (packet == nullptr)
+//            {
+//                if (udpBuffer.available() > 0) {
+//                    packet = udpBuffer.readNext();
+//                }
+//            } else {
+//
+//            }
+//        }
+
+
+//        if (udpBuffer.available() > 0) {
+//            packet = udpBuffer.readNext();
 
 //                Serial.printf("frame time %u\n", packet->frame.time);
 //                showTime = packet->frame.time + LAG;
 //                qois.decode(packet->frame.data, packet->plen-sizeof(packet->frame.time), &leds[0][0], LED_COUNT);
 //                ready = true;
 
-            } else {
-                if (multicastSync.synced())
-                    notify(CRGB::Green, 1000, 2000);
-                else
-                    notify(CRGB::Yellow, 500, 1000);
-            }
-        }
-    }
+//            } else {
+//                if (multicastSync.synced())
+//                    notify(CRGB::Green, 1000, 2000);
+//                else
+//                    notify(CRGB::Yellow, 500, 1000);
+//            }
+//        }
+//    }
 }
