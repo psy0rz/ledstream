@@ -118,7 +118,7 @@ public:
                 ESP_LOGE(TAG, "Got wrong time: %d", op);
                 Serial.println(show_time, HEX);
                 startFrame();
-                return true;
+                return false;
 
             }
 
