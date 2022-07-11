@@ -23,8 +23,8 @@
 //lag at 60fps will be so that the buffer will be at 80%
 #define LAG BUFFER_FRAMES*0.8*16
 
-//#define DATA_LEN 1472-4
-#define DATA_LEN 1460-4
+//#define QOIS_DATA_LEN 1472-4
+#define QOIS_DATA_LEN 1460-4
 
 //struct frameStruct {
 //    uint16_t frameLength;
@@ -34,8 +34,9 @@
 
 struct udpPacketStruct {
     uint8_t packetNr;
+    uint8_t reserved1;
     uint16_t syncOffset;
-    uint8_t data[DATA_LEN]; //contains multiple framestructs, with the first complete one starting at syncOffset
+    uint8_t data[QOIS_DATA_LEN]; //contains multiple framestructs, with the first complete one starting at syncOffset
 };
 
 
@@ -62,7 +63,7 @@ public:
     }
 
     // receive and store next udp frame if its available.
-    void recvNext() {
+    void handle() {
         int plen = udp.parsePacket();
 
         if (plen) {
@@ -104,7 +105,7 @@ public:
                     return;
                 }
 
-                // Serial.printf("recv frame %d channel %d, recvindex=%d
+                // Serial.printf("handle frame %d channel %d, recvindex=%d
                 // readindex=%d\n", udpPacket.frame, udpPacket.channel, recvIndex, readIndex);
 
                 return;
