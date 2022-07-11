@@ -57,6 +57,8 @@ public:
 
     //start decoding a new frame
     void startFrame() {
+//        ESP_LOGD(TAG, "start frame");
+
         px.rgba.r = 0;
         px.rgba.g = 0;
         px.rgba.b = 0;
@@ -73,6 +75,9 @@ public:
 
     //returns true when we need more data. false means frame is complete
     bool decodeByte(uint8_t data) {
+
+//        ESP_LOGD(TAG, "decode byte: waitshowtime=%d, waitop=%d, bytes_needed=%d, op=%d", wait_for_show_time, wait_for_op, bytes_needed, op);
+
 
         //wait for next operation
         if (wait_for_op) {
@@ -108,6 +113,10 @@ public:
             wait_for_show_time=false;
             wait_for_op=true;
             show_time= reinterpret_cast<uint32_t>(bytes);
+            ESP_LOGD(TAG, "got showtime %d", show_time);
+
+
+
             return true;
         }
 
@@ -133,19 +142,22 @@ public:
             px.rgba.b += vg - 8 + (b2 & 0x0f);
         } else if ((op & QOI_MASK_2) == QOI_OP_RUN) {
             int run = (op & 0x3f);
-            while(run)
+            while(run && px_pos< px_len)
             {
-                run--;
-                px_pos++;
+//                ESP_LOGD(TAG, "runon pixel %d", px_pos);
+
                 pixels[px_pos].r = px.rgba.r;
                 pixels[px_pos].g = px.rgba.g;
                 pixels[px_pos].b = px.rgba.b;
+                run--;
+                px_pos++;
             }
             return (px_pos<px_len);
 
         }
 
         index[QOI_COLOR_HASH(px) % 64] = px;
+//        ESP_LOGD(TAG, "write pixel %d", px_pos);
         pixels[px_pos].r = px.rgba.r;
         pixels[px_pos].g = px.rgba.g;
         pixels[px_pos].b = px.rgba.b;
