@@ -31,6 +31,8 @@ public:
         multicastSync.handle();
         udpBuffer.handle();
 
+        return;
+
         if (ready) {
             // its time to output the prepared leds buffer?
             if (multicastSync.remoteMillis() >= qois.show_time) {
