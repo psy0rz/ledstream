@@ -68,27 +68,27 @@ public:
 
         if (plen) {
             if (plen != sizeof(udpPacketStruct)) {
-                Serial.printf("udpbuffer: Incorrect packet length:  %d (expected %d)\n", plen, sizeof(udpPacketStruct));
+                ESP_LOGW(TAG,"udpbuffer: Incorrect packet length:  %d (expected %d)", plen, sizeof(udpPacketStruct));
                 udp.flush();
             } else {
                 udpPacketStruct &udpPacket = packets[recvIndex];
                 udp.read((char *) &udpPacket, plen);
 
                 if (udpPacket.packetNr == lastPacketNr) {
-                    Serial.printf("udpbuffer: Dropped duplicate packet.\n");
+                    ESP_LOGD(TAG, "Dropped duplicate packet.");
                     return;
                 }
 
 
                 //drop out of order packet?
                 if (udpPacket.packetNr!=0 && udpPacket.packetNr < lastPacketNr) {
-                    Serial.printf("udpbuffer: Dropped out of order packet. (packet nr %d, last was %d) \n", udpPacket.packetNr, lastPacketNr);
+                    ESP_LOGD(TAG, "Dropped out of order packet. (packet nr %d, last was %d) ", udpPacket.packetNr, lastPacketNr);
                     return;
                 }
 
                 const int diff=udpPacket.packetNr-lastPacketNr;
                 if (diff>1)
-                    Serial.printf("udpbuffer: Lost %d packets.\n", diff);
+                    ESP_LOGD(TAG, "Lost %d packets.", diff);
 
 
                 lastPacketNr=udpPacket.packetNr;
@@ -99,9 +99,11 @@ public:
                     recvIndex = 0;
 
                 if (readIndex == recvIndex) {
-                    Serial.println("udpbuffer: Buffer overrun");
-                    //shouldnt happen normally..just clear
-                    reset();
+                    ESP_LOGW(TAG,"Buffer overrun");
+                    //move the read index. (essentially dropped the oldest packet)
+                    readIndex++;
+                    if (readIndex == BUFFER)
+                        readIndex = 0;
                     return;
                 }
 
@@ -122,7 +124,7 @@ public:
             readIndex = 0;
 
         if (available() == 0)
-            Serial.println("udpbuffer: Buffer underrun");
+            ESP_LOGW(TAG," Buffer underrun");
 
 
         return (&packets[ret]);

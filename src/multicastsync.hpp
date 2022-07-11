@@ -39,7 +39,7 @@ public:
     int plen = udp.parsePacket();
     if (plen) {
       if (plen != sizeof(syncPacketStruct)) {
-        Serial.printf("Ignored sync frame with length %d (should be %d)\n",
+          ESP_LOGE(TAG, "Ignored sync frame with length %d (should be %d)",
                       plen,
                       sizeof(syncPacketStruct));
         udp.flush();
@@ -61,14 +61,14 @@ public:
           localStartTime = now;
           remoteStartTime = packet.time;
           startup = startup - 1;
-          Serial.printf("timesync: starting %d\n", startup);
+          ESP_LOGD(TAG,"starting %d", startup);
         } else {
-          Serial.printf(
-            "timesync: diff=%d mS correction=%d mS\n", diff, correction);
+            ESP_LOGD(TAG,
+            "diff=%d mS correction=%d mS", diff, correction);
 
           if (abs(diff) > 100 || !synced()) {
-            Serial.printf(
-              "timesync: Desynced, restarting\n");
+              ESP_LOGW(TAG,
+              "Desynced, restarting");
             startup = 10;
 
           } else {

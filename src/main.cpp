@@ -1,4 +1,5 @@
 #include "esp_log.h"
+static const char* TAG = "ledstream";
 
 
 #include "config.h"
@@ -15,7 +16,6 @@
 //#include <udpbuffer.hpp>
 //#include <qois.hpp>
 
-static const char* TAG = "main";
 
 
 CRGB leds[CHANNELS][LEDS_PER_CHAN];
