@@ -46,6 +46,7 @@ public:
     udpPacketStruct packets[BUFFER];
     byte readIndex;
     byte recvIndex;
+    boolean full;
     uint8_t lastPacketNr;
 
     WiFiUDP udp;
@@ -60,6 +61,7 @@ public:
         readIndex = 0;
         recvIndex = 0;
         lastPacketNr = 0;
+        full=false;
     }
 
     // receive and store next udp frame if its available.
@@ -68,7 +70,10 @@ public:
 
         if (plen) {
             if (plen != sizeof(udpPacketStruct)) {
-                ESP_LOGW(TAG,"udpbuffer: Incorrect packet length:  %d (expected %d)", plen, sizeof(udpPacketStruct));
+                ESP_LOGW(TAG, "incorrect packet length:  %d (expected %d)", plen, sizeof(udpPacketStruct));
+                udp.flush();
+            } else if (full) {
+                ESP_LOGW(TAG, "buffer overflow, packet dropped.");
                 udp.flush();
             } else {
                 udpPacketStruct &udpPacket = packets[recvIndex];
@@ -81,31 +86,25 @@ public:
 
 
                 //drop out of order packet?
-//                if (udpPacket.packetNr!=0 && udpPacket.packetNr < lastPacketNr) {
-//                    ESP_LOGD(TAG, "Dropped out of order packet. (packet nr %d, last was %d) ", udpPacket.packetNr, lastPacketNr);
-//                    return;
-//                }
+                //                if (udpPacket.packetNr!=0 && udpPacket.packetNr < lastPacketNr) {
+                //                    ESP_LOGD(TAG, "Dropped out of order packet. (packet nr %d, last was %d) ", udpPacket.packetNr, lastPacketNr);
+                //                    return;
+                //                }
 
-                const int diff=udpPacket.packetNr-lastPacketNr;
-                if (diff>1)
+                const int diff = udpPacket.packetNr - lastPacketNr;
+                if (diff > 1)
                     ESP_LOGD(TAG, "Lost %d packets.", diff);
 
 
-                lastPacketNr=udpPacket.packetNr;
+                lastPacketNr = udpPacket.packetNr;
 
                 // update indexes
                 recvIndex++;
                 if (recvIndex == BUFFER)
                     recvIndex = 0;
 
-                if (readIndex == recvIndex) {
-                    ESP_LOGW(TAG,"Buffer overrun");
-                    //move the read index. (essentially dropped the oldest packet)
-                    readIndex++;
-                    if (readIndex == BUFFER)
-                        readIndex = 0;
-                    return;
-                }
+                if (recvIndex== readIndex)
+                    full=true;
 
                 // Serial.printf("handle frame %d channel %d, recvindex=%d
                 // readindex=%d\n", udpPacket.frame, udpPacket.channel, recvIndex, readIndex);
@@ -113,7 +112,6 @@ public:
                 return;
             }
         }
-
     }
 
 
@@ -123,8 +121,10 @@ public:
         if (readIndex == BUFFER)
             readIndex = 0;
 
+        full=false;
+
         if (available() == 0)
-            ESP_LOGW(TAG," Buffer underrun");
+            ESP_LOGW(TAG, " Buffer underrun");
 
 
         return (&packets[ret]);
@@ -132,6 +132,9 @@ public:
 
     // current amount of buffered packets available
     byte available() const {
+        if (full)
+            return BUFFER;
+
         int diff = (recvIndex - readIndex);
         if (diff < 0)
             diff = diff + BUFFER;

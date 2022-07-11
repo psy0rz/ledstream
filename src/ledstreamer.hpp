@@ -14,7 +14,7 @@ class Ledstreamer {
 public:
     MulticastSync multicastSync;
 
-    Ledstreamer(CRGB * pixels, int px_len) : multicastSync(), udpBuffer(), qois( pixels,  px_len) {
+    Ledstreamer(CRGB *pixels, int px_len) : multicastSync(), udpBuffer(), qois(pixels, px_len) {
         ready = false;
         lastPacketNr = 0;
         currentPacket = nullptr;
@@ -31,16 +31,28 @@ public:
         multicastSync.handle();
         udpBuffer.handle();
 
+//        udpBuffer.readNext();
 
         if (ready) {
             // its time to output the prepared leds buffer?
-            //if (multicastSync.remoteMillis() >= qois.show_time) {
+//            if (multicastSync.remoteMillis() >= qois.show_time+1200) {
             if (true) {
                 FastLED.show();
+                qois.startFrame();
+
                 // Serial.printf("avail=%d, showtime=%d \n",
                 // udpBuffer.available(),showTime);
                 ready = false;
-            }
+
+                if (currentPacket->data[currentByteNr]!=0xff) {
+                    ESP_LOGE(TAG, "next byte wasnt sync?");
+                    currentPacket = nullptr;
+                    currentByteNr = UINT16_MAX;
+                }
+                currentByteNr++;
+
+
+                }
         } else {
             //prepare next frame
 
@@ -48,45 +60,50 @@ public:
             if (currentPacket == nullptr) {
                 if (udpBuffer.available() > 0) {
                     currentPacket = udpBuffer.readNext();
+//                    ESP_LOGD(TAG, "new packet, nr %d", currentPacket->packetNr);
                     //desynced?
-//                    if (lastPacketNr+1!=currentPacket->packetNr)
-                    if (true) {
-                        //abort and start new frame and jump to next syncoffset
-                        qois.startFrame();
+                    if (lastPacketNr + 1 != currentPacket->packetNr)
+                        ESP_LOGW(TAG,"missed packet");
 
-                        if (currentPacket->syncOffset < QOIS_DATA_LEN)
+                    if (lastPacketNr + 1 != currentPacket->packetNr || currentByteNr == UINT16_MAX) {
+                        ESP_LOGD(TAG, "desynced");
+                        //abort and start new frame and jump to next syncoffset
+
+                        if (currentPacket->syncOffset < QOIS_DATA_LEN) {
                             currentByteNr = currentPacket->syncOffset;
-                        else {
+                            qois.startFrame();
+                            if (currentPacket->data[currentByteNr]!=0xff)
+                            {
+                                ESP_LOGE(TAG, "sync byte wasnt 0xff??");
+                                currentPacket = nullptr;
+                                currentByteNr = UINT16_MAX;
+                            }
+                            currentByteNr++;
+                        } else {
                             //cant sync on this packet, wait for next one
-                            currentPacket= nullptr;
+                            currentPacket = nullptr;
+                            currentByteNr = UINT16_MAX;
                         }
 
                     } else {
-                        //continue at the beginning of next packet
+                        //continue at the beginning of this packet
+                        ESP_LOGD(TAG, "continuing in next packet");
                         currentByteNr = 0;
                     }
+                    lastPacketNr = currentPacket->packetNr;
                 }
             } else {
-                if (currentByteNr < QOIS_DATA_LEN)
-                {
-//                    ESP_LOGD(TAG, "currentbyte=%d", currentByteNr);
-
-
-                    if (!qois.decodeByte(currentPacket->data[currentByteNr]))
-                    {
-                        //frame is complete, its showtime :)
-                        ready=true;
-                        ESP_LOGD(TAG, "time=%u, showtime=%u", multicastSync.remoteMillis(), qois.show_time);
-
+                while (currentByteNr < QOIS_DATA_LEN) {
+                    if (!qois.decodeByte(currentPacket->data[currentByteNr])) {
+                        ready = true;
+                        currentByteNr++;
+                        return;
                     }
                     currentByteNr++;
                 }
-                else
-                {
-                    //done with this packet, get next one and continue there
-                    currentPacket= nullptr;
-                    currentByteNr=0;
-                }
+                //done with this packet, get new one
+                ESP_LOGD(TAG, "trying to continue in next packet");
+                currentPacket = nullptr;
 
             }
         }

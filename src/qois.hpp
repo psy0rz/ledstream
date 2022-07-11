@@ -40,7 +40,7 @@ class Qois {
     int op;
     boolean wait_for_op;
 
-    CRGB * pixels;
+    CRGB *pixels;
     int px_len;
     boolean wait_for_show_time;
 
@@ -48,9 +48,9 @@ public:
     uint32_t show_time;
 
 
-    Qois(CRGB * pixels, int px_len) {
-        this->px_len=px_len;
-        this->pixels=pixels;
+    Qois(CRGB *pixels, int px_len) {
+        this->px_len = px_len;
+        this->pixels = pixels;
         QOI_ZEROARR(index);
         startFrame();
     }
@@ -67,16 +67,17 @@ public:
 
         //stuff added to make QOI byte based
         wait_for_op = false;
-        wait_for_show_time=true;
+        wait_for_show_time = true;
         bytes_needed = 4;
         bytes_received = 0;
+
 
     }
 
     //returns true when we need more data. false means frame is complete
     bool decodeByte(uint8_t data) {
 
-//        ESP_LOGD(TAG, "decode byte: waitshowtime=%d, waitop=%d, bytes_needed=%d, op=%d", wait_for_show_time, wait_for_op, bytes_needed, op);
+//        ESP_LOGD(TAG, "decode byte: data=%d waitshowtime=%d, waitop=%d, bytes_needed=%d, op=%d", data,wait_for_show_time, wait_for_op, bytes_needed, op);
 
 
         //wait for next operation
@@ -108,17 +109,25 @@ public:
         }
 
         //store show time?
-        if (wait_for_show_time)
-        {
-            wait_for_show_time=false;
-            wait_for_op=true;
-            show_time= reinterpret_cast<uint32_t>(bytes);
-            ESP_LOGD(TAG, "got showtime %d", show_time);
+        if (wait_for_show_time) {
+            wait_for_show_time = false;
+            wait_for_op = true;
+            show_time = *(uint32_t *) bytes;
 
+            if ((show_time & 0xEE000000) != 0xEE000000) {
+                ESP_LOGE(TAG, "Got wrong time: %d", op);
+                Serial.println(show_time, HEX);
+                startFrame();
+                return true;
 
+            }
 
+//            ESP_LOGD(TAG, "got bytes %d %d", bytes[0], bytes[3]);
+//            ESP_LOGD(TAG, "got showtime %u", show_time);
+//            Serial.println(show_time, HEX);
             return true;
         }
+
 
         //from this point on we know the operation and we have all the bytes we need for QOI
 
@@ -141,10 +150,10 @@ public:
             px.rgba.g += vg;
             px.rgba.b += vg - 8 + (b2 & 0x0f);
         } else if ((op & QOI_MASK_2) == QOI_OP_RUN) {
-            int run = (op & 0x3f);
-            while(run && px_pos< px_len)
-            {
-//                ESP_LOGD(TAG, "runon pixel %d", px_pos);
+            int run = (op & 0x3f)+1;
+//            ESP_LOGD(TAG, "runon %d", run);
+
+            while (run && px_pos < px_len) {
 
                 pixels[px_pos].r = px.rgba.r;
                 pixels[px_pos].g = px.rgba.g;
@@ -152,8 +161,13 @@ public:
                 run--;
                 px_pos++;
             }
-            return (px_pos<px_len);
+            wait_for_op = true;
+            return (px_pos < px_len);
 
+
+        } else {
+            ESP_LOGE(TAG, "Illegal operation: %d", op);
+            return false;
         }
 
         index[QOI_COLOR_HASH(px) % 64] = px;
@@ -163,8 +177,8 @@ public:
         pixels[px_pos].b = px.rgba.b;
 
         px_pos++;
-        wait_for_op=true;
-        return (px_pos<px_len);
+        wait_for_op = true;
+        return (px_pos < px_len);
 
     }
 

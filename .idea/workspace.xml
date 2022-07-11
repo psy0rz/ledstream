@@ -20,10 +20,10 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="refactor wip">
+    <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="refactor wip debugging hell">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/autorun" beforeDir="false" afterPath="$PROJECT_DIR$/autorun" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ledstreamer.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ledstreamer.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/qois.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/qois.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/udpbuffer.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/udpbuffer.hpp" afterDir="false" />
     </list>
@@ -137,7 +137,7 @@
       <workItem from="1656947283664" duration="6063000" />
       <workItem from="1657043592826" duration="1344000" />
       <workItem from="1657440947897" duration="2486000" />
-      <workItem from="1657443913766" duration="31627000" />
+      <workItem from="1657443913766" duration="51348000" />
     </task>
     <task id="LOCAL-00001" summary="stuff">
       <created>1657441294224</created>
@@ -202,7 +202,14 @@
       <option name="project" value="LOCAL" />
       <updated>1657535034881</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="refactor wip debugging hell">
+      <created>1657537408570</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1657537408570</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -222,7 +229,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="stuff" />
     <MESSAGE value="refactor wip" />
-    <option name="LAST_COMMIT_MESSAGE" value="refactor wip" />
+    <MESSAGE value="refactor wip debugging hell" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor wip debugging hell" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
