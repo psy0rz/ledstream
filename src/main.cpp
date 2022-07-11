@@ -23,7 +23,7 @@ CRGB leds[CHANNELS][LEDS_PER_CHAN];
 //UdpBuffer udpBuffer = UdpBuffer();
 //MulticastSync multicastSync = MulticastSync();
 //Qois qois = Qois();
-Ledstreamer ledstreamer = Ledstreamer(reinterpret_cast<CRGB *>(leds), CHANNELS * LEDS_PER_CHAN);
+Ledstreamer ledstreamer = Ledstreamer((CRGB*)leds, CHANNELS * LEDS_PER_CHAN);
 
 
 CRGB &getLed(uint16_t ledNr) {
