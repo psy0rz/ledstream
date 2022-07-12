@@ -133,7 +133,7 @@ public:
 
 
             ESP_LOGD(TAG, "got header: showtime=%u, frame_length=%u", show_time, frame_bytes_left);
-            frame_bytes_left=frame_bytes_left-4 -1; //we already used 4 for this header
+            frame_bytes_left=frame_bytes_left-4 ; //we already used 4 for this header
 //            Serial.println(show_time, HEX);
             return true;
         }

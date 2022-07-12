@@ -46,7 +46,7 @@ public:
     udpPacketStruct packets[BUFFER];
     byte readIndex;
     byte recvIndex;
-    boolean full;
+//    boolean full;
     uint8_t lastPacketNr;
 
     WiFiUDP udp;
@@ -61,7 +61,7 @@ public:
         readIndex = 0;
         recvIndex = 0;
         lastPacketNr = 0;
-        full=false;
+//        full = false;
     }
 
     // receive and store next udp frame if its available.
@@ -72,11 +72,12 @@ public:
             if (plen != sizeof(udpPacketStruct)) {
                 ESP_LOGW(TAG, "incorrect packet length:  %d (expected %d)", plen, sizeof(udpPacketStruct));
                 udp.flush();
-            } else if (full) {
+            } else if (full()) {
                 ESP_LOGW(TAG, "buffer overflow, packet dropped.");
                 udp.flush();
             } else {
                 udpPacketStruct &udpPacket = packets[recvIndex];
+                memset(&udpPacket, 0, sizeof(udpPacketStruct));
                 udp.read((char *) &udpPacket, plen);
 
                 if (udpPacket.packetNr == lastPacketNr) {
@@ -103,8 +104,7 @@ public:
                 if (recvIndex == BUFFER)
                     recvIndex = 0;
 
-                if (recvIndex== readIndex)
-                    full=true;
+
 
                 // Serial.printf("handle frame %d channel %d, recvindex=%d
                 // readindex=%d\n", udpPacket.frame, udpPacket.channel, recvIndex, readIndex);
@@ -113,7 +113,7 @@ public:
         }
     }
 
-
+    //returns pointer to next packet, stays valid until next call.
     udpPacketStruct *readNext() {
 
         if (!available())
@@ -124,19 +124,17 @@ public:
         if (readIndex == BUFFER)
             readIndex = 0;
 
-        full=false;
 
         if (available() == 0)
             ESP_LOGW(TAG, " Buffer underrun");
 
+        ESP_LOGD(TAG, "readIndex=%d", ret);
 
         return (&packets[ret]);
     }
 
     // current amount of buffered packets available
     byte available() const {
-        if (full)
-            return BUFFER;
 
         int diff = (recvIndex - readIndex);
         if (diff < 0)
@@ -144,4 +142,10 @@ public:
 
         return (diff);
     }
+
+    boolean full() const {
+        //1 less because we need to keep oldest packet valid for user
+        return (available() == BUFFER - 1);
+    }
+
 };
