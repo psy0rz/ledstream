@@ -116,6 +116,10 @@ public:
 
 
     udpPacketStruct *readNext() {
+
+        if (!available())
+            return nullptr;
+
         int ret = readIndex;
         readIndex++;
         if (readIndex == BUFFER)

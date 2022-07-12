@@ -18,7 +18,8 @@ public:
         ready = false;
         lastPacketNr = 0;
         currentPacket = nullptr;
-        currentByteNr = UINT16_MAX;
+        currentByteNr = 0;
+        synced = false;
     }
 
     void begin() {
@@ -27,84 +28,75 @@ public:
         udpBuffer.reset();
     }
 
+    //make sure currentPacket is valid and currentByteNr is still in sync
+    boolean packetValid() {
+
+        //already have one
+        if (currentPacket != nullptr)
+            return true;
+
+        //get new one
+        udpPacketStruct *packet = udpBuffer.readNext();
+        if (packet == nullptr)
+            return false;
+
+        if (synced) {
+            //still synced?
+            if (lastPacketNr + 1 == packet->packetNr) {
+                lastPacketNr = packet->packetNr;
+                currentPacket = packet;
+                return true;
+            } else {
+                ESP_LOGW(TAG, "desynced");
+                synced = false;
+            }
+        }
+
+        if (!synced) {
+            //can we sync to this packet?
+            if (packet->syncOffset < QOIS_DATA_LEN) {
+                //reset everything and start from this packet and syncoffset.
+                ESP_LOGW(TAG, "synced");
+                currentPacket = packet;
+                currentByteNr = packet->syncOffset;
+                lastPacketNr = packet->packetNr;
+                qois.nextFrame();
+                synced = true;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     void handle() {
         multicastSync.handle();
         udpBuffer.handle();
 
-//        udpBuffer.readNext();
-
+        //leds are ready to be shown?
         if (ready) {
             // its time to output the prepared leds buffer?
 //            if (multicastSync.remoteMillis() >= qois.show_time+1200) {
             if (true) {
 //                FastLED.show();
-                qois.startFrame();
 
-                // Serial.printf("avail=%d, showtime=%d \n",
-                // udpBuffer.available(),showTime);
                 ready = false;
-
-                currentByteNr++;
-                if (currentPacket->data[currentByteNr]!=0xff) {
-                    ESP_LOGE(TAG, "next byte wasnt sync?");
-                    currentPacket = nullptr;
-                    currentByteNr = UINT16_MAX;
-                }
-
-
-                }
+            }
         } else {
-            //prepare next frame
-
-            //need new packet?
-            if (currentPacket == nullptr) {
-                if (udpBuffer.available() > 0) {
-                    currentPacket = udpBuffer.readNext();
-//                    ESP_LOGD(TAG, "new packet, nr %d", currentPacket->packetNr);
-                    //desynced?
-                    if (lastPacketNr + 1 != currentPacket->packetNr)
-                        ESP_LOGW(TAG,"missed packet");
-
-                    if (lastPacketNr + 1 != currentPacket->packetNr || currentByteNr == UINT16_MAX) {
-                        ESP_LOGD(TAG, "desynced");
-                        //abort and start new frame and jump to next syncoffset
-
-                        if (currentPacket->syncOffset < QOIS_DATA_LEN) {
-                            currentByteNr = currentPacket->syncOffset;
-                            qois.startFrame();
-                            if (currentPacket->data[currentByteNr]!=0xff)
-                            {
-                                ESP_LOGE(TAG, "sync byte wasnt 0xff??");
-                                currentPacket = nullptr;
-                                currentByteNr = UINT16_MAX;
-                            }
-                            currentByteNr++;
-                        } else {
-                            //cant sync on this packet, wait for next one
-                            currentPacket = nullptr;
-                            currentByteNr = UINT16_MAX;
-                        }
-
-                    } else {
-                        //continue at the beginning of this packet
-                        ESP_LOGD(TAG, "continuing in next packet");
-                        currentByteNr = 0;
-                    }
-                    lastPacketNr = currentPacket->packetNr;
-                }
-            } else {
+            if (packetValid()) {
+                //feed available bytes to decoder until we run out, or until it doesnt want any more:
                 while (currentByteNr < QOIS_DATA_LEN) {
                     if (!qois.decodeByte(currentPacket->data[currentByteNr])) {
                         ready = true;
                         currentByteNr++;
+                        qois.nextFrame();
                         return;
                     }
                     currentByteNr++;
                 }
-                //done with this packet, get new one
                 ESP_LOGD(TAG, "trying to continue in next packet");
+                currentByteNr=0;
                 currentPacket = nullptr;
-
             }
         }
     }
@@ -116,6 +108,7 @@ private:
     Qois qois;
 
     boolean ready;
+    boolean synced;
     udpPacketStruct *currentPacket;
     uint8_t lastPacketNr;
     uint16_t currentByteNr;
