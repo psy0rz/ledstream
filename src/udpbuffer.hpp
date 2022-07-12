@@ -109,7 +109,6 @@ public:
                 // Serial.printf("handle frame %d channel %d, recvindex=%d
                 // readindex=%d\n", udpPacket.frame, udpPacket.channel, recvIndex, readIndex);
 
-                return;
             }
         }
     }
