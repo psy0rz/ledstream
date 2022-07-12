@@ -40,6 +40,8 @@ public:
         if (packet == nullptr)
             return false;
 
+        ESP_LOGD(TAG, "packet nr %d, syncoffset %d", packet->packetNr, packet->syncOffset);
+
         if (synced) {
             //still synced?
             if (lastPacketNr + 1 == packet->packetNr) {
@@ -47,7 +49,7 @@ public:
                 currentPacket = packet;
                 return true;
             } else {
-                ESP_LOGW(TAG, "desynced");
+                ESP_LOGW(TAG, "desynced, missed packet");
                 synced = false;
             }
         }
@@ -86,10 +88,9 @@ public:
             if (packetValid()) {
                 //feed available bytes to decoder until we run out, or until it doesnt want any more:
                 while (currentByteNr < QOIS_DATA_LEN) {
-//                    ESP_LOGD(TAG,"byte nr %d", currentByteNr);
                     if (!qois.decodeByte(currentPacket->data[currentByteNr])) {
                         ready = true;
-                        currentByteNr++;
+//                        currentByteNr++;
                         qois.nextFrame();
                         return;
                     }

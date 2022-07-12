@@ -87,8 +87,11 @@ public:
         }
         frame_bytes_left--;
 
+        if (!wait_for_header)
+            return true;
+
         if (px_pos >= px_len) {
-            ESP_LOGE(TAG, "too many pixels (pos=%d len=%d)", px_pos, px_len);
+//            ESP_LOGE(TAG, "too many pixels (pos=%d len=%d)", px_pos, px_len);
             return true;
         }
 
@@ -191,62 +194,6 @@ public:
     }
 
 
-//    void decode(const void *data, int data_size, CRGB pixels[], int px_len) {
-//
-//        const unsigned char *bytes;
-//        unsigned int header_magic;
-//        qoi_rgba_t px;
-//        int data_pos = 0, run = 0;
-//
-//        bytes = (const unsigned char *) data;
-//
-//        px.rgba.r = 0;
-//        px.rgba.g = 0;
-//        px.rgba.b = 0;
-//        px.rgba.a = 255;
-//
-//        for (int px_pos = 0; px_pos < px_len; px_pos++) {
-//            if (run > 0) {
-//                run--;
-//            } else if (data_pos < data_size) {
-//                int b1 = bytes[data_pos++];
-//
-//                if (b1 == QOI_OP_RGB) {
-//                    px.rgba.r = bytes[data_pos++];
-//                    px.rgba.g = bytes[data_pos++];
-//                    px.rgba.b = bytes[data_pos++];
-//                } else if (b1 == QOI_OP_RGBA) {
-//                    px.rgba.r = bytes[data_pos++];
-//                    px.rgba.g = bytes[data_pos++];
-//                    px.rgba.b = bytes[data_pos++];
-//                    px.rgba.a = bytes[data_pos++];
-//                } else if ((b1 & QOI_MASK_2) == QOI_OP_INDEX) {
-//                    px = index[b1];
-//                } else if ((b1 & QOI_MASK_2) == QOI_OP_DIFF) {
-//                    px.rgba.r += ((b1 >> 4) & 0x03) - 2;
-//                    px.rgba.g += ((b1 >> 2) & 0x03) - 2;
-//                    px.rgba.b += (b1 & 0x03) - 2;
-//                } else if ((b1 & QOI_MASK_2) == QOI_OP_LUMA) {
-//                    int b2 = bytes[data_pos++];
-//                    int vg = (b1 & 0x3f) - 32;
-//                    px.rgba.r += vg - 8 + ((b2 >> 4) & 0x0f);
-//                    px.rgba.g += vg;
-//                    px.rgba.b += vg - 8 + (b2 & 0x0f);
-//                } else if ((b1 & QOI_MASK_2) == QOI_OP_RUN) {
-//                    run = (b1 & 0x3f);
-//                }
-//
-//                index[QOI_COLOR_HASH(px) % 64] = px;
-//            }
-//
-//
-//            pixels[px_pos].r = px.rgba.r;
-//            pixels[px_pos].g = px.rgba.g;
-//            pixels[px_pos].b = px.rgba.b;
-//
-//
-//        }
-//    }
 
 };
 
