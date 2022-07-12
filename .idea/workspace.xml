@@ -20,9 +20,10 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="refactor wip debugging hell">
+    <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="refactor wip">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ledstreamer.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ledstreamer.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/multicastsync.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/multicastsync.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/qois.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/qois.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/udpbuffer.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/udpbuffer.hpp" afterDir="false" />
     </list>
@@ -236,7 +237,21 @@
       <option name="project" value="LOCAL" />
       <updated>1657585755544</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="refactor wip debugging hell">
+      <created>1657632478621</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1657632478621</updated>
+    </task>
+    <task id="LOCAL-00016" summary="refactor wip">
+      <created>1657632592496</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1657632592496</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -255,9 +270,9 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="stuff" />
-    <MESSAGE value="refactor wip" />
     <MESSAGE value="refactor wip debugging hell" />
-    <option name="LAST_COMMIT_MESSAGE" value="refactor wip debugging hell" />
+    <MESSAGE value="refactor wip" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor wip" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
