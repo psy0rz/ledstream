@@ -88,19 +88,19 @@ public:
             if (packetValid()) {
                 //feed available bytes to decoder until we run out, or until it doesnt want any more:
 //                ESP_LOGD(TAG, "currentbytenr %d", currentByteNr);
-                for (int i = -10; i < 0; i++) {
-                    Serial.print(currentPacket->data[currentByteNr + i], HEX);
-                    Serial.print(" ");
-                }
-
-                Serial.printf("(%d)", currentByteNr);
-
-                for (int i = 0; i < 10; i++) {
-                    Serial.print(currentPacket->data[currentByteNr + i], HEX);
-                    Serial.print(" ");
-                }
-
-                Serial.println();
+//                for (int i = -10; i < 0; i++) {
+//                    Serial.print(currentPacket->data[currentByteNr + i], HEX);
+//                    Serial.print(" ");
+//                }
+//
+//                Serial.printf("(%d)", currentByteNr);
+//
+//                for (int i = 0; i < 10; i++) {
+//                    Serial.print(currentPacket->data[currentByteNr + i], HEX);
+//                    Serial.print(" ");
+//                }
+//
+//                Serial.println();
 
                 while (currentByteNr < QOIS_DATA_LEN) {
                     if (!qois.decodeByte(currentPacket->data[currentByteNr])) {
