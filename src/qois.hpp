@@ -58,7 +58,7 @@ public:
 
     //start decoding a new frame
     void nextFrame() {
-        ESP_LOGD(TAG, "start frame");
+//        ESP_LOGD(TAG, "start frame");
 
         px.rgba.r = 0;
         px.rgba.g = 0;
@@ -73,6 +73,7 @@ public:
         bytes_received = 0;
         frame_bytes_left = 4;
 
+        QOI_ZEROARR(index);
 
     }
 
@@ -87,11 +88,11 @@ public:
         }
         frame_bytes_left--;
 
-        if (!wait_for_header)
-            return true;
+//        if (!wait_for_header)
+//            return true;
 
         if (px_pos >= px_len) {
-//            ESP_LOGE(TAG, "too many pixels (pos=%d len=%d)", px_pos, px_len);
+            ESP_LOGE(TAG, "too many pixels (pos=%d len=%d)", px_pos, px_len);
             return true;
         }
 
@@ -104,7 +105,7 @@ public:
 
             if (op == QOI_OP_RGB)
                 bytes_needed = 3;
-            else if (op == QOI_OP_LUMA)
+            else if ((op & QOI_MASK_2) == QOI_OP_LUMA)
                 bytes_needed = 1;
             else
                 bytes_needed = 0;
@@ -132,7 +133,7 @@ public:
             show_time = *(uint16_t *) &bytes[2];
 
 
-            ESP_LOGD(TAG, "got header: showtime=%u, frame_length=%u", show_time, frame_bytes_left);
+//            ESP_LOGD(TAG, "got header: showtime=%u, frame_length=%u", show_time, frame_bytes_left);
             frame_bytes_left=frame_bytes_left-4 ; //we already used 4 for this header
 //            Serial.println(show_time, HEX);
             return true;
@@ -143,18 +144,24 @@ public:
         //from this point on we know the operation and we have all the bytes we need for QOI
 
         if (op == QOI_OP_RGB) {
+//            ESP_LOGD(TAG, "RGB");
+
             px.rgba.r = bytes[0];
             px.rgba.g = bytes[1];
             px.rgba.b = bytes[2];
         } else if (op == QOI_OP_RGBA) {
+//            ESP_LOGD(TAG, "RGBA ??");
             //FIXME: flip
         } else if ((op & QOI_MASK_2) == QOI_OP_INDEX) {
+//            ESP_LOGD(TAG, "index");
             px = index[op];
         } else if ((op & QOI_MASK_2) == QOI_OP_DIFF) {
+//            ESP_LOGD(TAG, "diff");
             px.rgba.r += ((op >> 4) & 0x03) - 2;
             px.rgba.g += ((op >> 2) & 0x03) - 2;
             px.rgba.b += (op & 0x03) - 2;
         } else if ((op & QOI_MASK_2) == QOI_OP_LUMA) {
+//            ESP_LOGD(TAG, "luma");
             int b2 = bytes[0];
             int vg = (op & 0x3f) - 32;
             px.rgba.r += vg - 8 + ((b2 >> 4) & 0x0f);
@@ -162,7 +169,6 @@ public:
             px.rgba.b += vg - 8 + (b2 & 0x0f);
         } else if ((op & QOI_MASK_2) == QOI_OP_RUN) {
             int run = (op & 0x3f) + 1;
-//            ESP_LOGD(TAG, "runon %d", run);
 
             while (run && px_pos < px_len) {
 

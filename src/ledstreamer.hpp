@@ -40,7 +40,7 @@ public:
         if (packet == nullptr)
             return false;
 
-        ESP_LOGD(TAG, "packet nr %d, syncoffset %d", packet->packetNr, packet->syncOffset);
+//        ESP_LOGD(TAG, "packet nr %d, syncoffset %d", packet->packetNr, packet->syncOffset);
 
         if (synced) {
             //still synced?
@@ -78,8 +78,8 @@ public:
         //leds are ready to be shown?
         if (ready) {
             // its time to output the prepared leds buffer?
-//            if (multicastSync.remoteMillis() >= qois.show_time+1200) {
-            if (true) {
+            if (multicastSync.remoteMillis() >= qois.show_time+100) {
+//            if (true) {
                 FastLED.show();
 
                 ready = false;
@@ -111,7 +111,7 @@ public:
                     }
                     currentByteNr++;
                 }
-                ESP_LOGD(TAG, "trying to continue in next packet");
+//                ESP_LOGD(TAG, "trying to continue in next packet");
                 currentByteNr = 0;
                 currentPacket = nullptr;
             }

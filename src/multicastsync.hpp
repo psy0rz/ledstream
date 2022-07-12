@@ -66,7 +66,7 @@ public:
             ESP_LOGD(TAG,
             "diff=%d mS correction=%d mS", diff, correction);
 
-          if (abs(diff) > 100 || !synced()) {
+          if (abs(diff) > 1000 || !synced()) {
               ESP_LOGW(TAG,
               "Desynced, restarting");
             startup = 10;

@@ -128,7 +128,7 @@ public:
         if (available() == 0)
             ESP_LOGW(TAG, " Buffer underrun");
 
-        ESP_LOGD(TAG, "readIndex=%d", ret);
+//        ESP_LOGD(TAG, "readIndex=%d", ret);
 
         return (&packets[ret]);
     }
