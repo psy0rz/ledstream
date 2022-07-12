@@ -58,7 +58,7 @@ public:
 
     //start decoding a new frame
     void nextFrame() {
-//        ESP_LOGD(TAG, "start frame");
+        ESP_LOGD(TAG, "start frame");
 
         px.rgba.r = 0;
         px.rgba.g = 0;
@@ -80,6 +80,7 @@ public:
     bool decodeByte(uint8_t data) {
 
 //        ESP_LOGD(TAG, "decode byte: data=%d waitshowtime=%d, waitop=%d, bytes_needed=%d, op=%d", data,wait_for_header, wait_for_op, bytes_needed, op);
+//ESP_LOGD(TAG, "framebytes=%d", frame_bytes_left);
         if (frame_bytes_left == 0) {
 
             return false;
@@ -129,10 +130,11 @@ public:
 
 
             ESP_LOGD(TAG, "got header: showtime=%u, frame_length=%u", show_time, frame_bytes_left);
-            frame_bytes_left=frame_bytes_left-4; //we already used 4 for this header
+            frame_bytes_left=frame_bytes_left-4 -1; //we already used 4 for this header
 //            Serial.println(show_time, HEX);
             return true;
         }
+
 
 
         //from this point on we know the operation and we have all the bytes we need for QOI

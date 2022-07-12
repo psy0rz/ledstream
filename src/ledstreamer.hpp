@@ -78,7 +78,7 @@ public:
             // its time to output the prepared leds buffer?
 //            if (multicastSync.remoteMillis() >= qois.show_time+1200) {
             if (true) {
-//                FastLED.show();
+                FastLED.show();
 
                 ready = false;
             }
@@ -86,6 +86,7 @@ public:
             if (packetValid()) {
                 //feed available bytes to decoder until we run out, or until it doesnt want any more:
                 while (currentByteNr < QOIS_DATA_LEN) {
+//                    ESP_LOGD(TAG,"byte nr %d", currentByteNr);
                     if (!qois.decodeByte(currentPacket->data[currentByteNr])) {
                         ready = true;
                         currentByteNr++;
