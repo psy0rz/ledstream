@@ -44,8 +44,8 @@ public:
 
         if (synced) {
             //still synced?
-            if (lastPacketNr + 1 == packet->packetNr) {
-                lastPacketNr = packet->packetNr;
+            lastPacketNr++;
+            if (lastPacketNr == packet->packetNr) {
                 currentPacket = packet;
                 return true;
             } else {
@@ -87,6 +87,21 @@ public:
         } else {
             if (packetValid()) {
                 //feed available bytes to decoder until we run out, or until it doesnt want any more:
+//                ESP_LOGD(TAG, "currentbytenr %d", currentByteNr);
+                for (int i = -10; i < 0; i++) {
+                    Serial.print(currentPacket->data[currentByteNr + i], HEX);
+                    Serial.print(" ");
+                }
+
+                Serial.printf("(%d)", currentByteNr);
+
+                for (int i = 0; i < 10; i++) {
+                    Serial.print(currentPacket->data[currentByteNr + i], HEX);
+                    Serial.print(" ");
+                }
+
+                Serial.println();
+
                 while (currentByteNr < QOIS_DATA_LEN) {
                     if (!qois.decodeByte(currentPacket->data[currentByteNr])) {
                         ready = true;
@@ -97,7 +112,7 @@ public:
                     currentByteNr++;
                 }
                 ESP_LOGD(TAG, "trying to continue in next packet");
-                currentByteNr=0;
+                currentByteNr = 0;
                 currentPacket = nullptr;
             }
         }
