@@ -20,11 +20,9 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="refactor wip">
+    <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="finally fixed qois/udpstreamer">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ledstreamer.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ledstreamer.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/multicastsync.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/multicastsync.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/qois.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/qois.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/udpbuffer.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/udpbuffer.hpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -94,11 +92,6 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="PlatformIO Debug" type="platformio" factoryName="PlatformIO Debug" nameIsGenerated="true" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="Debug" CONFIG_NAME="initialize">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -138,6 +131,7 @@
       <workItem from="1657043592826" duration="1344000" />
       <workItem from="1657440947897" duration="2486000" />
       <workItem from="1657443913766" duration="64352000" />
+      <workItem from="1657965047353" duration="1021000" />
     </task>
     <task id="LOCAL-00001" summary="stuff">
       <created>1657441294224</created>
@@ -251,7 +245,14 @@
       <option name="project" value="LOCAL" />
       <updated>1657632592496</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="finally fixed qois/udpstreamer">
+      <created>1657634568213</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1657634568213</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -272,7 +273,8 @@
     <MESSAGE value="stuff" />
     <MESSAGE value="refactor wip debugging hell" />
     <MESSAGE value="refactor wip" />
-    <option name="LAST_COMMIT_MESSAGE" value="refactor wip" />
+    <MESSAGE value="finally fixed qois/udpstreamer" />
+    <option name="LAST_COMMIT_MESSAGE" value="finally fixed qois/udpstreamer" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
