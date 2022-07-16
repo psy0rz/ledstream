@@ -13,15 +13,8 @@
 
 #define LED_COUNT LEDS_PER_CHAN * CHANNELS
 
-// nr of frames to buffer. marquee tries to keep buffer at 50% to decrease
-// jitter
-#ifndef BUFFER_FRAMES
-#define BUFFER_FRAMES 60
-#endif
-
-#define BUFFER 10
-//lag at 60fps will be so that the buffer will be at 80%
-#define LAG BUFFER_FRAMES*0.8*16
+//max number of packet to buffer
+#define BUFFER 20
 
 //#define QOIS_DATA_LEN 1472-4
 #define QOIS_DATA_LEN 1460-4

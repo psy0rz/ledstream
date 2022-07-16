@@ -78,7 +78,7 @@ public:
         //leds are ready to be shown?
         if (ready) {
             // its time to output the prepared leds buffer?
-            if (multicastSync.remoteMillis() >= qois.show_time+100) {
+            if (multicastSync.remoteMillis() >= qois.show_time) {
 //            if (true) {
                 FastLED.show();
 
