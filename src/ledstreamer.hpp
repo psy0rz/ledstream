@@ -89,25 +89,10 @@ public:
         } else {
             if (packetValid()) {
                 //feed available bytes to decoder until we run out, or until it doesnt want any more:
-//                ESP_LOGD(TAG, "currentbytenr %d", currentByteNr);
-//                for (int i = -10; i < 0; i++) {
-//                    Serial.print(currentPacket->data[currentByteNr + i], HEX);
-//                    Serial.print(" ");
-//                }
-//
-//                Serial.printf("(%d)", currentByteNr);
-//
-//                for (int i = 0; i < 10; i++) {
-//                    Serial.print(currentPacket->data[currentByteNr + i], HEX);
-//                    Serial.print(" ");
-//                }
-//
-//                Serial.println();
 
                 while (currentByteNr < udpBuffer.currentPlen - QOIS_HEADER_LEN) {
                     if (!qois.decodeByte(udpBuffer.currentPacket->data[currentByteNr])) {
                         ready = true;
-//                        currentByteNr++;
                         qois.nextFrame();
                         return;
                     }
@@ -116,6 +101,8 @@ public:
 //                ESP_LOGD(TAG, "trying to continue in next currentPacket");
                 currentByteNr = 0;
                 udpBuffer.currentPacket = nullptr;
+                if (udpBuffer.available()==0)
+                    ESP_LOGW(TAG, "buffer underrun");
             }
         }
     }

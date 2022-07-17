@@ -20,15 +20,11 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="sender determines lag">
+    <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="\o/">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/autorun" beforeDir="false" afterPath="$PROJECT_DIR$/autorun" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ledstreamer.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ledstreamer.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/multicastsync.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/multicastsync.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/qois.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/qois.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/udpbuffer.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/udpbuffer.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils.hpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -136,7 +132,7 @@
       <workItem from="1657043592826" duration="1344000" />
       <workItem from="1657440947897" duration="2486000" />
       <workItem from="1657443913766" duration="64352000" />
-      <workItem from="1657965047353" duration="14110000" />
+      <workItem from="1657965047353" duration="19285000" />
     </task>
     <task id="LOCAL-00001" summary="stuff">
       <created>1657441294224</created>
@@ -264,7 +260,14 @@
       <option name="project" value="LOCAL" />
       <updated>1657966492111</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="\o/">
+      <created>1658059520279</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1658059520279</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -287,7 +290,8 @@
     <MESSAGE value="refactor wip" />
     <MESSAGE value="finally fixed qois/udpstreamer" />
     <MESSAGE value="sender determines lag" />
-    <option name="LAST_COMMIT_MESSAGE" value="sender determines lag" />
+    <MESSAGE value="\o/" />
+    <option name="LAST_COMMIT_MESSAGE" value="\o/" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
