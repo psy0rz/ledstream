@@ -3,7 +3,10 @@
 #echo .pio/build/initialize/firmware.elf |entr -r -s "pio run -e initialize -t upload && gnome-terminal pio device monitor"
 #echo .pio/build/debug/firmware.bin |entr -r -s "esptool.py -b 921600 -c esp32 write_flash 0x00001000 .pio/build/debug/firmware.bin && gnome-terminal pio device monitor"
 #echo .pio/build/debug/firmware.bin |entr -r -s "esptool.py -b 921600 -c esp32 write_flash 0x10000 .pio/build/debug/firmware.bin && xterm -e 'pio device monitor'"
+while sleep 1; do
 echo .pio/build/debug/firmware.bin |entr -s "pkill -9 picocom; esptool.py -b 921600 -c esp32 write_flash 0x10000 .pio/build/debug/firmware.bin"
+done
+
 
 
 

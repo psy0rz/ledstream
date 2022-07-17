@@ -2,6 +2,7 @@
 
 #include <FastLED.h>
 #include <WiFiUdp.h>
+#include "utils.hpp"
 
 struct syncPacketStruct
 {
@@ -36,6 +37,8 @@ public:
 
   void handle()
   {
+
+
     int plen = udp.parsePacket();
     if (plen) {
       if (plen != sizeof(syncPacketStruct)) {
@@ -54,7 +57,7 @@ public:
         unsigned long remoteDelta = packet.time - remoteStartTime;
 
         unsigned long correctedLocalDelta = localDelta + correction;
-        int diff = remoteDelta - correctedLocalDelta;
+        int diff = diffUnsignedLong(remoteDelta , correctedLocalDelta);
 
         if (startup) {
           correction = 0;
@@ -86,12 +89,17 @@ public:
     }
   }
 
-  unsigned long remoteMillis()
+  unsigned long remoteMillis() const
   {
     return (millis() - localStartTime + remoteStartTime + correction);
   }
 
-  bool synced()
+    uint16_t remoteMillis16() const
+    {
+        return ((millis() - localStartTime + remoteStartTime + correction));
+    }
+
+    bool synced() const
   {
     if (millis() - lastRecvTime < 3000)
       return true;

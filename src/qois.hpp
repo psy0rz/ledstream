@@ -91,6 +91,7 @@ public:
 //        if (!wait_for_header)
 //            return true;
 
+//too many pixels, just drop the data
         if (px_pos >= px_len) {
             ESP_LOGE(TAG, "too many pixels (pos=%d len=%d)", px_pos, px_len);
             return true;

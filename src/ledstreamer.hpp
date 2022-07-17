@@ -17,7 +17,6 @@ public:
     Ledstreamer(CRGB *pixels, int px_len) : multicastSync(), udpBuffer(), qois(pixels, px_len) {
         ready = false;
         lastPacketNr = 0;
-        currentPacket = nullptr;
         currentByteNr = 0;
         synced = false;
     }
@@ -32,43 +31,45 @@ public:
     boolean packetValid() {
 
         //already have one
-        if (currentPacket != nullptr)
+        if (udpBuffer.currentPacket != nullptr)
             return true;
 
-        //get new one
-        udpPacketStruct *packet = udpBuffer.readNext();
-        if (packet == nullptr)
+        //try to get new one
+        udpBuffer.readNext();
+        if (udpBuffer.currentPacket == nullptr)
             return false;
 
-//        ESP_LOGD(TAG, "packet nr %d, syncoffset %d", packet->packetNr, packet->syncOffset);
 
         if (synced) {
             //still synced?
             lastPacketNr++;
-            if (lastPacketNr == packet->packetNr) {
-                currentPacket = packet;
+            if (lastPacketNr == udpBuffer.currentPacket->packetNr) {
                 return true;
             } else {
-                ESP_LOGW(TAG, "desynced, missed packet");
+                ESP_LOGW(TAG, "desynced by lost packet");
                 synced = false;
             }
         }
 
         if (!synced) {
-            //can we sync to this packet?
-            if (packet->syncOffset < QOIS_DATA_LEN) {
-                //reset everything and start from this packet and syncoffset.
+            //can we sync to this currentPacket?
+            if (udpBuffer.currentPacket->syncOffset < QOIS_DATA_LEN) {
+                //reset everything and start from this currentPacket and syncoffset.
                 ESP_LOGW(TAG, "synced");
-                currentPacket = packet;
-                currentByteNr = packet->syncOffset;
-                lastPacketNr = packet->packetNr;
+                currentByteNr = udpBuffer.currentPacket->syncOffset;
+                lastPacketNr = udpBuffer.currentPacket->packetNr;
                 qois.nextFrame();
                 synced = true;
                 return true;
             }
         }
 
+        udpBuffer.currentPacket = nullptr;
         return false;
+    }
+
+    bool idle() const {
+        return ( abs(diff16( multicastSync.remoteMillis16(), qois.show_time))>1000);
     }
 
     void handle() {
@@ -78,8 +79,9 @@ public:
         //leds are ready to be shown?
         if (ready) {
             // its time to output the prepared leds buffer?
-            if (multicastSync.remoteMillis() >= qois.show_time) {
+            if (multicastSync.remoteMillis16() >= qois.show_time) {
 //            if (true) {
+//                ESP_LOGD(TAG, "remotems=%u showtime=%u\n", multicastSync.remoteMillis16(), qois.show_time);
                 FastLED.show();
 
                 ready = false;
@@ -102,8 +104,8 @@ public:
 //
 //                Serial.println();
 
-                while (currentByteNr < QOIS_DATA_LEN) {
-                    if (!qois.decodeByte(currentPacket->data[currentByteNr])) {
+                while (currentByteNr < udpBuffer.currentPlen - QOIS_HEADER_LEN) {
+                    if (!qois.decodeByte(udpBuffer.currentPacket->data[currentByteNr])) {
                         ready = true;
 //                        currentByteNr++;
                         qois.nextFrame();
@@ -111,9 +113,9 @@ public:
                     }
                     currentByteNr++;
                 }
-//                ESP_LOGD(TAG, "trying to continue in next packet");
+//                ESP_LOGD(TAG, "trying to continue in next currentPacket");
                 currentByteNr = 0;
-                currentPacket = nullptr;
+                udpBuffer.currentPacket = nullptr;
             }
         }
     }
@@ -126,7 +128,6 @@ private:
 
     boolean ready;
     boolean synced;
-    udpPacketStruct *currentPacket;
     uint8_t lastPacketNr;
     uint16_t currentByteNr;
 

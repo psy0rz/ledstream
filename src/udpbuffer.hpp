@@ -3,21 +3,13 @@
 #include <FastLED.h>
 #include <WiFiUdp.h>
 
-#ifndef LEDS_PER_CHAN
-#define LEDS_PER_CHAN 300
-#endif
 
-#ifndef CHANNELS
-#define CHANNELS 2
-#endif
-
-#define LED_COUNT LEDS_PER_CHAN * CHANNELS
-
-//max number of packet to buffer
+//max number of currentPacket to buffer
 #define BUFFER 20
 
 //#define QOIS_DATA_LEN 1472-4
 #define QOIS_DATA_LEN 1460-4
+#define QOIS_HEADER_LEN 4
 
 //struct frameStruct {
 //    uint16_t frameLength;
@@ -35,16 +27,24 @@ struct udpPacketStruct {
 
 // circular udp frame buffer
 class UdpBuffer {
-public:
+private:
     udpPacketStruct packets[BUFFER];
+    uint16_t plens[BUFFER];
     byte readIndex;
     byte recvIndex;
 //    boolean full;
     uint8_t lastPacketNr;
-
     WiFiUDP udp;
 
+public:
+
+    //current currentPacket and packetlength. can be null
+    udpPacketStruct * currentPacket= nullptr;
+    uint16_t currentPlen;
+
+
     UdpBuffer() {
+
         reset();
     }
 
@@ -62,26 +62,24 @@ public:
         int plen = udp.parsePacket();
 
         if (plen) {
-            if (plen != sizeof(udpPacketStruct)) {
-                ESP_LOGW(TAG, "incorrect packet length:  %d (expected %d)", plen, sizeof(udpPacketStruct));
-                udp.flush();
-            } else if (full()) {
-                ESP_LOGW(TAG, "buffer overflow, packet dropped.");
+            if (full()) {
+                ESP_LOGW(TAG, "buffer overflow, currentPacket dropped.");
                 udp.flush();
             } else {
                 udpPacketStruct &udpPacket = packets[recvIndex];
                 memset(&udpPacket, 0, sizeof(udpPacketStruct));
                 udp.read((char *) &udpPacket, plen);
+                plens[recvIndex]=plen;
 
                 if (udpPacket.packetNr == lastPacketNr) {
-                    ESP_LOGD(TAG, "Dropped duplicate packet.");
+                    ESP_LOGD(TAG, "Dropped duplicate currentPacket.");
                     return;
                 }
 
 
-                //drop out of order packet?
+                //drop out of order currentPacket?
                 //                if (udpPacket.packetNr!=0 && udpPacket.packetNr < lastPacketNr) {
-                //                    ESP_LOGD(TAG, "Dropped out of order packet. (packet nr %d, last was %d) ", udpPacket.packetNr, lastPacketNr);
+                //                    ESP_LOGD(TAG, "Dropped out of order currentPacket. (currentPacket nr %d, last was %d) ", udpPacket.packetNr, lastPacketNr);
                 //                    return;
                 //                }
 
@@ -106,25 +104,28 @@ public:
         }
     }
 
-    //returns pointer to next packet, stays valid until next call.
-    udpPacketStruct *readNext() {
+    //sets current currentPacket to next avaiable currentPacket, or nullptr if none
+     void readNext() {
 
-        if (!available())
-            return nullptr;
+        if (!available()) {
+            currentPacket = nullptr;
+            return;
+        }
 
         int ret = readIndex;
         readIndex++;
         if (readIndex == BUFFER)
             readIndex = 0;
 
-
         if (available() == 0)
             ESP_LOGW(TAG, " Buffer underrun");
 
-//        ESP_LOGD(TAG, "readIndex=%d", ret);
 
-        return (&packets[ret]);
+        currentPacket=&packets[ret];
+        currentPlen=plens[ret];
     }
+
+
 
     // current amount of buffered packets available
     byte available() const {
@@ -137,7 +138,7 @@ public:
     }
 
     boolean full() const {
-        //1 less because we need to keep oldest packet valid for user
+        //1 less because we need to keep oldest currentPacket valid for user
         return (available() == BUFFER - 1);
     }
 
