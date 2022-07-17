@@ -1,5 +1,6 @@
 #include "esp_log.h"
-static const char* TAG = "ledstream";
+
+static const char *TAG = "ledstream";
 
 
 #include "config.h"
@@ -17,13 +18,12 @@ static const char* TAG = "ledstream";
 //#include <qois.hpp>
 
 
-
 CRGB leds[CHANNELS][LEDS_PER_CHAN];
 
 //UdpBuffer udpBuffer = UdpBuffer();
 //MulticastSync multicastSync = MulticastSync();
 //Qois qois = Qois();
-Ledstreamer ledstreamer = Ledstreamer((CRGB*)leds, CHANNELS * LEDS_PER_CHAN);
+Ledstreamer ledstreamer = Ledstreamer((CRGB *) leds, CHANNELS * LEDS_PER_CHAN);
 
 
 CRGB &getLed(uint16_t ledNr) {
@@ -120,7 +120,7 @@ void loop() {
 //    unsigned long showTime = 0;
 //    uint32_t lastTime = 0;
 
-//    udpPacketStruct *packet = nullptr;
+//    udpPacketStruct *currentPacket = nullptr;
 //    bool ready = false;
 
 
@@ -132,48 +132,12 @@ void loop() {
     ArduinoOTA.handle();
     ledstreamer.handle();
 
-//        multicastSync.handle();
-//        udpBuffer.handle();
 
-//        if (ready) {
-//            // its time to output the prepared leds buffer?
-//            if (multicastSync.remoteMillis() >= showTime) {
-//                FastLED.show();
-//                // Serial.printf("avail=%d, showtime=%d \n",
-//                // udpBuffer.available(),showTime);
-//
-//                ready = false;
-//            }
-//        } else {
-//            //prepare next frame
-//
-//
-//            //need new packet
-//            if (packet == nullptr)
-//            {
-//                if (udpBuffer.available() > 0) {
-//                    packet = udpBuffer.readNext();
-//                }
-//            } else {
-//
-//            }
-//        }
+    if (ledstreamer.idle()) {
+        if (ledstreamer.multicastSync.synced())
+            notify(CRGB::Green, 1000, 2000);
+        else
+            notify(CRGB::Yellow, 500, 1000);
+    }
 
-
-//        if (udpBuffer.available() > 0) {
-//            packet = udpBuffer.readNext();
-
-//                Serial.printf("frame time %u\n", packet->frame.time);
-//                showTime = packet->frame.time + LAG;
-//                qois.decode(packet->frame.data, packet->plen-sizeof(packet->frame.time), &leds[0][0], LED_COUNT);
-//                ready = true;
-
-//            } else {
-//                if (multicastSync.synced())
-//                    notify(CRGB::Green, 1000, 2000);
-//                else
-//                    notify(CRGB::Yellow, 500, 1000);
-//            }
-//        }
-//    }
 }
