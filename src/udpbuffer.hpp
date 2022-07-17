@@ -5,7 +5,7 @@
 
 
 //max number of currentPacket to buffer
-#define BUFFER 20
+#define BUFFER 30
 
 //#define QOIS_DATA_LEN 1472-4
 #define QOIS_DATA_LEN 1460-4
@@ -63,7 +63,7 @@ public:
 
         if (plen) {
             if (full()) {
-                ESP_LOGW(TAG, "buffer overflow, currentPacket dropped.");
+                ESP_LOGW(TAG, "buffer overflow, packet dropped.");
                 udp.flush();
             } else {
                 udpPacketStruct &udpPacket = packets[recvIndex];
@@ -117,8 +117,8 @@ public:
         if (readIndex == BUFFER)
             readIndex = 0;
 
-        if (available() == 0)
-            ESP_LOGW(TAG, " Buffer underrun");
+//        if (available() == 0)
+//            ESP_LOGW(TAG, " Buffer underrun");
 
 
         currentPacket=&packets[ret];
