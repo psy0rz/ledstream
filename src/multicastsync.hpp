@@ -62,7 +62,8 @@ public:
                 } else {
                     ESP_LOGD(TAG, "diff=%d mS correction=%d mS, time=%u mS", diff, correction, remoteMillis16());
 
-                    if (abs(diff) > 1000 || !synced()) {
+//                    if (abs(diff) > 1000 || !synced()) {
+                        if ( !synced()) {
                         ESP_LOGW(TAG, "Desynced, restarting");
                         startup = 10;
 

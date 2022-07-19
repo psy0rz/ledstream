@@ -69,7 +69,7 @@ public:
     }
 
     bool idle() const {
-        return ( abs(diff16( multicastSync.remoteMillis16(), qois.show_time))>1000);
+        return (abs(diff16(multicastSync.remoteMillis16(), qois.show_time)) > 1000);
     }
 
     void handle() {
@@ -79,7 +79,7 @@ public:
         //leds are ready to be shown?
         if (ready) {
             // its time to output the prepared leds buffer?
-            if (multicastSync.remoteMillis16() >= qois.show_time) {
+            if (diff16(multicastSync.remoteMillis16(), qois.show_time) >= 0) {
 //            if (true) {
 //                ESP_LOGD(TAG, "remotems=%u showtime=%u\n", multicastSync.remoteMillis16(), qois.show_time);
                 FastLED.show();
@@ -101,7 +101,7 @@ public:
 //                ESP_LOGD(TAG, "trying to continue in next currentPacket");
                 currentByteNr = 0;
                 udpBuffer.currentPacket = nullptr;
-                if (udpBuffer.available()==0)
+                if (udpBuffer.available() == 0)
                     ESP_LOGW(TAG, "buffer underrun");
             }
         }
