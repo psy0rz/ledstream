@@ -20,7 +20,7 @@
 struct udpPacketStruct {
     uint8_t packetNr;
     uint8_t reserved1;
-    uint16_t time;
+//    uint16_t time;
     uint16_t syncOffset;
     uint8_t data[QOIS_DATA_LEN]; //contains multiple framestructs, with the first complete one starting at syncOffset
 };
