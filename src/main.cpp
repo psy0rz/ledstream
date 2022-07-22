@@ -78,15 +78,6 @@ void wificheck() {
 void
 setup() {
     Serial.begin(115200);
-//    Serial.println("ledstream: Booted\n");
-//
-//    ESP_LOGI(TAG, "info");
-//    ESP_LOGD(TAG, "debub");
-//
-//    ESP_LOGE(TAG, "error2");
-//
-//
-//    Serial.printf("ledstream: CPU=%dMhz\n", getCpuFrequencyMhz());
 
 #ifdef CHANNEL0_PIN
     FastLED.addLeds<NEOPIXEL, CHANNEL0_PIN>(leds[0], LEDS_PER_CHAN);
