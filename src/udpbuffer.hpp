@@ -5,7 +5,7 @@
 
 
 //max number of currentPacket to buffer
-#define BUFFER 30
+#define BUFFER 50
 
 //#define QOIS_DATA_LEN 1472-4
 #define QOIS_DATA_LEN 1460-4
