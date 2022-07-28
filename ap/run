@@ -1,4 +1,6 @@
 nmcli n off
+sleep 3
+
 hostapd ./hostapd.conf &
 sleep 3
 ip a a 10.10.10.1/24 dev wlp2s0
