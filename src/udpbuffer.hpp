@@ -3,6 +3,8 @@
 #include <FastLED.h>
 #include <WiFiUdp.h>
 
+//this just stores received udp packets in a circular buffer.
+
 
 //max number of currentPacket to buffer
 #define BUFFER 50
@@ -21,7 +23,6 @@ struct udpPacketStruct {
 };
 
 
-// circular udp frame buffer
 class UdpBuffer {
 private:
     udpPacketStruct packets[BUFFER];

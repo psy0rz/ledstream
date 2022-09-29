@@ -28,6 +28,7 @@ class MulticastSync
   uint16_t localStartTime;
   uint16_t remoteStartTime;
   uint16_t lastRecvTime;
+  unsigned long lastDebugOutput;
   // float correctionFactor = 1;
   int correction;
   byte startup;
@@ -37,6 +38,7 @@ public:
   {
 
     udp.beginMulticast(IPAddress(MCAST_GROUP), 65001);
+    lastDebugOutput = 0;
     // remoteTime = 0;
     // localOffset=0;
     startup = 10;
@@ -88,7 +90,8 @@ public:
         startup = startup - 1;
         ESP_LOGD(TAG, "starting %d", startup);
       } else {
-        if (multicast) {
+
+        if (multicast || (millis() - lastDebugOutput >= 500)) {
           ESP_LOGD(TAG,
                    "multicast=%d, received=%d mS, remoteMillis=%u mS, "
                    "correction=%d, diff=%d",
@@ -97,8 +100,9 @@ public:
                    remoteMillis(),
                    correction,
                    diff);
+          lastDebugOutput = millis();
         }
-        //                    if (abs(diff) > 1000 || !synced()) {
+
         if (!synced()) {
           ESP_LOGW(TAG, "Desynced, restarting");
           startup = 10;
