@@ -5,22 +5,17 @@
 
 
 //max number of currentPacket to buffer
-#define BUFFER 50
+#define BUFFER 40
 
 //#define QOIS_DATA_LEN 1472-4
-#define QOIS_DATA_LEN 1460-4
-#define QOIS_HEADER_LEN 4
+#define QOIS_HEADER_LEN 6
+#define QOIS_DATA_LEN 1460 - QOIS_HEADER_LEN
 
-//struct frameStruct {
-//    uint16_t frameLength;
-//    uint32_t time;
-//    //data...
-//};
 
 struct udpPacketStruct {
     uint8_t packetNr;
     uint8_t reserved1;
-//    uint16_t time;
+   uint16_t time;
     uint16_t syncOffset;
     uint8_t data[QOIS_DATA_LEN]; //contains multiple framestructs, with the first complete one starting at syncOffset
 };
@@ -59,7 +54,9 @@ public:
     }
 
     // receive and store next udp frame if its available.
-    void handle() {
+    // returns received time from packet (used for timesyncronisation)
+    // 0=no time
+    uint16_t handle() {
         int plen = udp.parsePacket();
 
         if (plen) {
@@ -74,7 +71,7 @@ public:
 
                 if (udpPacket.packetNr == lastPacketNr) {
                     ESP_LOGD(TAG, "Dropped duplicate currentPacket.");
-                    return;
+                    return (0);
                 }
 
 
@@ -100,9 +97,11 @@ public:
 
                 // Serial.printf("handle frame %d channel %d, recvindex=%d
                 // readindex=%d\n", udpPacket.frame, udpPacket.channel, recvIndex, readIndex);
-
+                return (udpPacket.time);
             }
         }
+
+        return (0);
     }
 
     //sets current currentPacket to next avaiable currentPacket, or nullptr if none
