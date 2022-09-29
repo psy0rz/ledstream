@@ -56,7 +56,7 @@ public:
         nextFrame();
     }
 
-    //start decoding a new frame
+    //get ready for next frame
     void nextFrame() {
 //        ESP_LOGD(TAG, "start frame");
 
