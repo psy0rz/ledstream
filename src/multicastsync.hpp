@@ -4,6 +4,13 @@
 #include <FastLED.h>
 #include <WiFiUdp.h>
 
+// This class tries to sync the local time against the remote time.
+// It does this by looking at the remotetime that was received by either
+// multicast or the last packet. remoteMillis() should return the same time as
+// the remotehost.
+
+// We use small corrections to filter out the network jitter.
+
 struct syncPacketStruct
 {
   uint32_t time;
@@ -42,6 +49,9 @@ public:
   void handle(uint16_t lastPacketTime)
   {
 
+    // syncTime is the one that will be used. It can either get filled by
+    // multicast or via lastPacketTime
+
     uint16_t syncTime = lastPacketTime;
     boolean multicast = false;
 
@@ -57,20 +67,19 @@ public:
       } else {
 
         udp.read((char*)&packet, sizeof(syncPacketStruct));
-        syncTime = packet.time & 0xffff; //only use lower 16 bits
+        syncTime = packet.time & 0xffff; // only use lower 16 bits
         multicast = true;
       }
     }
 
     if (syncTime) {
-      uint16_t now= millis();
+      uint16_t now = millis();
       lastRecvTime = now;
       uint16_t localDelta = now - localStartTime;
-      uint16_t remoteDelta = packet.time - remoteStartTime;
+      uint16_t remoteDelta = syncTime - remoteStartTime;
 
       uint16_t correctedLocalDelta = localDelta + correction;
-    //   int diff = diff16(remoteDelta, correctedLocalDelta);
-      int diff = diff16(correctedLocalDelta, remoteDelta);
+      int diff = diff16(remoteDelta, correctedLocalDelta);
 
       if (startup) {
         correction = 0;
@@ -79,14 +88,16 @@ public:
         startup = startup - 1;
         ESP_LOGD(TAG, "starting %d", startup);
       } else {
-        ESP_LOGD(TAG,
-                 "multicast=%d, received=%d mS, remoteMillis=%u mS, correction=%d, diff=%d",
-                 multicast,
-                 lastPacketTime,
-                 remoteMillis(),
-                 correction,
-                 diff);
-
+        if (multicast) {
+          ESP_LOGD(TAG,
+                   "multicast=%d, received=%d mS, remoteMillis=%u mS, "
+                   "correction=%d, diff=%d",
+                   multicast,
+                   syncTime,
+                   remoteMillis(),
+                   correction,
+                   diff);
+        }
         //                    if (abs(diff) > 1000 || !synced()) {
         if (!synced()) {
           ESP_LOGW(TAG, "Desynced, restarting");
@@ -106,10 +117,10 @@ public:
     }
   }
 
-//   unsigned long remoteMillis() const
-//   {
-//     return (millis() - localStartTime + remoteStartTime + correction);
-//   }
+  //   unsigned long remoteMillis() const
+  //   {
+  //     return (millis() - localStartTime + remoteStartTime + correction);
+  //   }
 
   uint16_t remoteMillis() const
   {
