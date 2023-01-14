@@ -9,12 +9,12 @@
 
 //#define QOIS_DATA_LEN 1472-4
 #define QOIS_HEADER_LEN 6
-#define QOIS_DATA_LEN 1460 - QOIS_HEADER_LEN
+#define QOIS_DATA_LEN (1460 - QOIS_HEADER_LEN)
 
 
 struct udpPacketStruct {
     uint8_t packetNr;
-    uint8_t reserved1;
+    [[maybe_unused]] uint8_t reserved1;
    uint16_t time;
     uint16_t syncOffset;
     uint8_t data[QOIS_DATA_LEN]; //contains multiple framestructs, with the first complete one starting at syncOffset
@@ -29,7 +29,6 @@ private:
     uint8_t recvIndex;
 //    bool full;
     uint8_t lastPacketNr;
-    WiFiUDP udp;
 
 public:
 
@@ -43,7 +42,7 @@ public:
         reset();
     }
 
-    void begin(int port) { udp.begin(port); }
+//    void begin(int port) { udp.begin(port); }
 
     void reset() {
         readIndex = 0;
@@ -55,18 +54,16 @@ public:
     // receive and store next udp frame if its available.
     // returns received time from packet (used for timesyncronisation)
     // 0=no time
-    uint16_t handle() {
-        int plen = udp.parsePacket();
+    uint16_t handle(char *data, uint16_t len) {
 
-        if (plen) {
+        if (len) {
             if (full()) {
                 ESP_LOGW(TAG, "buffer overflow, packet dropped.");
-                udp.flush();
             } else {
                 udpPacketStruct &udpPacket = packets[recvIndex];
                 memset(&udpPacket, 0, sizeof(udpPacketStruct));
-                udp.read((char *) &udpPacket, plen);
-                plens[recvIndex]=plen;
+                memcpy(&udpPacket,data, len);
+                plens[recvIndex]=len;
 
                 if (udpPacket.packetNr == lastPacketNr) {
                     ESP_LOGD(TAG, "Dropped duplicate currentPacket.");

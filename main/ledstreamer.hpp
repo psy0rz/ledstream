@@ -28,7 +28,6 @@ public:
   void begin()
   {
     multicastSync.begin();
-    udpBuffer.begin(65000);
     udpBuffer.reset();
   }
 

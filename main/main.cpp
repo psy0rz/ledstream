@@ -14,6 +14,8 @@ static const char *TAG = "ledstream";
 //#include <udpbuffer.hpp>
 //#include <qois.hpp>
 
+#define CHANNELS 2
+#define LEDS_PER_CHAN 300
 
 CRGB leds[CHANNELS][LEDS_PER_CHAN];
 
