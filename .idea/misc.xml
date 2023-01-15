@@ -4,6 +4,7 @@
   <component name="CidrRootsConfiguration">
     <libraryRoots>
       <file path="$PROJECT_DIR$/../esp/esp-idf" />
+      <file path="$PROJECT_DIR$/../esp/esp-idf4.4" />
     </libraryRoots>
   </component>
 </project>
