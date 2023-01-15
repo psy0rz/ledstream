@@ -54,6 +54,7 @@ static void event_handler(void *arg,
     }
 }
 
+
 void wifi_init_sta(void) {
     s_wifi_event_group = xEventGroupCreate();
 
@@ -74,11 +75,15 @@ void wifi_init_sta(void) {
 
 
     wifi_config_t wifi_config;
+    memset(&wifi_config, 0 , sizeof(wifi_config_t));
 
     strcpy(reinterpret_cast<char *>(wifi_config.sta.ssid), WIFI_SSID);
     strcpy(reinterpret_cast<char *>(wifi_config.sta.password), WIFI_PASS);
     wifi_config.sta.threshold.authmode = ESP_WIFI_SCAN_AUTH_MODE_THRESHOLD;
-//    wifi_config.sta.sae_pwe_h2e = WPA;
+    wifi_config.sta.sae_pwe_h2e = WPA3_SAE_PWE_BOTH;
+
+    ESP_LOGI(WIFI_TAG, "connecting to SSID:%s password:%s", wifi_config.sta.ssid, wifi_config.sta.password);
+
 
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
     ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &wifi_config));

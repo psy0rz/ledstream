@@ -19,10 +19,10 @@
       <config projectName="ledder" targetName="__idf_newlib" />
       <config projectName="ledder" targetName="__idf_app_update" />
       <config projectName="ledder" targetName="mbedtls" />
-      <config projectName="ledder" targetName="encrypted-otadata-flash" />
       <config projectName="ledder" targetName="__idf_esp-tls" />
       <config projectName="ledder" targetName="bootloader-flash" />
       <config projectName="ledder" targetName="__idf_esp_gdbstub" />
+      <config projectName="ledder" targetName="__idf_esp_websocket_client" />
       <config projectName="ledder" targetName="__idf_xtensa" />
       <config projectName="ledder" targetName="__idf_esp_https_ota" />
       <config projectName="ledder" targetName="__idf_vfs" />
@@ -48,7 +48,6 @@
       <config projectName="ledder" targetName="__idf_fatfs" />
       <config projectName="ledder" targetName="size-components" />
       <config projectName="ledder" targetName="erase_flash" />
-      <config projectName="ledder" targetName="erase-otadata" />
       <config projectName="ledder" targetName="__idf_hal" />
       <config projectName="ledder" targetName="__idf_esp_adc_cal" />
       <config projectName="ledder" targetName="custom_bundle" />
@@ -59,8 +58,6 @@
       <config projectName="ledder" targetName="__idf_esp_system" />
       <config projectName="ledder" targetName="__idf_unity" />
       <config projectName="ledder" targetName="__idf_cmock" />
-      <config projectName="ledder" targetName="read_otadata" />
-      <config projectName="ledder" targetName="otadata-flash" />
       <config projectName="ledder" targetName="bootloader" />
       <config projectName="ledder" targetName="gen_project_binary" />
       <config projectName="ledder" targetName="partition_table_bin" />
@@ -105,7 +102,6 @@
       <config projectName="ledder" targetName="confserver" />
       <config projectName="ledder" targetName="__idf_mdns" />
       <config projectName="ledder" targetName="partition_table" />
-      <config projectName="ledder" targetName="erase_otadata" />
       <config projectName="ledder" targetName="__idf_bootloader_support" />
       <config projectName="ledder" targetName="__idf_spi_flash" />
       <config projectName="ledder" targetName="__idf_console" />
@@ -119,7 +115,6 @@
       <config projectName="ledder" targetName="__idf_espcoredump" />
       <config projectName="ledder" targetName="__idf_FastLED-idf" />
       <config projectName="ledder" targetName="save-defconfig" />
-      <config projectName="ledder" targetName="read-otadata" />
       <config projectName="ledder" targetName="Z_DUMMY_TARGET" />
       <config projectName="ledder" targetName="partition-table" />
       <config projectName="ledder" targetName="__idf_json" />
@@ -133,7 +128,6 @@
       <config projectName="ledder" targetName="__idf_esp_eth" />
       <config projectName="ledder" targetName="__idf_asio" />
       <config projectName="ledder" targetName="__idf_esp_adc" />
-      <config projectName="ledder" targetName="blank_ota_data" />
       <config projectName="ledder" targetName="encrypted-app-flash" />
       <config projectName="ledder" targetName="size" />
       <config projectName="ledder" targetName="__idf_esp_partition" />
@@ -146,12 +140,13 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="compiles">
+    <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="runs">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/ledstreamer.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/ledstreamer.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/autorun" beforeDir="false" afterPath="$PROJECT_DIR$/autorun" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/main.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/udpserver.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/udpserver.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/wifi.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/wifi.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sdkconfig" beforeDir="false" afterPath="$PROJECT_DIR$/sdkconfig" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -211,7 +206,7 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager" selected="CMake Application.app-flash">
+  <component name="RunManager" selected="CMake Application.app">
     <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
         <option name="CLION.EXTERNAL.BUILD" enabled="true" />
@@ -383,6 +378,11 @@
       </method>
     </configuration>
     <configuration name="__idf_esp_timer" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledder" TARGET_NAME="__idf_esp_timer" CONFIG_NAME="Default-esp4.4">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="__idf_esp_websocket_client" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledder" TARGET_NAME="__idf_esp_websocket_client" CONFIG_NAME="Default-esp4.4">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -607,11 +607,6 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="blank_ota_data" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledder" TARGET_NAME="blank_ota_data" CONFIG_NAME="Default-esp4.4">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="bootloader-flash" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledder" TARGET_NAME="bootloader-flash" CONFIG_NAME="Default-esp4.4">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -672,27 +667,12 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="encrypted-otadata-flash" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledder" TARGET_NAME="encrypted-otadata-flash" CONFIG_NAME="Default-esp4.4">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="encrypted-partition-table-flash" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledder" TARGET_NAME="encrypted-partition-table-flash" CONFIG_NAME="Default-esp4.4">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="erase-otadata" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledder" TARGET_NAME="erase-otadata" CONFIG_NAME="Default-esp4.4">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="erase_flash" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledder" TARGET_NAME="erase_flash" CONFIG_NAME="Default-esp4.4">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="erase_otadata" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledder" TARGET_NAME="erase_otadata" CONFIG_NAME="Default-esp4.4">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -747,11 +727,6 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="otadata-flash" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledder" TARGET_NAME="otadata-flash" CONFIG_NAME="Default-esp4.4">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="partition-table-flash" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledder" TARGET_NAME="partition-table-flash" CONFIG_NAME="Default-esp4.4">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -773,16 +748,6 @@
       </method>
     </configuration>
     <configuration name="partition_table_bin" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledder" TARGET_NAME="partition_table_bin" CONFIG_NAME="Default-esp4.4">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="read-otadata" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledder" TARGET_NAME="read-otadata" CONFIG_NAME="Default-esp4.4">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="read_otadata" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledder" TARGET_NAME="read_otadata" CONFIG_NAME="Default-esp4.4">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -843,13 +808,6 @@
       <item itemvalue="CMake Application.__idf_main" />
       <item itemvalue="CMake Application.__idf_app_trace" />
       <item itemvalue="CMake Application.__idf_app_update" />
-      <item itemvalue="CMake Application.blank_ota_data" />
-      <item itemvalue="CMake Application.encrypted-otadata-flash" />
-      <item itemvalue="CMake Application.erase-otadata" />
-      <item itemvalue="CMake Application.erase_otadata" />
-      <item itemvalue="CMake Application.otadata-flash" />
-      <item itemvalue="CMake Application.read-otadata" />
-      <item itemvalue="CMake Application.read_otadata" />
       <item itemvalue="CMake Application.__idf_asio" />
       <item itemvalue="CMake Application.bootloader-flash" />
       <item itemvalue="CMake Application.encrypted-bootloader-flash" />
@@ -892,6 +850,7 @@
       <item itemvalue="CMake Application.__ldgen_output_sections.ld" />
       <item itemvalue="CMake Application.memory_ld" />
       <item itemvalue="CMake Application.__idf_esp_timer" />
+      <item itemvalue="CMake Application.__idf_esp_websocket_client" />
       <item itemvalue="CMake Application.__idf_esp_wifi" />
       <item itemvalue="CMake Application.__idf_espcoredump" />
       <item itemvalue="CMake Application.app-flash" />
@@ -1175,7 +1134,14 @@
       <option name="project" value="LOCAL" />
       <updated>1673799566593</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="runs">
+      <created>1673802105995</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1673802105995</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1206,7 +1172,8 @@
     <MESSAGE value="moving to esp-idf" />
     <MESSAGE value="format" />
     <MESSAGE value="compiles" />
-    <option name="LAST_COMMIT_MESSAGE" value="compiles" />
+    <MESSAGE value="runs" />
+    <option name="LAST_COMMIT_MESSAGE" value="runs" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

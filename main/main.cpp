@@ -97,16 +97,17 @@ extern "C" void app_main(void) {
     ledstreamer.begin(65000);
 
 
-    wifi_init_sta();
 
-    ledstreamer.process();
+    while(1) {
+        ledstreamer.process();
 
 
-    if (ledstreamer.idle()) {
-        if (ledstreamer.timeSync.synced())
-            notify(CRGB::Green, 1000, 2000);
-        else
-            notify(CRGB::Yellow, 500, 1000);
+        if (ledstreamer.idle()) {
+            if (ledstreamer.timeSync.synced())
+                notify(CRGB::Green, 1000, 2000);
+            else
+                notify(CRGB::Yellow, 500, 1000);
+        }
     }
 
 }

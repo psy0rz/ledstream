@@ -23,7 +23,9 @@ public:
     void begin(uint16_t  port)
     {
         //create listen socket on adres/port
-        struct sockaddr_in dest_addr = {
+        struct sockaddr_in dest_addr;
+        memset(&dest_addr, 0, sizeof(dest_addr));
+        dest_addr= {
                 .sin_family = AF_INET,
                 .sin_port=htons(port),
                 .sin_addr={
