@@ -20,7 +20,6 @@
 #define QOI_COLOR_HASH(C) (C.rgba.r*3 + C.rgba.g*5 + C.rgba.b*7 + C.rgba.a*11)
 
 
-
 typedef union {
     struct {
         unsigned char r, g, b, a;
@@ -137,7 +136,7 @@ public:
 
 
 //            ESP_LOGD(TAG, "got header: showtime=%u, frame_length=%u", show_time, frame_bytes_left);
-            frame_bytes_left=frame_bytes_left-4 ; //we already used 4 for this header
+            frame_bytes_left = frame_bytes_left - 4; //we already used 4 for this header
 //            Serial.println(show_time, HEX);
             return true;
         }
@@ -159,34 +158,34 @@ public:
 //            ESP_LOGD(TAG, "index");
             px = index[op];
         } else if ((op & QOI_MASK_2) == QOI_OP_DIFF) {
-          //            ESP_LOGD(TAG, "diff");
-          px.rgba.r += ((op >> 4) & 0x03) - 2;
-          px.rgba.g += ((op >> 2) & 0x03) - 2;
-          px.rgba.b += (op & 0x03) - 2;
+            //            ESP_LOGD(TAG, "diff");
+            px.rgba.r += ((op >> 4) & 0x03) - 2;
+            px.rgba.g += ((op >> 2) & 0x03) - 2;
+            px.rgba.b += (op & 0x03) - 2;
         } else if ((op & QOI_MASK_2) == QOI_OP_LUMA) {
-          //            ESP_LOGD(TAG, "luma");
-          int b2 = bytes[0];
-          int vg = (op & 0x3f) - 32;
-          px.rgba.r += vg - 8 + ((b2 >> 4) & 0x0f);
-          px.rgba.g += vg;
-          px.rgba.b += vg - 8 + (b2 & 0x0f);
+            //            ESP_LOGD(TAG, "luma");
+            int b2 = bytes[0];
+            int vg = (op & 0x3f) - 32;
+            px.rgba.r += vg - 8 + ((b2 >> 4) & 0x0f);
+            px.rgba.g += vg;
+            px.rgba.b += vg - 8 + (b2 & 0x0f);
         } else if ((op & QOI_MASK_2) == QOI_OP_RUN) {
-          int run = (op & 0x3f) + 1;
+            int run = (op & 0x3f) + 1;
 
-          while (run && px_pos < px_len) {
+            while (run && px_pos < px_len) {
 
-            pixels[px_pos].r = px.rgba.r;
-            pixels[px_pos].g = px.rgba.g;
-            pixels[px_pos].b = px.rgba.b;
-            run--;
-            px_pos++;
-          }
-          wait_for_op = true;
-          return true;
+                pixels[px_pos].r = px.rgba.r;
+                pixels[px_pos].g = px.rgba.g;
+                pixels[px_pos].b = px.rgba.b;
+                run--;
+                px_pos++;
+            }
+            wait_for_op = true;
+            return true;
 
         } else {
-          ESP_LOGE(TAG, "Illegal operation: %d", op);
-          return true;
+            ESP_LOGE(TAG, "Illegal operation: %d", op);
+            return true;
         }
 
         px.rgba.a = 255;
@@ -201,7 +200,6 @@ public:
         return true;
 
     }
-
 
 
 };

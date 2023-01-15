@@ -1,13 +1,8 @@
 
 static const char *TAG = "ledstream";
 
-
-#include "config.h"
 #include "ledstreamer.hpp"
 #include "wifi.hpp"
-
-
-// #define FASTLED_ESP32_I2S true
 #include <FastLED.h>
 
 //#include <multicastsync.hpp>
@@ -16,6 +11,8 @@ static const char *TAG = "ledstream";
 
 #define CHANNELS 2
 #define LEDS_PER_CHAN 300
+#define CHANNEL0_PIN 12
+#define CHANNEL1_PIN 13
 
 CRGB leds[CHANNELS][LEDS_PER_CHAN];
 
