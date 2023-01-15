@@ -25,17 +25,18 @@ private:
 public:
     TimeSync timeSync;
 
-    Ledstreamer(CRGB *pixels, int px_len, uint16_t port)
-            : udpServer(port), udpBuffer(),  qois(pixels, px_len),timeSync() {
+    Ledstreamer(CRGB *pixels, int px_len)
+            : udpServer(), udpBuffer(),  qois(pixels, px_len),timeSync() {
         ready = false;
         lastPacketNr = 0;
         currentByteNr = 0;
         synced = false;
     }
 
-    void begin() {
+    void begin(uint16_t port) {
         timeSync.begin();
         udpBuffer.reset();
+        udpServer.begin(port);
     }
 
     // make sure currentPacket is valid and currentByteNr is still in sync

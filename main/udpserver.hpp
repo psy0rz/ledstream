@@ -15,10 +15,14 @@ class UdpServer {
     int sock;
 
 public:
-    explicit UdpServer(uint16_t port) {
+    UdpServer() {
 
+
+    }
+
+    void begin(uint16_t  port)
+    {
         //create listen socket on adres/port
-
         struct sockaddr_in dest_addr = {
                 .sin_family = AF_INET,
                 .sin_port=htons(port),
@@ -42,8 +46,6 @@ public:
             ESP_LOGE(UDPSERVER_TAG, "Socket unable to bind: errno %d", errno);
         }
         ESP_LOGI(UDPSERVER_TAG, "Socket bound, port %d", port);
-
-        //set source addr
 
 
     }

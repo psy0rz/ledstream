@@ -19,7 +19,7 @@ CRGB leds[CHANNELS][LEDS_PER_CHAN];
 //UdpBuffer udpBuffer = UdpBuffer();
 //TimeSync timeSync = TimeSync();
 //Qois qois = Qois();
-Ledstreamer ledstreamer = Ledstreamer((CRGB *) leds, CHANNELS * LEDS_PER_CHAN, 65000);
+Ledstreamer ledstreamer = Ledstreamer((CRGB *) leds, CHANNELS * LEDS_PER_CHAN);
 
 
 CRGB &getLed(uint16_t ledNr) {
@@ -54,6 +54,14 @@ void notify(CRGB rgb, int on, int total) {
 
 extern "C" void app_main(void) {
 
+    //Initialize NVS
+    esp_err_t ret = nvs_flash_init();
+    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
+        ESP_ERROR_CHECK(nvs_flash_erase());
+        ret = nvs_flash_init();
+    }
+    ESP_ERROR_CHECK(ret);
+
 
 #ifdef CHANNEL0_PIN
     FastLED.addLeds<WS2811, CHANNEL0_PIN>(leds[0], LEDS_PER_CHAN);
@@ -86,7 +94,7 @@ extern "C" void app_main(void) {
     wifi_init_sta();
 
     wificheck();
-    ledstreamer.begin();
+    ledstreamer.begin(65000);
 
 
     wifi_init_sta();

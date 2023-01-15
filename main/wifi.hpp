@@ -34,7 +34,7 @@ static EventGroupHandle_t s_wifi_event_group;
 #define WIFI_CONNECTED_BIT BIT0
 #define WIFI_FAIL_BIT BIT1
 
-static const char *WIFI_TAG = "wifi";
+static const char *WIFI_TAG = "wifistuff";
 
 
 static void event_handler(void *arg,
@@ -78,7 +78,7 @@ void wifi_init_sta(void) {
     strcpy(reinterpret_cast<char *>(wifi_config.sta.ssid), WIFI_SSID);
     strcpy(reinterpret_cast<char *>(wifi_config.sta.password), WIFI_PASS);
     wifi_config.sta.threshold.authmode = ESP_WIFI_SCAN_AUTH_MODE_THRESHOLD;
-    wifi_config.sta.sae_pwe_h2e = WPA3_SAE_PWE_BOTH;
+//    wifi_config.sta.sae_pwe_h2e = WPA;
 
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
     ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &wifi_config));

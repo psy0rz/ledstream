@@ -146,17 +146,11 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="format">
-      <change afterPath="$PROJECT_DIR$/main/udpserver.hpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main/wifi-config.h" afterDir="false" />
+    <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="compiles">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/main/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/ledstreamer.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/ledstreamer.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/qois.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/qois.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/timesync.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/timesync.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/udpbuffer.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/udpbuffer.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/utils.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/utils.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/udpserver.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/udpserver.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/wifi.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/wifi.hpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -217,7 +211,7 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager" selected="CMake Application.app">
+  <component name="RunManager" selected="CMake Application.app-flash">
     <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
         <option name="CLION.EXTERNAL.BUILD" enabled="true" />
@@ -1174,7 +1168,14 @@
       <option name="project" value="LOCAL" />
       <updated>1673790247817</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="compiles">
+      <created>1673799566593</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1673799566593</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1204,7 +1205,8 @@
     <MESSAGE value="\o/" />
     <MESSAGE value="moving to esp-idf" />
     <MESSAGE value="format" />
-    <option name="LAST_COMMIT_MESSAGE" value="format" />
+    <MESSAGE value="compiles" />
+    <option name="LAST_COMMIT_MESSAGE" value="compiles" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
