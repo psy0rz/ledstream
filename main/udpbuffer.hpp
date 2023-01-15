@@ -15,7 +15,7 @@
 struct udpPacketStruct {
     uint8_t packetNr;
     [[maybe_unused]] uint8_t reserved1;
-   uint16_t time;
+    uint16_t time;
     uint16_t syncOffset;
     uint8_t data[QOIS_DATA_LEN]; //contains multiple framestructs, with the first complete one starting at syncOffset
 };
@@ -33,7 +33,7 @@ private:
 public:
 
     //current currentPacket and packetlength. can be null
-    udpPacketStruct * currentPacket= nullptr;
+    udpPacketStruct *currentPacket = nullptr;
     uint16_t currentPlen;
 
 
@@ -62,8 +62,8 @@ public:
             } else {
                 udpPacketStruct &udpPacket = packets[recvIndex];
                 memset(&udpPacket, 0, sizeof(udpPacketStruct));
-                memcpy(&udpPacket,data, len);
-                plens[recvIndex]=len;
+                memcpy(&udpPacket, data, len);
+                plens[recvIndex] = len;
 
                 if (udpPacket.packetNr == lastPacketNr) {
                     ESP_LOGD(TAG, "Dropped duplicate currentPacket.");
@@ -101,7 +101,7 @@ public:
     }
 
     //sets current currentPacket to next avaiable currentPacket, or nullptr if none
-     void readNext() {
+    void readNext() {
 
         if (!available()) {
             currentPacket = nullptr;
@@ -117,10 +117,9 @@ public:
 //            ESP_LOGW(TAG, " Buffer underrun");
 
 
-        currentPacket=&packets[ret];
-        currentPlen=plens[ret];
+        currentPacket = &packets[ret];
+        currentPlen = plens[ret];
     }
-
 
 
     // current amount of buffered packets available
