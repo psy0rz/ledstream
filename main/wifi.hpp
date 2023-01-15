@@ -19,7 +19,7 @@
 #include "lwip/err.h"
 #include "lwip/sys.h"
 
-#include "config.h"
+#include "wifi-config.h"
 
 
 #define ESP_WIFI_SCAN_AUTH_MODE_THRESHOLD WIFI_AUTH_WPA2_PSK
@@ -72,22 +72,14 @@ void wifi_init_sta(void) {
     ESP_ERROR_CHECK(esp_event_handler_instance_register(
             IP_EVENT, IP_EVENT_STA_GOT_IP, &event_handler, NULL, &instance_got_ip));
 
-    wifi_config_t wifi_config = {
-            .sta =
-                    {
-                            .ssid = WIFI_SSID,
-                            .password = WIFI_PASS,
-                            /* Authmode threshold resets to WPA2 as default if password
-                             * matches WPA2 standards (pasword len => 8). If you want to
-                             * connect the device to deprecated WEP/WPA networks, Please set
-                             * the threshold value to WIFI_AUTH_WEP/WIFI_AUTH_WPA_PSK and set
-                             * the password with length and format matching to
-                             * WIFI_AUTH_WEP/WIFI_AUTH_WPA_PSK standards.
-                             */
-                            .threshold.authmode = ESP_WIFI_SCAN_AUTH_MODE_THRESHOLD,
-                            .sae_pwe_h2e = WPA3_SAE_PWE_BOTH,
-                    },
-    };
+
+    wifi_config_t wifi_config;
+
+    strcpy(reinterpret_cast<char *>(wifi_config.sta.ssid), WIFI_SSID);
+    strcpy(reinterpret_cast<char *>(wifi_config.sta.password), WIFI_PASS);
+    wifi_config.sta.threshold.authmode = ESP_WIFI_SCAN_AUTH_MODE_THRESHOLD;
+    wifi_config.sta.sae_pwe_h2e = WPA3_SAE_PWE_BOTH;
+
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
     ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &wifi_config));
     ESP_ERROR_CHECK(esp_wifi_start());

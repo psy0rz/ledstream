@@ -8,6 +8,8 @@
 // the remotehost.
 
 // We use small corrections to filter out the network jitter.
+static const char *TIMESYNCTAG = "timesync";
+
 
 struct syncPacketStruct {
     uint32_t time;
@@ -40,7 +42,7 @@ public:
 
     // can either use specified time, or time received via multicast.
     // use time=0 to only use multicast
-    void handle(uint16_t syncTime) {
+    void process(uint16_t syncTime) {
 
         // syncTime is the one that will be used. It can either get filled by
         // multicast or via lastPacketTime
@@ -60,11 +62,11 @@ public:
                 localStartTime = now;
                 remoteStartTime = syncTime;
                 startup = startup - 1;
-                ESP_LOGD(TAG, "starting %d", startup);
+                ESP_LOGD(TIMESYNCTAG, "starting %d", startup);
             } else {
 
                 if ((millis() - lastDebugOutput >= 500)) {
-                    ESP_LOGD(TAG,
+                    ESP_LOGD(TIMESYNCTAG,
                              "received=%d mS, remoteMillis=%u mS, "
                              "correction=%d, diff=%d",
                              syncTime,
@@ -75,7 +77,7 @@ public:
                 }
 
                 if (!synced()) {
-                    ESP_LOGW(TAG, "Desynced, restarting");
+                    ESP_LOGW(TIMESYNCTAG, "Desynced, restarting");
                     startup = 10;
 
                 } else {

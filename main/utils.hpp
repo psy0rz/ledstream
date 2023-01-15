@@ -19,12 +19,12 @@ void wificheck() {
 //      return;
 //
 //    //    Serial.printf("Attempting to connect to WPA SSID: %s\n", ssid);
-//    ESP_LOGI(TAG, "Connecting to wifi...");
+//    ESP_LOGI(UDPBUFFER_TAG, "Connecting to wifi...");
 //    while (WiFi.status() != WL_CONNECTED) {
 //      yield();
 //      notify(CRGB::Red, 125, 250);
 //    }
-//    ESP_LOGI(TAG, "Wifi connected.");
+//    ESP_LOGI(UDPBUFFER_TAG, "Wifi connected.");
 
     //    Serial.printf("MDNS mdns name is %s\n",
     //    ArduinoOTA.getHostname().c_str()); Serial.println(WiFi.localIP());

@@ -1,5 +1,10 @@
 
-#include <FastLED.h>
+#ifndef LEDDER_UDPBUFFER_HPP
+#define LEDDER_UDPBUFFER_HPP
+
+static const char *UDPBUFFER_TAG = "udpbuffer";
+
+
 
 //this just stores received udp packets in a circular buffer.
 
@@ -14,11 +19,13 @@
 
 struct udpPacketStruct {
     uint8_t packetNr;
-    [[maybe_unused]] uint8_t reserved1;
+    uint8_t reserved1;
     uint16_t time;
     uint16_t syncOffset;
     uint8_t data[QOIS_DATA_LEN]; //contains multiple framestructs, with the first complete one starting at syncOffset
 };
+
+auto const udpPacketSize = sizeof(udpPacketStruct);
 
 
 class UdpBuffer {
@@ -34,12 +41,14 @@ public:
 
     //current currentPacket and packetlength. can be null
     udpPacketStruct *currentPacket = nullptr;
-    uint16_t currentPlen;
+    uint16_t currentPlen=0;
 
 
     UdpBuffer() {
+        readIndex = 0;
+        recvIndex = 0;
+        lastPacketNr = 0;
 
-        reset();
     }
 
 //    void begin(int port) { udp.begin(port); }
@@ -51,36 +60,39 @@ public:
 //        full = false;
     }
 
-    // receive and store next udp frame if its available.
+    //get pointer to next recv buffer thats ready to be filled, or null if we have now more buffers left
+    udpPacketStruct  * getRecvBuffer() {
+        if (full())
+            return nullptr;
+
+        return &packets[recvIndex];
+
+    }
+
+    // process the data the just got received in the next getRecvBuffer()
     // returns received time from packet (used for timesyncronisation)
-    // 0=no time
-    uint16_t handle(char *data, uint16_t len) {
+    // 0=no time/dropped packet
+    uint16_t process(uint16_t len) {
 
         if (len) {
-            if (full()) {
-                ESP_LOGW(TAG, "buffer overflow, packet dropped.");
-            } else {
                 udpPacketStruct &udpPacket = packets[recvIndex];
-                memset(&udpPacket, 0, sizeof(udpPacketStruct));
-                memcpy(&udpPacket, data, len);
+//                memset(&udpPacket, 0, sizeof(udpPacketStruct));
+//                memcpy(&udpPacket, data, len);
                 plens[recvIndex] = len;
 
                 if (udpPacket.packetNr == lastPacketNr) {
-                    ESP_LOGD(TAG, "Dropped duplicate currentPacket.");
+                    ESP_LOGD(UDPBUFFER_TAG, "Dropped duplicate currentPacket.");
                     return (0);
                 }
-
-
                 //drop out of order currentPacket?
                 //                if (udpPacket.packetNr!=0 && udpPacket.packetNr < lastPacketNr) {
-                //                    ESP_LOGD(TAG, "Dropped out of order currentPacket. (currentPacket nr %d, last was %d) ", udpPacket.packetNr, lastPacketNr);
+                //                    ESP_LOGD(UDPBUFFER_TAG, "Dropped out of order currentPacket. (currentPacket nr %d, last was %d) ", udpPacket.packetNr, lastPacketNr);
                 //                    return;
                 //                }
 
                 const int diff = udpPacket.packetNr - lastPacketNr;
                 if (diff > 1)
-                    ESP_LOGD(TAG, "Lost %d packets.", diff);
-
+                    ESP_LOGD(UDPBUFFER_TAG, "Lost %d packets.", diff);
 
                 lastPacketNr = udpPacket.packetNr;
 
@@ -89,12 +101,9 @@ public:
                 if (recvIndex == BUFFER)
                     recvIndex = 0;
 
-
-
-                // Serial.printf("handle frame %d channel %d, recvindex=%d
+                // Serial.printf("process frame %d channel %d, recvindex=%d
                 // readindex=%d\n", udpPacket.frame, udpPacket.channel, recvIndex, readIndex);
                 return (udpPacket.time);
-            }
         }
 
         return (0);
@@ -114,7 +123,7 @@ public:
             readIndex = 0;
 
 //        if (available() == 0)
-//            ESP_LOGW(TAG, " Buffer underrun");
+//            ESP_LOGW(UDPBUFFER_TAG, " Buffer underrun");
 
 
         currentPacket = &packets[ret];
@@ -138,3 +147,5 @@ public:
     }
 
 };
+
+#endif
