@@ -20,7 +20,7 @@ static const char *TAG = "ledstream";
 CRGB leds[CHANNELS][LEDS_PER_CHAN];
 
 //UdpBuffer udpBuffer = UdpBuffer();
-//MulticastSync multicastSync = MulticastSync();
+//TimeSync timeSync = TimeSync();
 //Qois qois = Qois();
 Ledstreamer ledstreamer = Ledstreamer((CRGB *) leds, CHANNELS * LEDS_PER_CHAN);
 
@@ -32,9 +32,9 @@ CRGB &getLed(uint16_t ledNr) {
 
 bool duty_cycle(unsigned long on, unsigned long total, unsigned long starttime = 0) {
     if (!starttime)
-        return ((ledstreamer.multicastSync.remoteMillis() % total) < on);
+        return ((ledstreamer.timeSync.remoteMillis() % total) < on);
     else
-        return (((ledstreamer.multicastSync.remoteMillis() - starttime) % total) < on);
+        return (((ledstreamer.timeSync.remoteMillis() - starttime) % total) < on);
 }
 
 // notify user via led and clearing display
@@ -114,7 +114,7 @@ void loop() {
 
 
     if (ledstreamer.idle()) {
-        if (ledstreamer.multicastSync.synced())
+        if (ledstreamer.timeSync.synced())
             notify(CRGB::Green, 1000, 2000);
         else
             notify(CRGB::Yellow, 500, 1000);

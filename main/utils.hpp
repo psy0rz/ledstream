@@ -30,7 +30,7 @@ void wificheck() {
     //    Serial.printf("MDNS mdns name is %s\n",
     //    ArduinoOTA.getHostname().c_str()); Serial.println(WiFi.localIP());
 
-    //    multicastSync.begin();
+    //    timeSync.begin();
 }
 
 #endif

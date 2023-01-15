@@ -14,7 +14,7 @@ struct syncPacketStruct
   uint32_t time;
 };
 
-class MulticastSync
+class TimeSync
 {
   // unsigned long lastTime;
 

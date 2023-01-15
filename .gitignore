@@ -4,7 +4,6 @@
 .vscode/launch.json
 .vscode/ipch
 main/config.h
-/CMakeLists.txt
 /CMakeListsPrivate.txt
 cmake-build-*
 build

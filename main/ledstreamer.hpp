@@ -5,17 +5,17 @@
 #ifndef LEDSTREAM_LEDSTREAMER_HPP
 #define LEDSTREAM_LEDSTREAMER_HPP
 
-#include "multicastsync.hpp"
+#include "timesync.hpp"
 #include "qois.hpp"
 #include "udpbuffer.hpp"
 
 class Ledstreamer
 {
 public:
-  MulticastSync multicastSync;
+  TimeSync timeSync;
 
   Ledstreamer(CRGB* pixels, int px_len)
-    : multicastSync()
+    : timeSync()
     , udpBuffer()
     , qois(pixels, px_len)
   {
@@ -27,7 +27,7 @@ public:
 
   void begin()
   {
-    multicastSync.begin();
+    timeSync.begin();
     udpBuffer.reset();
   }
 
@@ -74,21 +74,21 @@ public:
 
   bool idle() const
   {
-    return (abs(diff16(multicastSync.remoteMillis(), qois.show_time)) > 1000);
+    return (abs(diff16(timeSync.remoteMillis(), qois.show_time)) > 1000);
   }
 
   void handle()
   {
     uint16_t time = udpBuffer.handle();
-    multicastSync.handle(time);
+    timeSync.handle(time);
 
     // leds are ready to be shown?
     if (ready) {
       // its time to output the prepared leds buffer?
-      if (diff16(multicastSync.remoteMillis(), qois.show_time) >= 0) {
+      if (diff16(timeSync.remoteMillis(), qois.show_time) >= 0) {
         //            if (true) {
         //                ESP_LOGD(TAG, "remotems=%u showtime=%u\n",
-        //                multicastSync.remoteMillis16(), qois.show_time);
+        //                timeSync.remoteMillis16(), qois.show_time);
         FastLED.show();
 
         ready = false;
