@@ -8,9 +8,11 @@
 #include "timesync.hpp"
 #include "qois.hpp"
 #include "udpbuffer.hpp"
+#include "udpserver.hpp"
 
 class Ledstreamer {
 private:
+    UdpServer udpServer;
     UdpBuffer udpBuffer;
     Qois qois;
 
@@ -19,11 +21,12 @@ private:
     uint8_t lastPacketNr;
     uint16_t currentByteNr;
 
+
 public:
     TimeSync timeSync;
 
-    Ledstreamer(CRGB *pixels, int px_len)
-            : timeSync(), udpBuffer(), qois(pixels, px_len) {
+    Ledstreamer(CRGB *pixels, int px_len, uint16_t port)
+            : udpServer(port), udpBuffer(),  qois(pixels, px_len),timeSync() {
         ready = false;
         lastPacketNr = 0;
         currentByteNr = 0;
@@ -53,7 +56,7 @@ public:
             if (lastPacketNr == udpBuffer.currentPacket->packetNr) {
                 return true;
             } else {
-                ESP_LOGW(TAG, "desynced by lost packet");
+                ESP_LOGW(UDPBUFFER_TAG, "desynced by lost packet");
                 synced = false;
             }
         }
@@ -62,7 +65,7 @@ public:
             // can we sync to this currentPacket?
             if (udpBuffer.currentPacket->syncOffset < QOIS_DATA_LEN) {
                 // reset everything and start from this currentPacket and syncoffset.
-                ESP_LOGW(TAG, "synced");
+                ESP_LOGW(UDPBUFFER_TAG, "synced");
                 currentByteNr = udpBuffer.currentPacket->syncOffset;
                 lastPacketNr = udpBuffer.currentPacket->packetNr;
                 qois.nextFrame();
@@ -79,16 +82,25 @@ public:
         return (abs(diff16(timeSync.remoteMillis(), qois.show_time)) > 1000);
     }
 
-    void handle() {
-        uint16_t time = udpBuffer.handle();
-        timeSync.handle(time);
+    //process receiving udp packets and updating the ledstrip
+    void process() {
+
+        //read and store udp packets, update time according to received packets
+        auto udpPacket = udpBuffer.getRecvBuffer();
+        if (udpPacket != nullptr) {
+            auto packetLen = udpServer.process(udpPacket, udpPacketSize);
+            uint16_t time = udpBuffer.process(packetLen);
+
+            if (time)
+                timeSync.process(time);
+        }
 
         // leds are ready to be shown?
         if (ready) {
             // its time to output the prepared leds buffer?
             if (diff16(timeSync.remoteMillis(), qois.show_time) >= 0) {
                 //            if (true) {
-                //                ESP_LOGD(TAG, "remotems=%u showtime=%u\n",
+                //                ESP_LOGD(UDPBUFFER_TAG, "remotems=%u showtime=%u\n",
                 //                timeSync.remoteMillis16(), qois.show_time);
                 FastLED.show();
 
@@ -101,22 +113,26 @@ public:
 
                 while (currentByteNr < udpBuffer.currentPlen - QOIS_HEADER_LEN) {
                     if (!qois.decodeByte(udpBuffer.currentPacket->data[currentByteNr])) {
+                        //we've decoded a frame, so we're ready to show the leds:
                         ready = true;
                         qois.nextFrame();
                         return;
                     }
                     currentByteNr++;
                 }
-                //                ESP_LOGD(TAG, "trying to continue in next
+                //                ESP_LOGD(UDPBUFFER_TAG, "trying to continue in next
                 //                currentPacket");
                 currentByteNr = 0;
                 udpBuffer.currentPacket = nullptr;
                 if (udpBuffer.available() == 0)
-                    ESP_LOGW(TAG, "buffer underrun");
+                    ESP_LOGW(UDPBUFFER_TAG, "buffer underrun");
             }
         }
+
     }
 
 };
+
+
 
 #endif // LEDSTREAM_LEDSTREAMER_HPP

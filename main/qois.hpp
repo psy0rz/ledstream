@@ -19,6 +19,8 @@
 #define QOI_MASK_2    0xc0 /* 11000000 */
 #define QOI_COLOR_HASH(C) (C.rgba.r*3 + C.rgba.g*5 + C.rgba.b*7 + C.rgba.a*11)
 
+static const char *QOISTAG = "qois";
+
 
 typedef union {
     struct {
@@ -58,7 +60,7 @@ public:
 
     //get ready for next frame
     void nextFrame() {
-//        ESP_LOGD(TAG, "start frame");
+//        ESP_LOGD(UDPBUFFER_TAG, "start frame");
 
         px.rgba.r = 0;
         px.rgba.g = 0;
@@ -81,8 +83,8 @@ public:
     //returns true when we need more data. false means frame is complete
     bool decodeByte(uint8_t data) {
 
-//        ESP_LOGD(TAG, "decode byte: data=%d waitshowtime=%d, waitop=%d, bytes_needed=%d, op=%d", data,wait_for_header, wait_for_op, bytes_needed, op);
-//ESP_LOGD(TAG, "framebytes=%d", frame_bytes_left);
+//        ESP_LOGD(UDPBUFFER_TAG, "decode byte: data=%d waitshowtime=%d, waitop=%d, bytes_needed=%d, op=%d", data,wait_for_header, wait_for_op, bytes_needed, op);
+//ESP_LOGD(UDPBUFFER_TAG, "framebytes=%d", frame_bytes_left);
         if (frame_bytes_left == 0) {
 
             return false;
@@ -94,7 +96,7 @@ public:
 
 //too many pixels, just drop the data
         if (px_pos >= px_len) {
-            ESP_LOGE(TAG, "too many pixels (pos=%d len=%d)", px_pos, px_len);
+            ESP_LOGE(QOISTAG, "too many pixels (pos=%d len=%d)", px_pos, px_len);
             return true;
         }
 
@@ -135,7 +137,7 @@ public:
             show_time = *(uint16_t *) &bytes[2];
 
 
-//            ESP_LOGD(TAG, "got header: showtime=%u, frame_length=%u", show_time, frame_bytes_left);
+//            ESP_LOGD(UDPBUFFER_TAG, "got header: showtime=%u, frame_length=%u", show_time, frame_bytes_left);
             frame_bytes_left = frame_bytes_left - 4; //we already used 4 for this header
 //            Serial.println(show_time, HEX);
             return true;
@@ -146,24 +148,24 @@ public:
         //from this point on we know the operation and we have all the bytes we need for QOI
 
         if (op == QOI_OP_RGB) {
-//            ESP_LOGD(TAG, "RGB");
+//            ESP_LOGD(UDPBUFFER_TAG, "RGB");
 
             px.rgba.r = bytes[0];
             px.rgba.g = bytes[1];
             px.rgba.b = bytes[2];
         } else if (op == QOI_OP_RGBA) {
-//            ESP_LOGD(TAG, "RGBA ??");
+//            ESP_LOGD(UDPBUFFER_TAG, "RGBA ??");
             //FIXME: flip
         } else if ((op & QOI_MASK_2) == QOI_OP_INDEX) {
-//            ESP_LOGD(TAG, "index");
+//            ESP_LOGD(UDPBUFFER_TAG, "index");
             px = index[op];
         } else if ((op & QOI_MASK_2) == QOI_OP_DIFF) {
-            //            ESP_LOGD(TAG, "diff");
+            //            ESP_LOGD(UDPBUFFER_TAG, "diff");
             px.rgba.r += ((op >> 4) & 0x03) - 2;
             px.rgba.g += ((op >> 2) & 0x03) - 2;
             px.rgba.b += (op & 0x03) - 2;
         } else if ((op & QOI_MASK_2) == QOI_OP_LUMA) {
-            //            ESP_LOGD(TAG, "luma");
+            //            ESP_LOGD(UDPBUFFER_TAG, "luma");
             int b2 = bytes[0];
             int vg = (op & 0x3f) - 32;
             px.rgba.r += vg - 8 + ((b2 >> 4) & 0x0f);
@@ -184,13 +186,13 @@ public:
             return true;
 
         } else {
-            ESP_LOGE(TAG, "Illegal operation: %d", op);
+            ESP_LOGE(QOISTAG, "Illegal operation: %d", op);
             return true;
         }
 
         px.rgba.a = 255;
         index[QOI_COLOR_HASH(px) % 64] = px;
-        //        ESP_LOGD(TAG, "write pixel %d", px_pos);
+        //        ESP_LOGD(UDPBUFFER_TAG, "write pixel %d", px_pos);
         pixels[px_pos].r = px.rgba.r;
         pixels[px_pos].g = px.rgba.g;
         pixels[px_pos].b = px.rgba.b;

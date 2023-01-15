@@ -1,5 +1,5 @@
 
-static const char *TAG = "ledstream";
+
 
 #include "ledstreamer.hpp"
 #include "wifi.hpp"
@@ -19,7 +19,7 @@ CRGB leds[CHANNELS][LEDS_PER_CHAN];
 //UdpBuffer udpBuffer = UdpBuffer();
 //TimeSync timeSync = TimeSync();
 //Qois qois = Qois();
-Ledstreamer ledstreamer = Ledstreamer((CRGB *) leds, CHANNELS * LEDS_PER_CHAN);
+Ledstreamer ledstreamer = Ledstreamer((CRGB *) leds, CHANNELS * LEDS_PER_CHAN, 65000);
 
 
 CRGB &getLed(uint16_t ledNr) {
@@ -52,8 +52,7 @@ void notify(CRGB rgb, int on, int total) {
 }
 
 
-void
-setup() {
+extern "C" void app_main(void) {
 
 
 #ifdef CHANNEL0_PIN
@@ -88,26 +87,11 @@ setup() {
 
     wificheck();
     ledstreamer.begin();
-}
 
 
-void loop() {
+    wifi_init_sta();
 
-//    udpBuffer.begin(65000);
-//    udpBuffer.reset();
-//    unsigned long showTime = 0;
-//    uint32_t lastTime = 0;
-
-//    udpPacketStruct *currentPacket = nullptr;
-//    bool ready = false;
-
-
-//    while (1) {
-
-
-    //backgrond processes:
-    // wificheck();
-    ledstreamer.handle();
+    ledstreamer.process();
 
 
     if (ledstreamer.idle()) {
