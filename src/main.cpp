@@ -3,7 +3,7 @@
 static const char *TAG = "ledstream";
 
 
-#include "config.h"
+#include "./wifi-config.h"
 #include "ledstreamer.hpp"
 
 #include <Arduino.h>
