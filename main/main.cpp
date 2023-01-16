@@ -11,8 +11,8 @@
 
 #define CHANNELS 2
 #define LEDS_PER_CHAN 300
-#define CHANNEL0_PIN 12
-#define CHANNEL1_PIN 13
+#define CHANNEL0_PIN 13
+#define CHANNEL1_PIN 12
 
 CRGB leds[CHANNELS][LEDS_PER_CHAN];
 
@@ -62,6 +62,7 @@ extern "C" void app_main(void) {
     }
     ESP_ERROR_CHECK(ret);
 
+    wifi_init_sta();
 
 #ifdef CHANNEL0_PIN
     FastLED.addLeds<WS2811, CHANNEL0_PIN>(leds[0], LEDS_PER_CHAN);
@@ -92,23 +93,31 @@ extern "C" void app_main(void) {
     FastLED.show();
     FastLED.setBrightness(80);
 
-    wifi_init_sta();
-
-    wificheck();
+//    wificheck();
     ledstreamer.begin(65000);
 
 
-
+    int test=0;
     while(1) {
         ledstreamer.process();
 
+        ///TEST
+//        FastLED.clear();
+//        test=(test+1)%300;
+//        leds[0][test]=CRGB::Red;
+//        leds[1][test]=CRGB::Green;
+//        FastLED.show();
+//        vTaskDelay(16/portTICK_PERIOD_MS);
 
-        if (ledstreamer.idle()) {
-            if (ledstreamer.timeSync.synced())
-                notify(CRGB::Green, 1000, 2000);
-            else
-                notify(CRGB::Yellow, 500, 1000);
-        }
+
+
+
+//        if (ledstreamer.idle()) {
+//            if (ledstreamer.timeSync.synced())
+//                notify(CRGB::Green, 1000, 2000);
+//            else
+//                notify(CRGB::Yellow, 500, 1000);
+//        }
     }
 
 }

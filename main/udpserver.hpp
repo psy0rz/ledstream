@@ -55,7 +55,9 @@ public:
     //recv next packet to buffer and returns number of bytes received.
     ssize_t process(void *buffer, uint16_t len) const {
 
-        return recv(sock, buffer, len, 0);
+
+
+        return recv(sock, buffer, len, MSG_DONTWAIT);
 
     }
 

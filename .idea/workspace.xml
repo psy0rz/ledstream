@@ -19,6 +19,7 @@
       <config projectName="ledder" targetName="__idf_newlib" />
       <config projectName="ledder" targetName="__idf_app_update" />
       <config projectName="ledder" targetName="mbedtls" />
+      <config projectName="ledder" targetName="encrypted-otadata-flash" />
       <config projectName="ledder" targetName="__idf_esp-tls" />
       <config projectName="ledder" targetName="bootloader-flash" />
       <config projectName="ledder" targetName="__idf_esp_gdbstub" />
@@ -48,6 +49,7 @@
       <config projectName="ledder" targetName="__idf_fatfs" />
       <config projectName="ledder" targetName="size-components" />
       <config projectName="ledder" targetName="erase_flash" />
+      <config projectName="ledder" targetName="erase-otadata" />
       <config projectName="ledder" targetName="__idf_hal" />
       <config projectName="ledder" targetName="__idf_esp_adc_cal" />
       <config projectName="ledder" targetName="custom_bundle" />
@@ -58,6 +60,8 @@
       <config projectName="ledder" targetName="__idf_esp_system" />
       <config projectName="ledder" targetName="__idf_unity" />
       <config projectName="ledder" targetName="__idf_cmock" />
+      <config projectName="ledder" targetName="read_otadata" />
+      <config projectName="ledder" targetName="otadata-flash" />
       <config projectName="ledder" targetName="bootloader" />
       <config projectName="ledder" targetName="gen_project_binary" />
       <config projectName="ledder" targetName="partition_table_bin" />
@@ -103,6 +107,7 @@
       <config projectName="ledder" targetName="__idf_mdns" />
       <config projectName="ledder" targetName="partition_table" />
       <config projectName="ledder" targetName="__idf_bootloader_support" />
+      <config projectName="ledder" targetName="erase_otadata" />
       <config projectName="ledder" targetName="__idf_spi_flash" />
       <config projectName="ledder" targetName="__idf_console" />
       <config projectName="ledder" targetName="__idf_esp_hw_support" />
@@ -115,6 +120,7 @@
       <config projectName="ledder" targetName="__idf_espcoredump" />
       <config projectName="ledder" targetName="__idf_FastLED-idf" />
       <config projectName="ledder" targetName="save-defconfig" />
+      <config projectName="ledder" targetName="read-otadata" />
       <config projectName="ledder" targetName="Z_DUMMY_TARGET" />
       <config projectName="ledder" targetName="partition-table" />
       <config projectName="ledder" targetName="__idf_json" />
@@ -130,6 +136,7 @@
       <config projectName="ledder" targetName="__idf_esp_adc" />
       <config projectName="ledder" targetName="encrypted-app-flash" />
       <config projectName="ledder" targetName="size" />
+      <config projectName="ledder" targetName="blank_ota_data" />
       <config projectName="ledder" targetName="__idf_esp_partition" />
       <config projectName="ledder" targetName="__idf_wear_levelling" />
     </generated>
@@ -140,9 +147,12 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="connects">
+    <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="fixes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/ledstreamer.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/ledstreamer.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/qois.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/qois.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/udpserver.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/udpserver.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sdkconfig" beforeDir="false" afterPath="$PROJECT_DIR$/sdkconfig" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -204,6 +214,11 @@
   }
 }</component>
   <component name="RunManager" selected="CMake Application.app">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="__idf_FastLED-idf" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledder" TARGET_NAME="__idf_FastLED-idf" CONFIG_NAME="Default-esp4.4">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -570,11 +585,6 @@
       </method>
     </configuration>
     <configuration name="_project_elf_src" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledder" TARGET_NAME="_project_elf_src" CONFIG_NAME="Default-esp4.4">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -964,6 +974,7 @@
       <workItem from="1673738338363" duration="1751000" />
       <workItem from="1673740137272" duration="321000" />
       <workItem from="1673867086737" duration="327000" />
+      <workItem from="1673869748910" duration="4984000" />
     </task>
     <task id="LOCAL-00001" summary="stuff">
       <created>1657441294224</created>
@@ -1182,7 +1193,14 @@
       <option name="project" value="LOCAL" />
       <updated>1673813966384</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="fixes">
+      <created>1673870305594</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1673870305594</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1215,7 +1233,8 @@
     <MESSAGE value="compiles" />
     <MESSAGE value="runs" />
     <MESSAGE value="connects" />
-    <option name="LAST_COMMIT_MESSAGE" value="connects" />
+    <MESSAGE value="fixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixes" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
