@@ -148,8 +148,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="fixes">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sdkconfig" beforeDir="false" afterPath="$PROJECT_DIR$/sdkconfig" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -973,7 +972,7 @@
       <workItem from="1673738338363" duration="1751000" />
       <workItem from="1673740137272" duration="321000" />
       <workItem from="1673867086737" duration="327000" />
-      <workItem from="1673869748910" duration="9952000" />
+      <workItem from="1673869748910" duration="10754000" />
     </task>
     <task id="LOCAL-00001" summary="stuff">
       <created>1657441294224</created>
