@@ -42,11 +42,11 @@ class Qois {
     int op;
     bool wait_for_op;
 
-    CRGB *pixels;
     int px_len;
     bool wait_for_header;
 
 public:
+    CRGB *pixels;
     uint16_t show_time;
     uint16_t frame_bytes_left;
 

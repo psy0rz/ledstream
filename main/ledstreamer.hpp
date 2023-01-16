@@ -10,6 +10,8 @@
 #include "udpbuffer.hpp"
 #include "udpserver.hpp"
 
+static const char *LEDSTREAMER_TAG = "ledstreamer";
+
 class Ledstreamer {
 private:
     UdpServer udpServer;
@@ -57,7 +59,7 @@ public:
             if (lastPacketNr == udpBuffer.currentPacket->packetNr) {
                 return true;
             } else {
-                ESP_LOGW(UDPBUFFER_TAG, "desynced by lost packet");
+                ESP_LOGW(LEDSTREAMER_TAG, "desynced by lost packet");
                 synced = false;
             }
         }
@@ -66,7 +68,7 @@ public:
             // can we sync to this currentPacket?
             if (udpBuffer.currentPacket->syncOffset < QOIS_DATA_LEN) {
                 // reset everything and start from this currentPacket and syncoffset.
-                ESP_LOGW(UDPBUFFER_TAG, "synced");
+                ESP_LOGW(LEDSTREAMER_TAG, "synced");
                 currentByteNr = udpBuffer.currentPacket->syncOffset;
                 lastPacketNr = udpBuffer.currentPacket->packetNr;
                 qois.nextFrame();
@@ -90,7 +92,8 @@ public:
         auto udpPacket = udpBuffer.getRecvBuffer();
         if (udpPacket != nullptr) {
             auto packetLen = udpServer.process(udpPacket, udpPacketSize);
-            if (packetLen) {
+
+            if (packetLen>0) {
                 uint16_t time = udpBuffer.process(packetLen);
 
                 if (time)
@@ -102,10 +105,10 @@ public:
         if (ready) {
             // its time to output the prepared leds buffer?
             if (diff16(timeSync.remoteMillis(), qois.show_time) >= 0) {
-                //            if (true) {
-                //                ESP_LOGD(UDPBUFFER_TAG, "remotems=%u showtime=%u\n",
-                //                timeSync.remoteMillis16(), qois.show_time);
+
+
                 FastLED.show();
+
 
                 ready = false;
             }
@@ -128,7 +131,7 @@ public:
                 currentByteNr = 0;
                 udpBuffer.currentPacket = nullptr;
                 if (udpBuffer.available() == 0)
-                    ESP_LOGW(UDPBUFFER_TAG, "buffer underrun");
+                    ESP_LOGW(LEDSTREAMER_TAG, "buffer underrun");
             }
         }
 
