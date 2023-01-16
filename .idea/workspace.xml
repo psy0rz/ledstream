@@ -147,14 +147,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="fixes">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/ledstreamer.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/ledstreamer.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/qois.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/qois.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/udpserver.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/udpserver.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sdkconfig" beforeDir="false" afterPath="$PROJECT_DIR$/sdkconfig" afterDir="false" />
-    </list>
+    <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="fixes" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -186,6 +179,9 @@
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
+  </component>
+  <component name="OCResolveContextSettings">
+    <option name="configuration" value="0-Default-__idf_main" />
   </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
@@ -974,7 +970,7 @@
       <workItem from="1673738338363" duration="1751000" />
       <workItem from="1673740137272" duration="321000" />
       <workItem from="1673867086737" duration="327000" />
-      <workItem from="1673869748910" duration="4984000" />
+      <workItem from="1673869748910" duration="5277000" />
     </task>
     <task id="LOCAL-00001" summary="stuff">
       <created>1657441294224</created>
@@ -1200,7 +1196,14 @@
       <option name="project" value="LOCAL" />
       <updated>1673870305594</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033" summary="fixes">
+      <created>1673874755927</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1673874755927</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
