@@ -1,0 +1,4 @@
+#!/bin/bash
+
+P=/dev/ttyUSB0
+idf.py app-flash -p $P && idf.py monitor -p $P
