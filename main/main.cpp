@@ -90,7 +90,8 @@ extern "C" void app_main(void) {
 
     FastLED.clear();
     FastLED.show();
-    FastLED.setBrightness(255);
+    FastLED.setBrightness(80);
+
     wifi_init_sta();
 
     wificheck();
