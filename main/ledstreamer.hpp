@@ -90,10 +90,12 @@ public:
         auto udpPacket = udpBuffer.getRecvBuffer();
         if (udpPacket != nullptr) {
             auto packetLen = udpServer.process(udpPacket, udpPacketSize);
-            uint16_t time = udpBuffer.process(packetLen);
+            if (packetLen) {
+                uint16_t time = udpBuffer.process(packetLen);
 
-            if (time)
-                timeSync.process(time);
+                if (time)
+                    timeSync.process(time);
+            }
         }
 
         // leds are ready to be shown?
