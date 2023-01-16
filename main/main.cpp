@@ -14,8 +14,18 @@
 #define LEDS_PER_CHAN 300
 #define CHANNEL0_PIN 13
 #define CHANNEL1_PIN 12
+#define CHANNEL2_PIN 15
+#define CHANNEL3_PIN 4
+#define CHANNEL4_PIN 2
+#define CHANNEL5_PIN 17
+#define CHANNEL6_PIN 32
+#define CHANNEL7_PIN 33
 #define COLOR_ORDER GRB
-CRGB leds[CHANNELS][LEDS_PER_CHAN];
+//CRGB leds[CHANNELS][LEDS_PER_CHAN];
+CRGB leds[8][LEDS_PER_CHAN];
+
+static const char *MAIN_TAG = "main";
+
 
 //UdpBuffer udpBuffer = UdpBuffer();
 //TimeSync timeSync = TimeSync();
@@ -55,6 +65,9 @@ void notify(CRGB rgb, int on, int total) {
 
 extern "C" void app_main(void) {
 
+    //settle
+    delay(250);
+
     //Initialize NVS
     esp_err_t ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
@@ -64,6 +77,9 @@ extern "C" void app_main(void) {
     ESP_ERROR_CHECK(ret);
 
     wifi_init_sta();
+//    ESP_LOGD(MAIN_TAG, "wifi done, pause");
+//    delay(3000);
+//    ESP_LOGD(MAIN_TAG, "GO");
 
 #ifdef CHANNEL0_PIN
     FastLED.addLeds<WS2811, CHANNEL0_PIN, COLOR_ORDER>(leds[0], LEDS_PER_CHAN);
@@ -107,7 +123,7 @@ extern "C" void app_main(void) {
 
         if (millis()-lastTime>1000)
         {
-            ESP_LOGD("main", "heartbeat");
+            ESP_LOGD(MAIN_TAG, "heartbeat");
 
             lastTime=millis();
 
