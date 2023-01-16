@@ -1,6 +1,7 @@
 
 
 
+
 #include "ledstreamer.hpp"
 #include "wifi.hpp"
 #include <FastLED.h>
@@ -13,7 +14,7 @@
 #define LEDS_PER_CHAN 300
 #define CHANNEL0_PIN 13
 #define CHANNEL1_PIN 12
-
+#define COLOR_ORDER GRB
 CRGB leds[CHANNELS][LEDS_PER_CHAN];
 
 //UdpBuffer udpBuffer = UdpBuffer();
@@ -65,41 +66,53 @@ extern "C" void app_main(void) {
     wifi_init_sta();
 
 #ifdef CHANNEL0_PIN
-    FastLED.addLeds<WS2811, CHANNEL0_PIN>(leds[0], LEDS_PER_CHAN);
+    FastLED.addLeds<WS2811, CHANNEL0_PIN, COLOR_ORDER>(leds[0], LEDS_PER_CHAN);
 #endif
 #ifdef CHANNEL1_PIN
-    FastLED.addLeds<WS2811, CHANNEL1_PIN>(leds[1], LEDS_PER_CHAN);
+    FastLED.addLeds<WS2811, CHANNEL1_PIN, COLOR_ORDER>(leds[1], LEDS_PER_CHAN);
 #endif
 #ifdef CHANNEL2_PIN
-    FastLED.addLeds<WS2811, CHANNEL2_PIN>(leds[2], LEDS_PER_CHAN);
+    FastLED.addLeds<WS2811, CHANNEL2_PIN, COLOR_ORDER>(leds[2], LEDS_PER_CHAN);
 #endif
 #ifdef CHANNEL3_PIN
-    FastLED.addLeds<WS2811, CHANNEL3_PIN>(leds[3], LEDS_PER_CHAN);
+    FastLED.addLeds<WS2811, CHANNEL3_PIN, COLOR_ORDER>(leds[3], LEDS_PER_CHAN);
 #endif
 #ifdef CHANNEL4_PIN
-    FastLED.addLeds<WS2811, CHANNEL4_PIN>(leds[4], LEDS_PER_CHAN);
+    FastLED.addLeds<WS2811, CHANNEL4_PIN, COLOR_ORDER>(leds[4], LEDS_PER_CHAN);
 #endif
 #ifdef CHANNEL5_PIN
-    FastLED.addLeds<WS2811, CHANNEL5_PIN>(leds[5], LEDS_PER_CHAN);
+    FastLED.addLeds<WS2811, CHANNEL5_PIN, COLOR_ORDER>(leds[5], LEDS_PER_CHAN);
 #endif
 #ifdef CHANNEL6_PIN
-    FastLED.addLeds<WS2811, CHANNEL6_PIN>(leds[6], LEDS_PER_CHAN);
+    FastLED.addLeds<WS2811, CHANNEL6_PIN, COLOR_ORDER>(leds[6], LEDS_PER_CHAN);
 #endif
 #ifdef CHANNEL7_PIN
-    FastLED.addLeds<WS2811, CHANNEL7_PIN>(leds[7], LEDS_PER_CHAN);
+    FastLED.addLeds<WS2811, CHANNEL7_PIN, COLOR_ORDER>(leds[7], LEDS_PER_CHAN);
 #endif
 
     FastLED.clear();
     FastLED.show();
+
     FastLED.setBrightness(80);
 
 //    wificheck();
     ledstreamer.begin(65000);
 
 
-    int test=0;
+
+
+    auto lastTime=millis();
     while(1) {
         ledstreamer.process();
+
+        if (millis()-lastTime>1000)
+        {
+            ESP_LOGD("main", "heartbeat");
+
+            lastTime=millis();
+
+        }
+
 
         ///TEST
 //        FastLED.clear();

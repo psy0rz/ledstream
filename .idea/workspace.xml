@@ -147,7 +147,12 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="fixes" />
+    <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="no more glitches">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/platforms/esp/32/clockless_i2s_esp32.h" beforeDir="false" afterPath="$PROJECT_DIR$/components/FastLED-idf/platforms/esp/32/clockless_i2s_esp32.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/ledstreamer.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/ledstreamer.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/main.cpp" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -970,7 +975,7 @@
       <workItem from="1673738338363" duration="1751000" />
       <workItem from="1673740137272" duration="321000" />
       <workItem from="1673867086737" duration="327000" />
-      <workItem from="1673869748910" duration="5277000" />
+      <workItem from="1673869748910" duration="8292000" />
     </task>
     <task id="LOCAL-00001" summary="stuff">
       <created>1657441294224</created>
@@ -1203,7 +1208,14 @@
       <option name="project" value="LOCAL" />
       <updated>1673874755927</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="no more glitches">
+      <created>1673875040702</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1673875040702</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1237,7 +1249,8 @@
     <MESSAGE value="runs" />
     <MESSAGE value="connects" />
     <MESSAGE value="fixes" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixes" />
+    <MESSAGE value="no more glitches" />
+    <option name="LAST_COMMIT_MESSAGE" value="no more glitches" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
