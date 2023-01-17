@@ -1,10 +1,7 @@
-
-
-
-
 #include "ledstreamer.hpp"
 #include "wifi.hpp"
 #include <FastLED.h>
+#include "ethernet.h"
 
 //#include <multicastsync.hpp>
 //#include <udpbuffer.hpp>
@@ -76,7 +73,13 @@ extern "C" void app_main(void) {
     }
     ESP_ERROR_CHECK(ret);
 
+    // Initialize TCP/IP network interface (should be called only once in application)
+    ESP_ERROR_CHECK(esp_netif_init());
+    // Create default event loop that running in background
+    ESP_ERROR_CHECK(esp_event_loop_create_default());
+
     wifi_init_sta();
+    ethernet_init();
 //    ESP_LOGD(MAIN_TAG, "wifi done, pause");
 //    delay(3000);
 //    ESP_LOGD(MAIN_TAG, "GO");

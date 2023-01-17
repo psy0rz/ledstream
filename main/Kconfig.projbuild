@@ -1,0 +1,88 @@
+# Copied and stripped from IDF basic ethernet example
+
+menu "LEDSTREAM CONFIG"
+
+    config LEDSTREAM_GPIO_RANGE_MIN
+        int
+        default 0
+
+    config LEDSTREAM_GPIO_RANGE_MAX
+        int
+        default 33 if IDF_TARGET_ESP32
+        default 46 if IDF_TARGET_ESP32S2
+        default 19 if IDF_TARGET_ESP32C3
+        default 48 if IDF_TARGET_ESP32S3
+
+    config LEDSTREAM_USE_INTERNAL_ETHERNET
+        depends on IDF_TARGET_ESP32
+        select ETH_USE_ESP32_EMAC
+        bool "Internal EMAC"
+        default "y"
+        help
+            Use internal Ethernet MAC controller.
+
+    if LEDSTREAM_USE_INTERNAL_ETHERNET
+        choice LEDSTREAM_ETH_PHY_MODEL
+            prompt "Ethernet PHY Device"
+            default LEDSTREAM_ETH_PHY_LAN87XX
+            help
+                Select the Ethernet PHY device to use in the example.
+
+
+
+            config LEDSTREAM_ETH_PHY_LAN87XX
+                bool "LAN87xx"
+                help
+                    NOTE: Defaults are for WT32-ETH01 ESP32 (psy0rz)
+
+                    Below chips are supported:
+                    LAN8710A is a small footprint MII/RMII 10/100 Ethernet Transceiver with HP Auto-MDIX and
+                        flexPWR® Technology.
+                    LAN8720A is a small footprint RMII 10/100 Ethernet Transceiver with HP Auto-MDIX Support.
+                    LAN8740A/LAN8741A is a small footprint MII/RMII 10/100 Energy Efficient Ethernet Transceiver
+                        with HP Auto-MDIX and flexPWR® Technology.
+                    LAN8742A is a small footprint RMII 10/100 Ethernet Transceiver with HP Auto-MDIX and
+                        flexPWR® Technology.
+                    Goto https://www.microchip.com for more information about them.
+
+        endchoice # LEDSTREAM_ETH_PHY_MODEL
+
+        config LEDSTREAM_ETH_MDC_GPIO
+            int "SMI MDC GPIO number"
+            range LEDSTREAM_GPIO_RANGE_MIN LEDSTREAM_GPIO_RANGE_MAX
+            default 23
+            help
+                Set the GPIO number used by SMI MDC.
+
+        config LEDSTREAM_ETH_MDIO_GPIO
+            int "SMI MDIO GPIO number"
+            range LEDSTREAM_GPIO_RANGE_MIN LEDSTREAM_GPIO_RANGE_MAX
+            default 18
+            help
+                Set the GPIO number used by SMI MDIO.
+
+        config LEDSTREAM_ETH_PHY_RST_GPIO
+            int "PHY Reset GPIO number"
+            range -1 LEDSTREAM_GPIO_RANGE_MAX
+            default -1
+            help
+                Set the GPIO number used to reset PHY chip.
+                Set to -1 to disable PHY chip hardware reset.
+
+        config LEDSTREAM_ETH_EXT_CLOCK_ACTIVATE
+            int "Pin to activate external clock"
+            range LEDSTREAM_GPIO_RANGE_MIN LEDSTREAM_GPIO_RANGE_MAX
+            default 16
+            help
+               This is needed for WT32-ETH01 ESP32 (psy0rz)
+
+
+        config LEDSTREAM_ETH_PHY_ADDR
+            int "PHY Address"
+            range 0 31
+            default 1
+            help
+                Set PHY address according your board schematic.
+    endif # LEDSTREAM_USE_INTERNAL_ETHERNET
+
+endmenu
