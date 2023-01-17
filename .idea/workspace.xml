@@ -147,14 +147,11 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="fixes">
-      <change afterPath="$PROJECT_DIR$/main/ethernet.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main/ethernet.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../esp/esp-idf4.4/examples/ethernet/basic/main/ethernet_example_main.c" beforeDir="false" afterPath="$PROJECT_DIR$/../esp/esp-idf4.4/examples/ethernet/basic/main/ethernet_example_main.c" afterDir="false" />
+    <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="adding ethernet for WT32-ETH01 ESP32">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/main/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/ledstreamer.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/ledstreamer.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/wifi.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/wifi.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/timesync.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/timesync.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sdkconfig" beforeDir="false" afterPath="$PROJECT_DIR$/sdkconfig" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -981,7 +978,7 @@
       <workItem from="1673740137272" duration="321000" />
       <workItem from="1673867086737" duration="327000" />
       <workItem from="1673869748910" duration="12468000" />
-      <workItem from="1673912130907" duration="2521000" />
+      <workItem from="1673912130907" duration="6522000" />
     </task>
     <task id="LOCAL-00001" summary="stuff">
       <created>1657441294224</created>
@@ -1235,7 +1232,14 @@
       <option name="project" value="LOCAL" />
       <updated>1673883900329</updated>
     </task>
-    <option name="localTasksCounter" value="37" />
+    <task id="LOCAL-00037" summary="adding ethernet for WT32-ETH01 ESP32">
+      <created>1673914824683</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1673914824683</updated>
+    </task>
+    <option name="localTasksCounter" value="38" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1270,7 +1274,8 @@
     <MESSAGE value="connects" />
     <MESSAGE value="no more glitches" />
     <MESSAGE value="fixes" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixes" />
+    <MESSAGE value="adding ethernet for WT32-ETH01 ESP32" />
+    <option name="LAST_COMMIT_MESSAGE" value="adding ethernet for WT32-ETH01 ESP32" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

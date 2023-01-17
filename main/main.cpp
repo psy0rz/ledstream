@@ -7,13 +7,13 @@
 //#include <udpbuffer.hpp>
 //#include <qois.hpp>
 
-#define CHANNELS 2
-#define LEDS_PER_CHAN 300
-#define CHANNEL0_PIN 13
-#define CHANNEL1_PIN 12
+#define CHANNELS 8
+#define LEDS_PER_CHAN 256
+#define CHANNEL0_PIN 12
+#define CHANNEL1_PIN 2
 #define CHANNEL2_PIN 15
 #define CHANNEL3_PIN 4
-#define CHANNEL4_PIN 2
+#define CHANNEL4_PIN 13
 #define CHANNEL5_PIN 17
 #define CHANNEL6_PIN 32
 #define CHANNEL7_PIN 33
@@ -80,9 +80,6 @@ extern "C" void app_main(void) {
 
     wifi_init_sta();
     ethernet_init();
-//    ESP_LOGD(MAIN_TAG, "wifi done, pause");
-//    delay(3000);
-//    ESP_LOGD(MAIN_TAG, "GO");
 
 #ifdef CHANNEL0_PIN
     FastLED.addLeds<WS2811, CHANNEL0_PIN, COLOR_ORDER>(leds[0], LEDS_PER_CHAN);
@@ -126,7 +123,7 @@ extern "C" void app_main(void) {
 
         if (millis()-lastTime>1000)
         {
-            ESP_LOGD(MAIN_TAG, "heartbeat");
+            ESP_LOGI(MAIN_TAG, "heartbeat");
 
             lastTime=millis();
 
