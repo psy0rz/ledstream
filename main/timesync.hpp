@@ -62,11 +62,11 @@ public:
                 localStartTime = now;
                 remoteStartTime = syncTime;
                 startup = startup - 1;
-                ESP_LOGD(TIMESYNCTAG, "starting %d", startup);
+                ESP_LOGI(TIMESYNCTAG, "starting %d", startup);
             } else {
 
                 if ((millis() - lastDebugOutput >= 500)) {
-                    ESP_LOGD(TIMESYNCTAG,
+                    ESP_LOGI(TIMESYNCTAG,
                              "received=%d mS, remoteMillis=%u mS, "
                              "correction=%d, diff=%d",
                              syncTime,

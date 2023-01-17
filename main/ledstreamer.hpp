@@ -94,7 +94,7 @@ public:
             auto packetLen = udpServer.process(udpPacket, udpPacketSize);
 
             if (packetLen>0) {
-                ESP_LOGW(LEDSTREAMER_TAG, "packet %d bytes", packetLen);
+                ESP_LOGD(LEDSTREAMER_TAG, "packet %d bytes", packetLen);
 
                 uint16_t time = udpBuffer.process(packetLen);
 
