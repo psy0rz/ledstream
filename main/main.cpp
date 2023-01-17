@@ -13,7 +13,7 @@
 #define CHANNEL1_PIN 2
 #define CHANNEL2_PIN 15
 #define CHANNEL3_PIN 4
-#define CHANNEL4_PIN 13
+#define CHANNEL4_PIN 14
 #define CHANNEL5_PIN 17
 #define CHANNEL6_PIN 32
 #define CHANNEL7_PIN 33
@@ -109,7 +109,8 @@ extern "C" void app_main(void) {
     FastLED.clear();
     FastLED.show();
 
-    FastLED.setBrightness(50);
+//    FastLED.setBrightness(50);
+FastLED.setMaxPowerInVoltsAndMilliamps(5,2500);
 
 //    wificheck();
     ledstreamer.begin(65000);
