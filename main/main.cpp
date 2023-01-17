@@ -109,7 +109,7 @@ extern "C" void app_main(void) {
     FastLED.clear();
     FastLED.show();
 
-    FastLED.setBrightness(80);
+    FastLED.setBrightness(50);
 
 //    wificheck();
     ledstreamer.begin(65000);
