@@ -149,15 +149,10 @@
   <component name="ChangeListManager">
     <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="configstuf">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/flashmon" beforeDir="false" afterPath="$PROJECT_DIR$/flashmon" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/Kconfig.projbuild" beforeDir="false" afterPath="$PROJECT_DIR$/main/Kconfig.projbuild" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/ethernet.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/ethernet.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/ethernet.h" beforeDir="false" afterPath="$PROJECT_DIR$/main/ethernet.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/ledstreamer.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/ledstreamer.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/main.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/udpbuffer.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/udpbuffer.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/wifi.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/wifi.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sdkconfig" beforeDir="false" afterPath="$PROJECT_DIR$/sdkconfig.defaults" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -992,7 +987,7 @@
       <workItem from="1674039554633" duration="104000" />
       <workItem from="1674039678221" duration="755000" />
       <workItem from="1674041460876" duration="273000" />
-      <workItem from="1674041756578" duration="7692000" />
+      <workItem from="1674041756578" duration="9516000" />
     </task>
     <task id="LOCAL-00001" summary="stuff">
       <created>1657441294224</created>
@@ -1274,7 +1269,14 @@
       <option name="project" value="LOCAL" />
       <updated>1674050820395</updated>
     </task>
-    <option name="localTasksCounter" value="41" />
+    <task id="LOCAL-00041" summary="configstuf">
+      <created>1674050824108</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1674050824108</updated>
+    </task>
+    <option name="localTasksCounter" value="42" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

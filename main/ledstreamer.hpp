@@ -53,9 +53,12 @@ public:
         if (udpBuffer.currentPacket == nullptr)
             return false;
 
+//        ESP_LOGW(LEDSTREAMER_TAG,"packetnr %d", udpBuffer.currentPacket->packetNr);
+
         if (synced) {
             // still synced?
             lastPacketNr++;
+
             if (lastPacketNr == udpBuffer.currentPacket->packetNr) {
                 return true;
             } else {
