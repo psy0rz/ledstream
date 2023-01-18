@@ -3,35 +3,39 @@
 #include <FastLED.h>
 #include "ethernet.h"
 
-//#include <multicastsync.hpp>
-//#include <udpbuffer.hpp>
-//#include <qois.hpp>
 
-#define CHANNELS 8
-#define LEDS_PER_CHAN 256
-#define CHANNEL0_PIN 12
-#define CHANNEL1_PIN 2
-#define CHANNEL2_PIN 15
-#define CHANNEL3_PIN 4
-#define CHANNEL4_PIN 14
-#define CHANNEL5_PIN 17
-#define CHANNEL6_PIN 32
-#define CHANNEL7_PIN 33
 #define COLOR_ORDER GRB
-//CRGB leds[CHANNELS][LEDS_PER_CHAN];
-CRGB leds[8][LEDS_PER_CHAN];
+
+//note: is there a better way of doing this?
+#ifdef CONFIG_LEDSTREAM_CHANNEL7_PIN
+#define CHANNELS 8
+#elif CONFIG_LEDSTREAM_CHANNEL6_PIN
+#define CHANNELS 7
+#elif CONFIG_LEDSTREAM_CHANNEL5_PIN
+#define CHANNELS 6
+#elif CONFIG_LEDSTREAM_CHANNEL4_PIN
+#define CHANNELS 5
+#elif CONFIG_LEDSTREAM_CHANNEL3_PIN
+#define CHANNELS 4
+#elif CONFIG_LEDSTREAM_CHANNEL2_PIN
+#define CHANNELS 3
+#elif CONFIG_LEDSTREAM_CHANNEL1_PIN
+#define CHANNELS 2
+#elif CONFIG_LEDSTREAM_CHANNEL0_PIN
+#define CHANNELS 1
+#endif
+
+
+CRGB leds[CHANNELS][CONFIG_LEDSTREAM_LEDS_PER_CHANNEL];
 
 static const char *MAIN_TAG = "main";
 
 
-//UdpBuffer udpBuffer = UdpBuffer();
-//TimeSync timeSync = TimeSync();
-//Qois qois = Qois();
-Ledstreamer ledstreamer = Ledstreamer((CRGB *) leds, CHANNELS * LEDS_PER_CHAN);
+Ledstreamer ledstreamer = Ledstreamer((CRGB *) leds, CHANNELS * CONFIG_LEDSTREAM_LEDS_PER_CHANNEL);
 
 
 CRGB &getLed(uint16_t ledNr) {
-    return (leds[ledNr / LEDS_PER_CHAN][ledNr % LEDS_PER_CHAN]);
+    return (leds[ledNr / CONFIG_LEDSTREAM_LEDS_PER_CHANNEL][ledNr % CONFIG_LEDSTREAM_LEDS_PER_CHANNEL]);
 }
 
 
@@ -81,52 +85,52 @@ extern "C" void app_main(void) {
     wifi_init_sta();
     ethernet_init();
 
-#ifdef CHANNEL0_PIN
-    FastLED.addLeds<WS2811, CHANNEL0_PIN, COLOR_ORDER>(leds[0], LEDS_PER_CHAN);
+#ifdef CONFIG_LEDSTREAM_CHANNEL0_PIN
+    FastLED.addLeds<WS2811, CONFIG_LEDSTREAM_CHANNEL0_PIN, COLOR_ORDER>(leds[0], CONFIG_LEDSTREAM_LEDS_PER_CHANNEL);
 #endif
-#ifdef CHANNEL1_PIN
-    FastLED.addLeds<WS2811, CHANNEL1_PIN, COLOR_ORDER>(leds[1], LEDS_PER_CHAN);
+#ifdef CONFIG_LEDSTREAM_CHANNEL1_PIN
+    FastLED.addLeds<WS2811, CONFIG_LEDSTREAM_CHANNEL1_PIN, COLOR_ORDER>(leds[1], CONFIG_LEDSTREAM_LEDS_PER_CHANNEL);
 #endif
-#ifdef CHANNEL2_PIN
-    FastLED.addLeds<WS2811, CHANNEL2_PIN, COLOR_ORDER>(leds[2], LEDS_PER_CHAN);
+#ifdef CONFIG_LEDSTREAM_CHANNEL2_PIN
+    FastLED.addLeds<WS2811, CONFIG_LEDSTREAM_CHANNEL2_PIN, COLOR_ORDER>(leds[2], CONFIG_LEDSTREAM_LEDS_PER_CHANNEL);
 #endif
-#ifdef CHANNEL3_PIN
-    FastLED.addLeds<WS2811, CHANNEL3_PIN, COLOR_ORDER>(leds[3], LEDS_PER_CHAN);
+#ifdef CONFIG_LEDSTREAM_CHANNEL3_PIN
+    FastLED.addLeds<WS2811, CONFIG_LEDSTREAM_CHANNEL3_PIN, COLOR_ORDER>(leds[3], CONFIG_LEDSTREAM_LEDS_PER_CHANNEL);
 #endif
-#ifdef CHANNEL4_PIN
-    FastLED.addLeds<WS2811, CHANNEL4_PIN, COLOR_ORDER>(leds[4], LEDS_PER_CHAN);
+#ifdef CONFIG_LEDSTREAM_CHANNEL4_PIN
+    FastLED.addLeds<WS2811, CONFIG_LEDSTREAM_CHANNEL4_PIN, COLOR_ORDER>(leds[4], CONFIG_LEDSTREAM_LEDS_PER_CHANNEL);
 #endif
-#ifdef CHANNEL5_PIN
-    FastLED.addLeds<WS2811, CHANNEL5_PIN, COLOR_ORDER>(leds[5], LEDS_PER_CHAN);
+#ifdef CONFIG_LEDSTREAM_CHANNEL5_PIN
+    FastLED.addLeds<WS2811, CONFIG_LEDSTREAM_CHANNEL5_PIN, COLOR_ORDER>(leds[5], CONFIG_LEDSTREAM_LEDS_PER_CHANNEL);
 #endif
-#ifdef CHANNEL6_PIN
-    FastLED.addLeds<WS2811, CHANNEL6_PIN, COLOR_ORDER>(leds[6], LEDS_PER_CHAN);
+#ifdef CONFIG_LEDSTREAM_CHANNEL6_PIN
+    FastLED.addLeds<WS2811, CONFIG_LEDSTREAM_CHANNEL6_PIN, COLOR_ORDER>(leds[6], CONFIG_LEDSTREAM_LEDS_PER_CHANNEL);
 #endif
-#ifdef CHANNEL7_PIN
-    FastLED.addLeds<WS2811, CHANNEL7_PIN, COLOR_ORDER>(leds[7], LEDS_PER_CHAN);
+#ifdef CONFIG_LEDSTREAM_CHANNEL7_PIN
+    FastLED.addLeds<WS2811, CONFIG_LEDSTREAM_CHANNEL7_PIN, COLOR_ORDER>(leds[7], CONFIG_LEDSTREAM_LEDS_PER_CHANNEL);
 #endif
 
     FastLED.clear();
     FastLED.show();
 
 //    FastLED.setBrightness(50);
-FastLED.setMaxPowerInVoltsAndMilliamps(5,2500);
-
+    if (CONFIG_LEDSTREAM_MAX_MILLIAMPS > 0)
+        FastLED.setMaxPowerInVoltsAndMilliamps(5, CONFIG_LEDSTREAM_MAX_MILLIAMPS);
 //    wificheck();
     ledstreamer.begin(65000);
 
 
+    auto lastTime = millis();
+    ESP_LOGI(MAIN_TAG, "RAM left %d", esp_get_free_heap_size());
 
 
-    auto lastTime=millis();
-    while(1) {
+    while (1) {
         ledstreamer.process();
 
-        if (millis()-lastTime>1000)
-        {
+        if (millis() - lastTime > 1000) {
             ESP_LOGI(MAIN_TAG, "heartbeat");
 
-            lastTime=millis();
+            lastTime = millis();
 
         }
 

@@ -85,4 +85,77 @@ menu "LEDSTREAM CONFIG"
                 Set PHY address according your board schematic.
     endif # LEDSTREAM_USE_INTERNAL_ETHERNET
 
+    config LEDSTREAM_LEDS_PER_CHANNEL
+        int "Leds per channel"
+        range 1 600
+        default 256
+
+
+    config LEDSTREAM_CHANNEL0_PIN
+        int "Channel 0 pin"
+        range -1 LEDSTREAM_GPIO_RANGE_MAX
+        default 12
+        help
+            Use -1 to disable. (only to this with the last channels)
+
+    config LEDSTREAM_CHANNEL1_PIN
+        int "Channel 1 pin"
+        range -1 LEDSTREAM_GPIO_RANGE_MAX
+        default 2
+        help
+            Use -1 to disable. (only to this with the last channels)
+
+    config LEDSTREAM_CHANNEL2_PIN
+        int "Channel 2 pin"
+        range -1 LEDSTREAM_GPIO_RANGE_MAX
+        default 15
+        help
+            Use -1 to disable. (only to this with the last channels)
+
+    config LEDSTREAM_CHANNEL3_PIN
+        int "Channel 3 pin"
+        range -1 LEDSTREAM_GPIO_RANGE_MAX
+        default 4
+        help
+            Use -1 to disable. (only to this with the last channels)
+
+    config LEDSTREAM_CHANNEL4_PIN
+        int "Channel 4 pin"
+        range -1 LEDSTREAM_GPIO_RANGE_MAX
+        default 14
+        help
+            Use -1 to disable. (only to this with the last channels)
+
+    config LEDSTREAM_CHANNEL5_PIN
+        int "Channel 5 pin"
+        range -1 LEDSTREAM_GPIO_RANGE_MAX
+        default 17
+        help
+            Use -1 to disable. (only to this with the last channels)
+
+    config LEDSTREAM_CHANNEL6_PIN
+        int "Channel 6 pin"
+        range -1 LEDSTREAM_GPIO_RANGE_MAX
+        default 32
+        help
+            Use -1 to disable. (only to this with the last channels)
+
+    config LEDSTREAM_CHANNEL7_PIN
+        int "Channel 7 pin"
+        range -1 LEDSTREAM_GPIO_RANGE_MAX
+        default 33
+        help
+            Use -1 to disable. (only to this with the last channels)
+
+    config LEDSTREAM_UDP_BUFFERS
+        int "UDP buffers"
+        range 1 600
+        default 50
+
+    config LEDSTREAM_MAX_MILLIAMPS
+        int "Max milliamps"
+        range -1 100000
+        default -1
+
+
 endmenu

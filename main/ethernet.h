@@ -4,6 +4,6 @@
 
 #ifndef LEDDER_ETHERNET_H
 #define LEDDER_ETHERNET_H
-void ethernet_init(void);
+bool ethernet_init(void);
 
 #endif //LEDDER_ETHERNET_H

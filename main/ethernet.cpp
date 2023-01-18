@@ -62,7 +62,7 @@ static void got_ip_event_handler(void *arg, esp_event_base_t event_base,
 }
 
 
-void ethernet_init(void) {
+bool ethernet_init(void) {
 //    vTaskDelay(1000/portTICK_PERIOD_MS);
 
 //    // Initialize TCP/IP network interface (should be called only once in application)
@@ -107,7 +107,8 @@ void ethernet_init(void) {
 #endif
     esp_eth_config_t config = ETH_DEFAULT_CONFIG(mac, phy);
     esp_eth_handle_t eth_handle = NULL;
-    ESP_ERROR_CHECK(esp_eth_driver_install(&config, &eth_handle));
+    if (esp_eth_driver_install(&config, &eth_handle)!=ESP_OK)
+        return (false);
     /* attach Ethernet driver to TCP/IP stack */
     ESP_ERROR_CHECK(esp_netif_attach(eth_netif, esp_eth_new_netif_glue(eth_handle)));
 #endif //CONFIG_LEDSTREAM_USE_INTERNAL_ETHERNET
@@ -123,5 +124,6 @@ void ethernet_init(void) {
 #endif // CONFIG_LEDSTREAM_USE_INTERNAL_ETHERNET
 
 
+    return (true);
 
 }

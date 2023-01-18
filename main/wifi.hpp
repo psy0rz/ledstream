@@ -56,6 +56,13 @@ static void event_handler(void *arg,
 
 
 void wifi_init_sta(void) {
+
+
+#ifndef WIFI_SSID
+    ESP_LOGW(WIFI_TAG,"No SSID specified, wifi disabled");
+    return ;
+#endif
+
     s_wifi_event_group = xEventGroupCreate();
 
 //    ESP_ERROR_CHECK(esp_netif_init());

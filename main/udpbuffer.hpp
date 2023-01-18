@@ -10,7 +10,7 @@ static const char *UDPBUFFER_TAG = "udpbuffer";
 
 
 //max number of currentPacket to buffer
-#define BUFFER 10
+
 
 //#define QOIS_DATA_LEN 1472-4
 #define QOIS_HEADER_LEN 6
@@ -30,8 +30,8 @@ auto const udpPacketSize = sizeof(udpPacketStruct);
 
 class UdpBuffer {
 private:
-    udpPacketStruct packets[BUFFER];
-    uint16_t plens[BUFFER];
+    udpPacketStruct packets[CONFIG_LEDSTREAM_UDP_BUFFERS];
+    uint16_t plens[CONFIG_LEDSTREAM_UDP_BUFFERS];
     uint8_t readIndex;
     uint8_t recvIndex;
 //    bool full;
@@ -98,7 +98,7 @@ public:
 
                 // update indexes
                 recvIndex++;
-                if (recvIndex == BUFFER)
+                if (recvIndex == CONFIG_LEDSTREAM_UDP_BUFFERS)
                     recvIndex = 0;
 
                 // Serial.printf("process frame %d channel %d, recvindex=%d
@@ -119,7 +119,7 @@ public:
 
         int ret = readIndex;
         readIndex++;
-        if (readIndex == BUFFER)
+        if (readIndex == CONFIG_LEDSTREAM_UDP_BUFFERS)
             readIndex = 0;
 
 //        if (available() == 0)
@@ -136,14 +136,14 @@ public:
 
         int diff = (recvIndex - readIndex);
         if (diff < 0)
-            diff = diff + BUFFER;
+            diff = diff + CONFIG_LEDSTREAM_UDP_BUFFERS;
 
         return (diff);
     }
 
     bool full() const {
         //1 less because we need to keep oldest currentPacket valid for user
-        return (available() == BUFFER - 1);
+        return (available() == CONFIG_LEDSTREAM_UDP_BUFFERS - 1);
     }
 
 };
