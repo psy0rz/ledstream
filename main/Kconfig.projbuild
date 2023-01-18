@@ -85,6 +85,12 @@ menu "LEDSTREAM CONFIG"
                 Set PHY address according your board schematic.
     endif # LEDSTREAM_USE_INTERNAL_ETHERNET
 
+    config LEDSTREAM_CHANNELS
+        int "Channels"
+        range 1 8
+        default 8
+
+
     config LEDSTREAM_LEDS_PER_CHANNEL
         int "Leds per channel"
         range 1 600

@@ -81,7 +81,7 @@ public:
                 plens[recvIndex] = len;
 
                 if (udpPacket.packetNr == lastPacketNr) {
-                    ESP_LOGD(UDPBUFFER_TAG, "Dropped duplicate currentPacket.");
+                    ESP_LOGW(UDPBUFFER_TAG, "Dropped duplicate currentPacket.");
                     return (0);
                 }
                 //drop out of order currentPacket?
@@ -92,7 +92,7 @@ public:
 
                 const int diff = udpPacket.packetNr - lastPacketNr;
                 if (diff > 1)
-                    ESP_LOGD(UDPBUFFER_TAG, "Lost %d packets.", diff);
+                    ESP_LOGW(UDPBUFFER_TAG, "Lost %d packets.", diff-1);
 
                 lastPacketNr = udpPacket.packetNr;
 
