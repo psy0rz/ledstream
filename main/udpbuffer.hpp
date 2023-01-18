@@ -101,6 +101,11 @@ public:
                 if (recvIndex == CONFIG_LEDSTREAM_UDP_BUFFERS)
                     recvIndex = 0;
 
+                if (full())
+                {
+                    ESP_LOGW(UDPBUFFER_TAG, "buffer overflow");
+                }
+
                 // Serial.printf("process frame %d channel %d, recvindex=%d
                 // readindex=%d\n", udpPacket.frame, udpPacket.channel, recvIndex, readIndex);
                 return (udpPacket.time);
