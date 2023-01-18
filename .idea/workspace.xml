@@ -147,7 +147,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="fixes">
+    <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="configstuf">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/flashmon" beforeDir="false" afterPath="$PROJECT_DIR$/flashmon" afterDir="false" />
@@ -992,7 +992,7 @@
       <workItem from="1674039554633" duration="104000" />
       <workItem from="1674039678221" duration="755000" />
       <workItem from="1674041460876" duration="273000" />
-      <workItem from="1674041756578" duration="7337000" />
+      <workItem from="1674041756578" duration="7692000" />
     </task>
     <task id="LOCAL-00001" summary="stuff">
       <created>1657441294224</created>
@@ -1267,7 +1267,14 @@
       <option name="project" value="LOCAL" />
       <updated>1673966327144</updated>
     </task>
-    <option name="localTasksCounter" value="40" />
+    <task id="LOCAL-00040" summary="configstuf">
+      <created>1674050820395</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1674050820395</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1304,7 +1311,8 @@
     <MESSAGE value="fixes" />
     <MESSAGE value="adding ethernet for WT32-ETH01 ESP32" />
     <MESSAGE value="w00p works with 8 * 256 leds" />
-    <option name="LAST_COMMIT_MESSAGE" value="w00p works with 8 * 256 leds" />
+    <MESSAGE value="configstuf" />
+    <option name="LAST_COMMIT_MESSAGE" value="configstuf" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
