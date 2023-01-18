@@ -61,7 +61,7 @@ void wifi_init_sta(void) {
 #ifndef WIFI_SSID
     ESP_LOGW(WIFI_TAG,"No SSID specified, wifi disabled");
     return ;
-#endif
+#else
 
     s_wifi_event_group = xEventGroupCreate();
 
@@ -116,4 +116,6 @@ void wifi_init_sta(void) {
 //    } else {
 //        ESP_LOGE(WIFI_TAG, "UNEXPECTED EVENT");
 //    }
+
+#endif
 }
