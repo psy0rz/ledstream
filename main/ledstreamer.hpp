@@ -28,7 +28,7 @@ public:
     TimeSync timeSync;
 
     Ledstreamer(CRGB *pixels, int px_len)
-            : udpServer(), udpBuffer(),  qois(pixels, px_len),timeSync() {
+            : udpServer(), udpBuffer(), qois(pixels, px_len), timeSync() {
         ready = false;
         lastPacketNr = 0;
         currentByteNr = 0;
@@ -96,7 +96,7 @@ public:
         if (udpPacket != nullptr) {
             auto packetLen = udpServer.process(udpPacket, udpPacketSize);
 
-            if (packetLen>0) {
+            if (packetLen > 0) {
                 ESP_LOGD(LEDSTREAMER_TAG, "packet %d bytes", packetLen);
 
                 uint16_t time = udpBuffer.process(packetLen);
@@ -112,7 +112,9 @@ public:
             if (diff16(timeSync.remoteMillis(), qois.show_time) >= 0) {
 
 
+//                auto start = micros();
                 FastLED.show();
+//                ESP_LOGW(LEDSTREAMER_TAG, "takes %lu", micros() - start);
 
 
                 ready = false;
@@ -143,7 +145,6 @@ public:
     }
 
 };
-
 
 
 #endif // LEDSTREAM_LEDSTREAMER_HPP
