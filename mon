@@ -1,0 +1,8 @@
+#!/bin/bash
+
+
+set -e
+
+P=/dev/ttyUSB0
+
+idf.py -D SDKCONFIG=$1 monitor -p $P

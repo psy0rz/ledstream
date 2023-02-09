@@ -112,7 +112,17 @@ public:
             if (diff16(timeSync.remoteMillis(), qois.show_time) >= 0) {
 
 
-//                auto start = micros();
+//                static bool flip = false;
+//                flip = !flip;
+//
+////                auto start = micros();
+//                if (flip) {
+//                    FastLED.showColor(CRGB::Red);
+//                }
+//                else{
+//                  FastLED.showColor(CRGB::Green);
+//                }
+
                 FastLED.show();
 //                ESP_LOGW(LEDSTREAMER_TAG, "takes %lu", micros() - start);
 
