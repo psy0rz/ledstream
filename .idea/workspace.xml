@@ -149,10 +149,6 @@
   <component name="ChangeListManager">
     <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="workaround (max 50fps)">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/platforms/esp/32/clockless_i2s_esp32.h" beforeDir="false" afterPath="$PROJECT_DIR$/components/FastLED-idf/platforms/esp/32/clockless_i2s_esp32.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/flashmon" beforeDir="false" afterPath="$PROJECT_DIR$/flashmon" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/ledstreamer.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/ledstreamer.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/main.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -990,7 +986,7 @@
       <workItem from="1674041756578" duration="9516000" />
       <workItem from="1675022602179" duration="7000" />
       <workItem from="1675022710786" duration="1379000" />
-      <workItem from="1675894551335" duration="3933000" />
+      <workItem from="1675894551335" duration="5097000" />
     </task>
     <task id="LOCAL-00001" summary="stuff">
       <created>1657441294224</created>
@@ -1286,7 +1282,14 @@
       <option name="project" value="LOCAL" />
       <updated>1674059654322</updated>
     </task>
-    <option name="localTasksCounter" value="43" />
+    <task id="LOCAL-00043" summary="workaround (max 50fps)">
+      <created>1675949408344</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1675949408344</updated>
+    </task>
+    <option name="localTasksCounter" value="44" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
