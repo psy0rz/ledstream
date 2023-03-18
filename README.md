@@ -35,3 +35,5 @@ main/wifi-config.h:
 ```
 
 Now configure ledder to stream to your display. The number of leds and number of channels should exactly match!
+
+In ledder you will find displayconf-example.js, the examples that use DisplayQOISudp() are used with ledstream.
