@@ -21,6 +21,7 @@
 
 #include "wifi-config.h"
 
+#include "ota.hpp"
 
 #define ESP_WIFI_SCAN_AUTH_MODE_THRESHOLD WIFI_AUTH_WPA2_PSK
 
@@ -51,6 +52,7 @@ static void event_handler(void *arg,
         ip_event_got_ip_t *event = (ip_event_got_ip_t *) event_data;
         ESP_LOGI(WIFI_TAG, "got ip:" IPSTR, IP2STR(&event->ip_info.ip));
         xEventGroupSetBits(s_wifi_event_group, WIFI_CONNECTED_BIT);
+        ota_stuff();
     }
 }
 

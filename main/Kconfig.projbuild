@@ -164,4 +164,13 @@ menu "LEDSTREAM CONFIG"
         default -1
 
 
+
+    config LEDSTREAM_FIRMWARE_UPGRADE_URL
+        string "Firmware Upgrade URL"
+        default "http://192.168.13.135/ledstream.bin"
+        help
+            URL of server which hosts the firmware image.
+
+
+
 endmenu
