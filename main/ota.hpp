@@ -37,8 +37,9 @@ static esp_err_t validate_image_header(esp_app_desc_t *new_app_info)
         ESP_LOGI(OTA_TAG, "Running firmware version: %s", running_app_info.version);
     }
 
-    if (memcmp(new_app_info->version, running_app_info.version, sizeof(new_app_info->version)) == 0) {
-        ESP_LOGW(OTA_TAG, "Current running version is the same as a new. We will not continue the update.");
+//    if (memcmp(new_app_info->version, running_app_info.version, sizeof(new_app_info->version)) == 0) {
+    if (new_app_info->time==running_app_info.time && new_app_info->date==running_app_info.date) {
+        ESP_LOGI(OTA_TAG, "No update needed.");
         return ESP_FAIL;
     }
 
@@ -70,6 +71,8 @@ static esp_err_t _http_client_init_cb(esp_http_client_handle_t http_client)
 void ota_stuff(void)
 {
 
+    int total_size=0;
+    int last_progress=-1;
 
     /**
      * We are treating successful WiFi connection as a checkpoint to cancel rollback
@@ -105,8 +108,8 @@ void ota_stuff(void)
     esp_https_ota_config_t ota_config = {
         .http_config = &config,
         .http_client_init_cb = _http_client_init_cb, // Register a callback to be invoked after esp_http_client is initialized
-        .partial_http_download = true,
-        .max_http_request_size = 16384,
+        .partial_http_download = false,
+//        .max_http_request_size = 64000,
     };
 
     esp_https_ota_handle_t https_ota_handle = NULL;
@@ -124,25 +127,33 @@ void ota_stuff(void)
     }
     err = validate_image_header(&app_desc);
     if (err != ESP_OK) {
-        ESP_LOGE(OTA_TAG, "image header verification failed");
+        //no update needed
         goto ota_end;
     }
+
+    total_size=esp_https_ota_get_image_size(https_ota_handle);
 
     while (1) {
         err = esp_https_ota_perform(https_ota_handle);
         if (err != ESP_ERR_HTTPS_OTA_IN_PROGRESS) {
             break;
         }
-        // esp_https_ota_perform returns after every read operation which gives user the ability to
-        // monitor the status of OTA upgrade by calling esp_https_ota_get_image_len_read, which gives length of image
-        // data read so far.
-        ESP_LOGI(OTA_TAG, "Image bytes read: %d", esp_https_ota_get_image_len_read(https_ota_handle));
+        int read_size=esp_https_ota_get_image_len_read(https_ota_handle);
+//        ESP_LOGI(OTA_TAG, "Image bytes read: %d", esp_https_ota_get_image_len_read(https_ota_handle));
+        int progress=read_size*100/total_size;
+        if (progress != last_progress) {
+            ESP_LOGI(OTA_TAG, "Progress %d %%", progress);
+            last_progress=progress;
+        }
+
     }
+            ESP_LOGI(OTA_TAG, "TAK");
 
     if (esp_https_ota_is_complete_data_received(https_ota_handle) != true) {
         // the OTA image was not completely received and user can customise the response to this situation.
         ESP_LOGE(OTA_TAG, "Complete data was not received.");
     } else {
+            ESP_LOGI(OTA_TAG, "finishinggg");
         ota_finish_err = esp_https_ota_finish(https_ota_handle);
         if ((err == ESP_OK) && (ota_finish_err == ESP_OK)) {
             ESP_LOGI(OTA_TAG, "ESP_HTTPS_OTA upgrade successful. Rebooting ...");
