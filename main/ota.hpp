@@ -7,7 +7,8 @@
 #include "esp_ota_ops.h"
 #include "esp_http_client.h"
 #include "esp_https_ota.h"
-#include "FastLED.h"
+
+#import "leds.hpp"
 
 #ifndef OTA_UPDATER_HEADER
 #define OTA_UPDATER_HEADER
@@ -15,27 +16,27 @@
 class OTAUpdater {
 public:
     OTAUpdater(CRGB *leds) : leds(leds) {
-        ota_semaphore = xSemaphoreCreateBinary();
-        xSemaphoreGive(ota_semaphore);
+        updating = false;
     }
 
-    void begin() {
-        xTaskCreate(&ota_task, "ota_task", 8192, this, 5, NULL);
-    }
 
-    void check_updates() {
-        if (xSemaphoreTake(ota_semaphore, (TickType_t) 10) == pdTRUE) {
-            begin();
-        } else {
-            ESP_LOGW(TAG, "OTA task already running, skipping check_updates.");
+    void check_update() {
+        if (updating) {
+            ESP_LOGI(TAG, "Update already in progress");
+            return;
         }
+
+        updating = true;
+//        xTaskCreate(ota_update_task, "ota_update_task", 8192, this, 5, &ota_task_handle);
+        xTaskCreate(&ota_task, "ota_task", 8192, this, 5, NULL);
     }
 
 private:
     static const char *TAG;
 
+    bool updating;
+
     CRGB *leds;
-    SemaphoreHandle_t ota_semaphore;
 
     int total_length = 0;
     int downloaded_length = 0;
@@ -43,82 +44,78 @@ private:
 
     static void ota_task(void *pvParameter) {
         OTAUpdater *instance = static_cast<OTAUpdater *>(pvParameter);
-        instance->perform_update();
+        instance->update_firmware();
+        instance->updating = false;
         vTaskDelete(NULL);
     }
 
-    void perform_update() {
-        ESP_LOGI(TAG, "Starting OTA...");
+    bool is_update_needed(const esp_app_desc_t *new_app_info) {
+        const esp_app_desc_t *current_desc = esp_ota_get_app_description();
+        ESP_LOGI(TAG, "Current firmware  : %s %s", current_desc->date, current_desc->time);
+        ESP_LOGI(TAG, "Available firmware: %s %s", new_app_info->date, new_app_info->time);
+        return (
+                strncmp(new_app_info->date, current_desc->date, sizeof(new_app_info->date)) != 0 ||
+                strncmp(new_app_info->time, current_desc->time, sizeof(new_app_info->time)) != 0);
+    }
 
+
+    void update_firmware() {
+
+        ESP_LOGI(TAG, "Checking for updates at %s ...", CONFIG_LEDSTREAM_FIRMWARE_UPGRADE_URL);
+
+        esp_err_t err;
         esp_http_client_config_t config = {};
-
         config.url = CONFIG_LEDSTREAM_FIRMWARE_UPGRADE_URL;
-        config.timeout_ms = 5000;
-        config.event_handler = http_client_event_handler;
-        config.user_data = this;
+//        config.cert_pem = server_cert_pem;
 
-        total_length = 0;
-        downloaded_length = 0;
-        percentage = 0;
+        esp_https_ota_config_t ota_config = {};
+        ota_config.http_config = &config;
 
+        esp_https_ota_handle_t ota_handle = NULL;
+        err = esp_https_ota_begin(&ota_config, &ota_handle);
+        if (err != ESP_OK) {
+            ESP_LOGE(TAG, "esp_https_ota_begin failed");
+            return;
+        }
 
-        esp_err_t ret = esp_https_ota(&config);
-        if (ret == ESP_OK) {
-            ESP_LOGI(TAG, "OTA update succeeded. Rebooting...");
+        esp_app_desc_t new_app_info;
+        err = esp_https_ota_get_img_desc(ota_handle, &new_app_info);
+        if (err != ESP_OK) {
+            ESP_LOGE(TAG, "Failed to get the image description");
+            esp_https_ota_abort(ota_handle);
+            return;
+        }
+
+        if (!is_update_needed(&new_app_info)) {
+            ESP_LOGI(TAG, "No update available");
+            esp_https_ota_abort(ota_handle);
+            return;
+        }
+
+        ESP_LOGW(TAG, "Firmware update started...");
+
+        int binary_file_length = esp_https_ota_get_image_size(ota_handle);
+
+        while (1) {
+            esp_err_t ota_result = esp_https_ota_perform(ota_handle);
+            if (ota_result != ESP_ERR_HTTPS_OTA_IN_PROGRESS) {
+                break;
+            }
+
+            int progress = (esp_https_ota_get_image_len_read(ota_handle) * 100) / binary_file_length;
+            progress_bar(progress);
+        }
+
+        err = esp_https_ota_finish(ota_handle);
+        if (err == ESP_OK) {
+            ESP_LOGI(TAG, "OTA update completed. Restarting...");
             esp_restart();
         } else {
-            ESP_LOGE(TAG, "OTA update failed: %s", esp_err_to_name(ret));
+            ESP_LOGE(TAG, "OTA update failed");
         }
-
-        xSemaphoreGive(ota_semaphore);
     }
 
-    static esp_err_t http_client_event_handler(esp_http_client_event_t *evt) {
-        OTAUpdater *instance = static_cast<OTAUpdater *>(evt->user_data);
-int percentage=0;
 
-
-        switch (evt->event_id) {
-            case HTTP_EVENT_ERROR:
-                ESP_LOGE(TAG, "HTTP_EVENT_ERROR");
-                break;
-            case HTTP_EVENT_ON_HEADER:
-                if (strcasecmp(evt->header_key, "Content-Length") == 0) {
-                    instance->total_length = atoi(evt->header_value);
-                    ESP_LOGI(TAG, "Content-Length: %d", instance->total_length);
-                }
-                break;
-            case HTTP_EVENT_ON_DATA:
-                instance->downloaded_length += evt->data_len;
-                percentage = (instance->downloaded_length * 100) / instance->total_length;
-
-                if (percentage != instance->percentage) {
-                    ESP_LOGI(TAG, "Progress: %d%%", percentage);
-                    instance->percentage=percentage;
-                    instance->update_progress_bar(percentage);
-                }
-
-                break;
-            default:
-                break;
-        }
-        return ESP_OK;
-    }
-
-    void update_progress_bar(int percentage) {
-        const int NUM_LEDS = 8;
-        int num_leds_lit = ((percentage * NUM_LEDS ) / 100);
-//        static int flash_state = 0;
-
-        for (int i = 0; i < NUM_LEDS; i++) {
-            if (i < num_leds_lit) {
-                leds[i] = CRGB::DarkGreen;
-            } else {
-                leds[i] = CRGB::DarkRed;
-            }
-        }
-        FastLED.show();
-    }
 };
 
 const char *OTAUpdater::TAG = "ota";
