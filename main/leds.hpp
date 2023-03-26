@@ -44,10 +44,8 @@ void leds_init() {
 }
 
 
-// notify user via led and clearing display
-// also note that blinking should be in sync between different display via
-// multicastsync
-void notify(CRGB rgb, int on, int total) {
+// notify user via led 0 of channel 0 (async, return immeadatly)
+void async_notify(CRGB rgb, int on, int total) {
     static bool lastState = false;
 
     if (duty_cycle(on, total) != lastState) {
@@ -61,13 +59,27 @@ void notify(CRGB rgb, int on, int total) {
     }
 }
 
-void progress_bar(int percentage) {
-    static int last_percentage=-1;
+// notify user via led 0 of channel 0 (sync, returns after one blink cycle)
+void notify(CRGB rgb, int on, int total) {
 
-    if (last_percentage==percentage)
+    leds[0][0] = rgb;
+    FastLED.show();
+    vTaskDelay(on / portTICK_PERIOD_MS);
+    leds[0][0] = CRGB::Black;
+    FastLED.show();
+    vTaskDelay((total - on) / portTICK_PERIOD_MS);
+}
+
+
+
+
+void progress_bar(int percentage) {
+    static int last_percentage = -1;
+
+    if (last_percentage == percentage)
         return;
 
-    last_percentage=percentage;
+    last_percentage = percentage;
 
     ESP_LOGI("progress", "%d%%", percentage);
 

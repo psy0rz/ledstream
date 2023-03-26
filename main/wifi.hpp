@@ -22,6 +22,7 @@
 #include "wifi-config.h"
 
 #include "ota.hpp"
+#include "leds.hpp"
 
 #define ESP_WIFI_SCAN_AUTH_MODE_THRESHOLD WIFI_AUTH_WPA2_PSK
 
@@ -38,17 +39,34 @@ static EventGroupHandle_t s_wifi_event_group;
 static const char *WIFI_TAG = "wifistuff";
 
 
-static void event_handler(void *arg,
-                          esp_event_base_t event_base,
-                          int32_t event_id,
-                          void *event_data) {
+bool wifi_disconnected = true;
+
+static void wifi_blinker(void *pvParameter) {
+    while (1) {
+        if (wifi_disconnected)
+            notify(CRGB(50, 0, 0), 250, 500);
+        else
+            vTaskDelay(1000 / portTICK_PERIOD_MS);
+
+    }
+
+}
+
+
+static void wifi_event_handler(void *arg,
+                               esp_event_base_t event_base,
+                               int32_t event_id,
+                               void *event_data) {
     if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_START) {
         esp_wifi_connect();
+        wifi_disconnected = true;
     } else if (event_base == WIFI_EVENT &&
                event_id == WIFI_EVENT_STA_DISCONNECTED) {
+        wifi_disconnected = true;
         esp_wifi_connect();
         ESP_LOGI(WIFI_TAG, "retry to connect to the AP");
     } else if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP) {
+        wifi_disconnected = false;
         ip_event_got_ip_t *event = (ip_event_got_ip_t *) event_data;
         ESP_LOGI(WIFI_TAG, "got ip:" IPSTR, IP2STR(&event->ip_info.ip));
         xEventGroupSetBits(s_wifi_event_group, WIFI_CONNECTED_BIT);
@@ -66,6 +84,8 @@ void wifi_init_sta() {
     ESP_LOGW(WIFI_TAG,"No SSID specified, wifi disabled");
     return ;
 #else
+    xTaskCreate(&wifi_blinker, "wifi_blinker", 1024, NULL, 5, NULL);
+
 
     s_wifi_event_group = xEventGroupCreate();
 
@@ -80,13 +100,13 @@ void wifi_init_sta() {
     esp_event_handler_instance_t instance_any_id;
     esp_event_handler_instance_t instance_got_ip;
     ESP_ERROR_CHECK(esp_event_handler_instance_register(
-            WIFI_EVENT, ESP_EVENT_ANY_ID, &event_handler, NULL, &instance_any_id));
+            WIFI_EVENT, ESP_EVENT_ANY_ID, &wifi_event_handler, NULL, &instance_any_id));
     ESP_ERROR_CHECK(esp_event_handler_instance_register(
-            IP_EVENT, IP_EVENT_STA_GOT_IP, &event_handler, NULL, &instance_got_ip));
+            IP_EVENT, IP_EVENT_STA_GOT_IP, &wifi_event_handler, NULL, &instance_got_ip));
 
 
     wifi_config_t wifi_config;
-    memset(&wifi_config, 0 , sizeof(wifi_config_t));
+    memset(&wifi_config, 0, sizeof(wifi_config_t));
 
     strcpy(reinterpret_cast<char *>(wifi_config.sta.ssid), WIFI_SSID);
     strcpy(reinterpret_cast<char *>(wifi_config.sta.password), WIFI_PASS);
@@ -106,7 +126,7 @@ void wifi_init_sta() {
 
     /* Waiting until either the connection is established (WIFI_CONNECTED_BIT) or
      * connection failed for the maximum number of re-tries (WIFI_FAIL_BIT). The
-     * bits are set by event_handler() (see above) */
+     * bits are set by wifi_event_handler() (see above) */
 //    EventBits_t bits = xEventGroupWaitBits(s_wifi_event_group,
 //                                           WIFI_CONNECTED_BIT | WIFI_FAIL_BIT,
 //                                           pdFALSE, pdFALSE, portMAX_DELAY);
