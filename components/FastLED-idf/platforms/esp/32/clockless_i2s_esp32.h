@@ -600,24 +600,6 @@ protected:
     //    This is the main entry point for the controller.
     virtual void showPixels(PixelController<RGB_ORDER> & pixels)
     {
-//glitchy
-//        if (gNumStarted==gNumControllers)
-//        {
-//                        // -- Wait here while the rest of the data is sent. The interrupt handler
-//            //    will keep refilling the DMA buffers until it is all sent; then it
-//            //    gives the semaphore back.
-//            xSemaphoreTake(gTX_sem, portMAX_DELAY);
-//            xSemaphoreGive(gTX_sem);
-//
-//            i2sStop();
-//
-//            mWait.mark();
-//
-//            // -- Reset the counters
-//            gNumStarted = 0;
-//
-//        }
-
         if (gNumStarted == 0) {
             // -- First controller: make sure everything is set up
             xSemaphoreTake(gTX_sem, portMAX_DELAY);
@@ -651,8 +633,6 @@ protected:
             mWait.wait();
 
             i2sStart();
-
-            //TODO: try to move to beginning of function (glitchy)
 
             // -- Wait here while the rest of the data is sent. The interrupt handler
             //    will keep refilling the DMA buffers until it is all sent; then it
@@ -691,6 +671,8 @@ protected:
      *  This is where the real work happens: take a row of pixels (one
      *  from each strip), transpose and encode the bits, and store
      *  them in the DMA buffer for the I2S peripheral to read.
+     *
+     *  Note: Filling is done in small parts to conserve memory. Everytime the buffer is sent, the intterupt handler will call this.
      */
     static IRAM_ATTR void fillBuffer()
     {

@@ -150,10 +150,6 @@
     <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="had a stackoverflow (cant flash from wifi eventhandler).&#10;asked chatgpt4...decided to rewrite this whole file with chatgpt4 after this commit :p">
       <change beforePath="$PROJECT_DIR$/../esp/esp-idf/examples/system/ota/advanced_https_ota/main/advanced_https_ota_example.c" beforeDir="false" afterPath="$PROJECT_DIR$/../esp/esp-idf/examples/system/ota/advanced_https_ota/main/advanced_https_ota_example.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/platforms/esp/32/clockless_i2s_esp32.h" beforeDir="false" afterPath="$PROJECT_DIR$/components/FastLED-idf/platforms/esp/32/clockless_i2s_esp32.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/ota.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/ota.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/wifi.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/wifi.hpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -593,11 +589,6 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="apidoc" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="apidoc" CONFIG_NAME="Default-esp">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -994,6 +985,7 @@
       <workItem from="1675894551335" duration="5097000" />
       <workItem from="1679821160610" duration="1101000" />
       <workItem from="1679822379014" duration="10054000" />
+      <workItem from="1679854314501" duration="26000" />
     </task>
     <task id="LOCAL-00001" summary="stuff">
       <created>1657441294224</created>
