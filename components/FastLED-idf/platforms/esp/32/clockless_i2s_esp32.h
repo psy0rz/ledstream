@@ -436,7 +436,7 @@ protected:
         
         return b;
     }
-    
+
     static void i2sInit()
     {
         // -- Only need to do this once
@@ -465,44 +465,87 @@ protected:
         i2sReset_DMA();
         i2sReset_FIFO();
         
-        // -- Main configuration
+        ////////////// -- Main configuration
+
+        //I2S_TX_MSB_RIGHT Set this bit to place right-channel data at the MSB in the transmit FIFO. (R/W)
         i2s->conf.tx_msb_right = 1;
+
+        //I2S_TX_MONO Set this bit to enable transmitter’s mono mode in PCM standard mode. (R/W)
         i2s->conf.tx_mono = 0;
+
+        //I2S_TX_SHORT_SYNC Set this bit to enable transmitter in PCM standard mode. (R/W)
         i2s->conf.tx_short_sync = 0;
+
+        //I2S_TX_MSB_SHIFT Set this bit to enable transmitter in Philips standard mode. (R/W)
         i2s->conf.tx_msb_shift = 0;
+
+        //I2S_TX_RIGHT_FIRST Set this bit to transmit right-channel data first. (R/W)
         i2s->conf.tx_right_first = 1; // 0;//1;
+
+        //I2S_TX_SLAVE_MOD Set this bit to enable slave transmitter mode. (R/W)
         i2s->conf.tx_slave_mod = 0;
-        
-        // -- Set parallel mode
+
+
+        //////////////// -- Set parallel mode
         i2s->conf2.val = 0;
+
+        //I2S_LCD_EN Set this bit to enable LCD mode. (R/W)
         i2s->conf2.lcd_en = 1;
+
+        //I2S_LCD_TX_WRX2_EN One datum will be written twice in LCD mode. (R/W)
         i2s->conf2.lcd_tx_wrx2_en = 0; // 0 for 16 or 32 parallel output
+
+        //I2S_LCD_TX_SDX2_EN Set this bit to duplicate data pairs (Data Frame, Form 2) in LCD mode. (R/W)
         i2s->conf2.lcd_tx_sdx2_en = 0; // HN
-        
-        // -- Set up the clock rate and sampling
+
+
+        ///////////////// -- Set up the clock rate and sampling
         i2s->sample_rate_conf.val = 0;
+
+        //I2S_TX_BITS_MOD Set the bits to configure the bit length of I2S transmitter channel. (R/W)
         i2s->sample_rate_conf.tx_bits_mod = 32; // Number of parallel bits/pins
+
+        //I2S_TX_BCK_DIV_NUM Bit clock configuration bit in transmitter mode. (R/W)
         i2s->sample_rate_conf.tx_bck_div_num = 1;
+
         i2s->clkm_conf.val = 0;
-        i2s->clkm_conf.clka_en = 0;
-        
+        //I2S_CLKA_ENA bit of register I2S_CLKM_CONF_REG is used to select either
+        //PLL_D2_CLK or APLL_CLK as the clock source for I2Sn.
+        i2s->clkm_conf.clka_en = 0; //use PLL clock, not the APLL high acuracy one
+
         // -- Data clock is computed as Base/(div_num + (div_b/div_a))
         //    Base is 80Mhz, so 80/(10 + 0/1) = 8Mhz
         //    One cycle is 125ns
+        //I2S_CLKM_DIV_A Fractional clock divider’s denominator value. (R/W)
         i2s->clkm_conf.clkm_div_a = CLOCK_DIVIDER_A;
+        //I2S_CLKM_DIV_B Fractional clock divider’s numerator value. (R/W)
         i2s->clkm_conf.clkm_div_b = CLOCK_DIVIDER_B;
+        //I2S_CLKM_DIV_NUM I2S clock divider’s integral value. (R/W)
         i2s->clkm_conf.clkm_div_num = CLOCK_DIVIDER_N;
         
         i2s->fifo_conf.val = 0;
+
+        //I2S_TX_FIFO_MOD_FORCE_EN The bit should always be set to 1. (R/W)
         i2s->fifo_conf.tx_fifo_mod_force_en = 1;
+
+        //I2S_TX_FIFO_MOD Transmit FIFO mode configuration bit. (R/W)
         i2s->fifo_conf.tx_fifo_mod = 3;  // 32-bit single channel data
+
+        //I2S_TX_DATA_NUM Threshold of data length in the transmit FIFO. (R/W)
         i2s->fifo_conf.tx_data_num = 32; // fifo length
+
+        //I2S_DSCR_EN Set this bit to enable I2S DMA mode. (R/W)
         i2s->fifo_conf.dscr_en = 1;      // fifo will use dma
         
         i2s->conf1.val = 0;
+        //I2S_TX_STOP_EN Set this bit and the transmitter will stop transmitting BCK signal and WS signal
+        //when tx FIFO is empty. (R/W)
         i2s->conf1.tx_stop_en = 0;
+
+        //I2S_TX_PCM_BYPASS Set this bit to bypass the Compress/Decompress module for the transmitted
+        //data. (R/W)
         i2s->conf1.tx_pcm_bypass = 1;
-        
+
         i2s->conf_chan.val = 0;
         i2s->conf_chan.tx_chan_mod = 1; // Mono mode, with tx_msb_right = 1, everything goes to right-channel
         
@@ -629,6 +672,7 @@ protected:
     // -- Custom interrupt handler
     static IRAM_ATTR void interruptHandler(void *arg)
     {
+        // I2S_OUT_TOTAL_EOF_INT: Triggered when all transmitting linked lists are used up.
         if (i2s->int_st.out_eof) {
             i2s->int_clr.val = i2s->int_raw.val;
             
