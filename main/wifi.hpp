@@ -52,12 +52,14 @@ static void event_handler(void *arg,
         ip_event_got_ip_t *event = (ip_event_got_ip_t *) event_data;
         ESP_LOGI(WIFI_TAG, "got ip:" IPSTR, IP2STR(&event->ip_info.ip));
         xEventGroupSetBits(s_wifi_event_group, WIFI_CONNECTED_BIT);
-        ota_stuff();
+        ota_updater.check_updates();
+
+
     }
 }
 
 
-void wifi_init_sta(void) {
+void wifi_init_sta() {
 
 
 #ifndef WIFI_SSID

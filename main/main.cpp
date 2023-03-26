@@ -2,7 +2,7 @@
 #include "wifi.hpp"
 #include <FastLED.h>
 #include "ethernet.h"
-
+#include "ota.hpp"
 
 #define COLOR_ORDER GRB
 
@@ -17,6 +17,12 @@
  */
 
 CRGB leds[CONFIG_LEDSTREAM_CHANNELS][CONFIG_LEDSTREAM_LEDS_PER_CHANNEL];
+
+OTAUpdater ota_updater= OTAUpdater(reinterpret_cast<CRGB *>(leds));
+
+
+
+
 
 static const char *MAIN_TAG = "main";
 
@@ -123,6 +129,8 @@ extern "C" void app_main(void) {
             lastTime = millis();
 
         }
+
+
 
 
         ///TEST
