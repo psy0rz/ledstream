@@ -21,7 +21,7 @@ Ledstreamer ledstreamer = Ledstreamer((CRGB *) leds, CONFIG_LEDSTREAM_CHANNELS *
 
 
 
-extern "C" void app_main(void) {
+extern "C" [[noreturn]] __attribute__((unused)) void app_main(void) {
 
     //settle
     delay(250);
@@ -47,11 +47,11 @@ extern "C" void app_main(void) {
     ledstreamer.begin(65000);
 
 
-    auto lastTime = millis();
+//    auto lastTime = millis();
     ESP_LOGI(MAIN_TAG, "RAM left %d", esp_get_free_heap_size());
 
     //main task
-    while (1) {
+    while (true) {
         ledstreamer.process();
 
 //        if (millis() - lastTime > 1000) {
