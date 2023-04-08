@@ -10,7 +10,7 @@ static const char *MAIN_TAG = "main";
 
 
 OTAUpdater ota_updater = OTAUpdater(reinterpret_cast<CRGB *>(leds));
-Ledstreamer ledstreamer = Ledstreamer((CRGB *) leds, CONFIG_LEDSTREAM_CHANNELS * CONFIG_LEDSTREAM_LEDS_PER_CHANNEL);
+Ledstreamer ledstreamer = Ledstreamer();
 
 
 //CRGB &getLed(uint16_t ledNr) {
