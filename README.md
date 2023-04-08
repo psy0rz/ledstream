@@ -1,7 +1,8 @@
 # Stream led animations to an ESP. 
 
-* Control up to 8 x 512 leds @ 55fps
+* Control up to 8 x 512 leds @ ~50fps (higher framerate if you use less leds per chan)
 * Only supports WS2812 leds (for now)
+* Only runs on vanilla ESP32
 * Use with <https://github.com/psy0rz/ledder>
 
 ## Instructions
@@ -30,13 +31,17 @@ Every time you want to use it you have to activate it one time:
  source ~/esp/esp-idf/export.sh
 ```
 
-## Run menuconfig and configure number of channels and leds per channel
+## Run menuconfig and look at pins that are used.
 
 ```
 idf.py menuconfig
 ```
 
-The easiest to start it one of those 8x32 WS2812 matrixes:
+The default config is probably OK for now, just keep in mind which pin is channel 0.
+
+## Connect hardware
+
+The easiest way to start it one of those 8x32 WS2812 matrixes:
 
 ![img.png](img.png)
 
@@ -50,9 +55,9 @@ Ledder will handle the correct layout and orientation.
 
 If you use that many leds keep this in mind:
 
- * Use a power supply that can handle the load (up to 15A per display!)
- * Connect the power supply to the middle 2 leads.
- * You can always limit the power usage by setting Max milliamps in the menuconfig.
+ * Use a power supply that can handle the load  (up to 15A per display!)
+ * If you use a power supply, connect the power supply to the middle 2 leads. 
+ * Or just use USB poewr and set max current via menu config. (USB power can handle at least 1000mA)
  * If you get glitches use a level shifter like the SN74AHCT125N. (dont use the bidirectional onces, those suck) For one simple display you can get away with it, but for multiple displays it gets problematic.
  * Use a esp32 with buildin ethernet like the WT32-ETH01 to handle the bandwidth:
 
