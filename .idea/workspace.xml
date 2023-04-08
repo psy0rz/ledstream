@@ -147,8 +147,11 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="be more flexible with number of leds per channel. (incompatible protocol change!)">
+    <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="fixed timesync issues">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/Kconfig.projbuild" beforeDir="false" afterPath="$PROJECT_DIR$/main/Kconfig.projbuild" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/timesync.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/timesync.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/udpbuffer.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/udpbuffer.hpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -994,7 +997,7 @@
       <workItem from="1679854381158" duration="13546000" />
       <workItem from="1680860645667" duration="427000" />
       <workItem from="1680861093700" duration="11881000" />
-      <workItem from="1680961204372" duration="313000" />
+      <workItem from="1680961204372" duration="7313000" />
     </task>
     <task id="LOCAL-00001" summary="stuff">
       <created>1657441294224</created>
@@ -1325,7 +1328,21 @@
       <option name="project" value="LOCAL" />
       <updated>1680950861844</updated>
     </task>
-    <option name="localTasksCounter" value="48" />
+    <task id="LOCAL-00048" summary="cleanup">
+      <created>1680961762951</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1680961762951</updated>
+    </task>
+    <task id="LOCAL-00049" summary="fixed timesync issues">
+      <created>1680963830366</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1680963830366</updated>
+    </task>
+    <option name="localTasksCounter" value="50" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1373,7 +1390,9 @@
     <MESSAGE value="wifi notifier" />
     <MESSAGE value="fixes" />
     <MESSAGE value="be more flexible with number of leds per channel. (incompatible protocol change!)" />
-    <option name="LAST_COMMIT_MESSAGE" value="be more flexible with number of leds per channel. (incompatible protocol change!)" />
+    <MESSAGE value="cleanup" />
+    <MESSAGE value="fixed timesync issues" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed timesync issues" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

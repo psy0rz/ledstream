@@ -11,7 +11,7 @@
 static const char *TIMESYNCTAG = "timesync";
 
 //step sync our internal time if difference is too much for too long
-#define MAX_DIFF_MS 10
+#define MAX_DIFF_MS 100
 #define RESYNC_TIME_MS 1000
 
 
