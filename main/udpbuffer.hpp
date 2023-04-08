@@ -42,6 +42,7 @@ public:
     //current currentPacket and packetlength. can be null
     udpPacketStruct *currentPacket = nullptr;
     uint16_t currentPlen=0;
+    uint16_t lastStatsTime=0;
 
 
     UdpBuffer() {
@@ -74,11 +75,22 @@ public:
     // 0=no time/dropped packet
     uint16_t process(uint16_t len) {
 
+        uint16_t now=millis();
+        if (diff16(now, lastStatsTime)>1000)
+        {
+            lastStatsTime=now;
+            ESP_LOGI(UDPBUFFER_TAG, "buffered %d/%d", available(), CONFIG_LEDSTREAM_UDP_BUFFERS);
+        }
+
+
         if (len) {
+
                 udpPacketStruct &udpPacket = packets[recvIndex];
 //                memset(&udpPacket, 0, sizeof(udpPacketStruct));
 //                memcpy(&udpPacket, data, len);
                 plens[recvIndex] = len;
+
+
 
                 if (udpPacket.packetNr == lastPacketNr) {
                     ESP_LOGW(UDPBUFFER_TAG, "Dropped duplicate currentPacket.");

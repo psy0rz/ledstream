@@ -94,7 +94,7 @@ menu "LEDSTREAM CONFIG"
     config LEDSTREAM_LEDS_PER_CHANNEL
         int "Leds per channel"
         range 1 600
-        default 256
+        default 512
 
 
     config LEDSTREAM_CHANNEL0_PIN
