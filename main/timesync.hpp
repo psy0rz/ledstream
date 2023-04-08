@@ -10,97 +10,82 @@
 // We use small corrections to filter out the network jitter.
 static const char *TIMESYNCTAG = "timesync";
 
+//step sync our internal time if difference is too much for too long
+#define MAX_DIFF_MS 10
+#define RESYNC_TIME_MS 1000
 
-struct syncPacketStruct {
-    uint32_t time;
-};
 
 class TimeSync {
-    // unsigned long lastTime;
-
-    // unsigned long remoteTime;
-    // unsigned long localOffset;
 
     uint16_t localStartTime;
     uint16_t remoteStartTime;
-    uint16_t lastRecvTime;
     unsigned long lastDebugOutput;
-    // float correctionFactor = 1;
     int correction;
-    uint8_t startup;
+
+    uint16_t desyncStartTime;
+    bool desynced;
 
 public:
 
     void begin() {
-
         lastDebugOutput = 0;
-        // remoteTime = 0;
-        // localOffset=0;
-        startup = 10;
+        desynced = true;
+        desyncStartTime=-10000;
+        localStartTime=0;
+        remoteStartTime=0;
+        correction=0;
+        lastDebugOutput=0;
     };
-
 
     // can either use specified time, or time received via multicast.
     // use time=0 to only use multicast
     void process(uint16_t syncTime) {
 
-        uint16_t now = esp_timer_get_time() / 1000;
-        lastRecvTime = now;
+        uint16_t now = millis();
         uint16_t localDelta = now - localStartTime;
         uint16_t remoteDelta = syncTime - remoteStartTime;
 
         uint16_t correctedLocalDelta = localDelta + correction;
         int diff = diff16(remoteDelta, correctedLocalDelta);
 
-        if (startup) {
-            correction = 0;
-            localStartTime = now;
-            remoteStartTime = syncTime;
-            startup = startup - 1;
-            ESP_LOGI(TIMESYNCTAG, "starting %d", startup);
-        } else {
-
-            if ((millis() - lastDebugOutput >= 500)) {
-                ESP_LOGI(TIMESYNCTAG,
-                         "received=%d mS, remoteMillis=%u mS, "
-                         "correction=%d, diff=%d",
-                         syncTime,
-                         remoteMillis(),
-                         correction,
-                         diff);
-                lastDebugOutput = millis();
-            }
-
-            if (!synced()) {
-                ESP_LOGW(TIMESYNCTAG, "Desynced, restarting");
-                startup = 10;
-
+        //diff too big?
+        if (abs(diff) > MAX_DIFF_MS) {
+            if (!desynced) {
+                desynced = true;
+                desyncStartTime = now;
             } else {
-
-                // NOTE: correction factors give jittery rounding errors. so we
-                // use a correction offset. correctionFactor = (float)remoteDelta
-                // / (float)localDelta;
-                if (diff > 0)
-                    correction++;
-                else
-                    correction--;
+                int desyncLength = diff16(now, desyncStartTime);
+                if (desyncLength > RESYNC_TIME_MS) {
+                    correction = 0;
+                    localStartTime = now;
+                    remoteStartTime = syncTime;
+                    ESP_LOGW(TIMESYNCTAG, "resynced timing (diff was %d mS for %d mS)", abs(diff), desyncLength);
+                }
             }
+        } else {
+            desynced = false;
+            //do clock corrections by 1 mS steps
+            if (diff > 0)
+                correction++;
+            else if (diff < 0)
+                correction--;
         }
-    }
 
-    //   unsigned long remoteMillis() const
-    //   {
-    //     return (millis() - localStartTime + remoteStartTime + correction);
-    //   }
+        if ((now - lastDebugOutput >= 1000)) {
+            ESP_LOGI(TIMESYNCTAG,
+                     "received=%d mS, remoteMillis=%u mS, "
+                     "correction=%d, diff=%d",
+                     syncTime,
+                     remoteMillis(),
+                     correction,
+                     diff);
+            lastDebugOutput = now;
+        }
+
+    }
 
     uint16_t remoteMillis() const {
         return ((millis() - localStartTime + remoteStartTime + correction));
     }
 
-    bool synced() const {
-        if (diff16(millis(), lastRecvTime) < 3000)
-            return true;
-        else
-            return false;
-    }
 };
