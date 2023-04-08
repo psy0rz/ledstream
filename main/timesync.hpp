@@ -44,52 +44,46 @@ public:
     // use time=0 to only use multicast
     void process(uint16_t syncTime) {
 
-        // syncTime is the one that will be used. It can either get filled by
-        // multicast or via lastPacketTime
+        uint16_t now = esp_timer_get_time() / 1000;
+        lastRecvTime = now;
+        uint16_t localDelta = now - localStartTime;
+        uint16_t remoteDelta = syncTime - remoteStartTime;
 
+        uint16_t correctedLocalDelta = localDelta + correction;
+        int diff = diff16(remoteDelta, correctedLocalDelta);
 
-        if (syncTime) {
-            uint16_t now = esp_timer_get_time() / 1000;
-            lastRecvTime = now;
-            uint16_t localDelta = now - localStartTime;
-            uint16_t remoteDelta = syncTime - remoteStartTime;
+        if (startup) {
+            correction = 0;
+            localStartTime = now;
+            remoteStartTime = syncTime;
+            startup = startup - 1;
+            ESP_LOGI(TIMESYNCTAG, "starting %d", startup);
+        } else {
 
-            uint16_t correctedLocalDelta = localDelta + correction;
-            int diff = diff16(remoteDelta, correctedLocalDelta);
+            if ((millis() - lastDebugOutput >= 500)) {
+                ESP_LOGI(TIMESYNCTAG,
+                         "received=%d mS, remoteMillis=%u mS, "
+                         "correction=%d, diff=%d",
+                         syncTime,
+                         remoteMillis(),
+                         correction,
+                         diff);
+                lastDebugOutput = millis();
+            }
 
-            if (startup) {
-                correction = 0;
-                localStartTime = now;
-                remoteStartTime = syncTime;
-                startup = startup - 1;
-                ESP_LOGI(TIMESYNCTAG, "starting %d", startup);
+            if (!synced()) {
+                ESP_LOGW(TIMESYNCTAG, "Desynced, restarting");
+                startup = 10;
+
             } else {
 
-                if ((millis() - lastDebugOutput >= 500)) {
-                    ESP_LOGI(TIMESYNCTAG,
-                             "received=%d mS, remoteMillis=%u mS, "
-                             "correction=%d, diff=%d",
-                             syncTime,
-                             remoteMillis(),
-                             correction,
-                             diff);
-                    lastDebugOutput = millis();
-                }
-
-                if (!synced()) {
-                    ESP_LOGW(TIMESYNCTAG, "Desynced, restarting");
-                    startup = 10;
-
-                } else {
-
-                    // NOTE: correction factors give jittery rounding errors. so we
-                    // use a correction offset. correctionFactor = (float)remoteDelta
-                    // / (float)localDelta;
-                    if (diff > 0)
-                        correction++;
-                    else
-                        correction--;
-                }
+                // NOTE: correction factors give jittery rounding errors. so we
+                // use a correction offset. correctionFactor = (float)remoteDelta
+                // / (float)localDelta;
+                if (diff > 0)
+                    correction++;
+                else
+                    correction--;
             }
         }
     }

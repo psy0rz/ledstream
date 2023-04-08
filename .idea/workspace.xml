@@ -147,8 +147,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="had a stackoverflow (cant flash from wifi eventhandler).&#10;asked chatgpt4...decided to rewrite this whole file with chatgpt4 after this commit :p">
-      <change beforePath="$PROJECT_DIR$/../esp/esp-idf/examples/system/ota/advanced_https_ota/main/advanced_https_ota_example.c" beforeDir="false" afterPath="$PROJECT_DIR$/../esp/esp-idf/examples/system/ota/advanced_https_ota/main/advanced_https_ota_example.c" afterDir="false" />
+    <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="be more flexible with number of leds per channel. (incompatible protocol change!)">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -202,13 +201,14 @@
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
     &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;idf&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;CMakeSettings&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
     &quot;structure.view.defaults.are.configured&quot;: &quot;true&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
@@ -585,6 +585,11 @@
       </method>
     </configuration>
     <configuration name="_project_elf_src" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="_project_elf_src" CONFIG_NAME="Default-esp">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -986,6 +991,10 @@
       <workItem from="1679821160610" duration="1101000" />
       <workItem from="1679822379014" duration="10054000" />
       <workItem from="1679854314501" duration="26000" />
+      <workItem from="1679854381158" duration="13546000" />
+      <workItem from="1680860645667" duration="427000" />
+      <workItem from="1680861093700" duration="11881000" />
+      <workItem from="1680961204372" duration="313000" />
     </task>
     <task id="LOCAL-00001" summary="stuff">
       <created>1657441294224</created>
@@ -1288,7 +1297,35 @@
       <option name="project" value="LOCAL" />
       <updated>1675949408344</updated>
     </task>
-    <option name="localTasksCounter" value="44" />
+    <task id="LOCAL-00044" summary="cleanups, added OTA updater">
+      <created>1679866507123</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1679866507124</updated>
+    </task>
+    <task id="LOCAL-00045" summary="wifi notifier">
+      <created>1679868962832</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1679868962832</updated>
+    </task>
+    <task id="LOCAL-00046" summary="fixes">
+      <created>1680861227683</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1680861227683</updated>
+    </task>
+    <task id="LOCAL-00047" summary="be more flexible with number of leds per channel. (incompatible protocol change!)">
+      <created>1680950861844</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1680950861844</updated>
+    </task>
+    <option name="localTasksCounter" value="48" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1297,6 +1334,12 @@
   <component name="UnknownFeatures">
     <option featureType="dependencySupport" implementationName="javascript:npm:stylus" />
     <option featureType="dependencySupport" implementationName="javascript:npm:vue" />
+  </component>
+  <component name="VCPKGProject">
+    <isAutomaticEditVcpkgJson value="false" />
+    <isAutomaticCheckingOnLaunch value="false" />
+    <isAutomaticFoundErrors value="true" />
+    <isAutomaticFoundErrors value="true" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -1325,9 +1368,12 @@
     <MESSAGE value="adding ethernet for WT32-ETH01 ESP32" />
     <MESSAGE value="w00p works with 8 * 256 leds" />
     <MESSAGE value="configstuf" />
-    <MESSAGE value="fixes" />
     <MESSAGE value="workaround (max 50fps)" />
-    <option name="LAST_COMMIT_MESSAGE" value="workaround (max 50fps)" />
+    <MESSAGE value="cleanups, added OTA updater" />
+    <MESSAGE value="wifi notifier" />
+    <MESSAGE value="fixes" />
+    <MESSAGE value="be more flexible with number of leds per channel. (incompatible protocol change!)" />
+    <option name="LAST_COMMIT_MESSAGE" value="be more flexible with number of leds per channel. (incompatible protocol change!)" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
