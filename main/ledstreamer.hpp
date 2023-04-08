@@ -27,8 +27,8 @@ private:
 public:
     TimeSync timeSync;
 
-    Ledstreamer(CRGB *pixels, int px_len)
-            : udpServer(), udpBuffer(), qois(pixels, px_len), timeSync() {
+    Ledstreamer()
+            : udpServer(), udpBuffer(), qois(), timeSync() {
         ready = false;
         lastPacketNr = 0;
         currentByteNr = 0;
@@ -110,23 +110,7 @@ public:
         if (ready) {
             // its time to output the prepared leds buffer?
             if (diff16(timeSync.remoteMillis(), qois.show_time) >= 0) {
-
-
-//                static bool flip = false;
-//                flip = !flip;
-//
-////                auto start = micros();
-//                if (flip) {
-//                    FastLED.showColor(CRGB::Red);
-//                }
-//                else{
-//                  FastLED.showColor(CRGB::Green);
-//                }
-
                 FastLED.show();
-//                ESP_LOGW(LEDSTREAMER_TAG, "takes %lu", micros() - start);
-
-
                 ready = false;
             }
         } else {
