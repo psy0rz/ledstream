@@ -88,18 +88,20 @@ public:
     void setNextPixel(const uint8_t r, const uint8_t g, const uint8_t b) {
 
         //only set if we're in range
-        if (channel_nr<CONFIG_LEDSTREAM_CHANNELS && pixel_nr<CONFIG_LEDSTREAM_LEDS_PER_CHANNEL) {
+        if (channel_nr < CONFIG_LEDSTREAM_CHANNELS && pixel_nr < CONFIG_LEDSTREAM_LEDS_PER_CHANNEL) {
 
             leds[channel_nr][pixel_nr].r = r;
             leds[channel_nr][pixel_nr].g = g;
             leds[channel_nr][pixel_nr].b = b;
+
+//            if (pixel_nr == 28)
+//                ESP_LOGD(QOISTAG, "pixel: chan %d, nr %d, %dr %dg %db", channel_nr, pixel_nr, r, g, b);
         }
 
         pixel_nr++;
-        if ( pixel_nr==pixels_per_channel)
-        {
+        if (pixel_nr == pixels_per_channel) {
             channel_nr++;
-            pixel_nr=0;
+            pixel_nr = 0;
         }
     }
 
@@ -107,41 +109,12 @@ public:
     bool decodeByte(uint8_t data) {
 
 //        ESP_LOGD(UDPBUFFER_TAG, "decode byte: data=%d waitshowtime=%d, waitop=%d, bytes_needed=%d, op=%d", data,wait_for_header, wait_for_op, bytes_needed, op);
-//ESP_LOGD(UDPBUFFER_TAG, "framebytes=%d", frame_bytes_left);
         if (frame_bytes_left == 0) {
-
             return false;
         }
         frame_bytes_left--;
 
-//        if (!wait_for_header)
-//            return true;
-
-//too many pixels, just drop the data
-//        if (px_pos >= px_len) {
-//            ESP_LOGE(QOISTAG, "too many pixels (pos=%d len=%d)", px_pos, px_len);
-//            return true;
-//        }
-
-
-        //wait for next operation
-        if (wait_for_op) {
-            op = data;
-            bytes_received = 0;
-            wait_for_op = false;
-
-            if (op == QOI_OP_RGB)
-                bytes_needed = 3;
-            else if ((op & QOI_MASK_2) == QOI_OP_LUMA)
-                bytes_needed = 1;
-            else
-                bytes_needed = 0;
-
-            if (bytes_needed)
-                return true;
-        }
-
-        //store received bytes
+        //step 1: store received bytes, if we need them
         if (bytes_needed) {
             bytes_needed--;
             bytes[bytes_received] = data;
@@ -149,36 +122,54 @@ public:
 
             //still need more?
             if (bytes_needed)
-                return true;
+                return (frame_bytes_left > 0);
         }
 
-        //store showtime and framebytes?
+        //step 2: parse frameheader (from stored bytes in step 1)
         if (wait_for_header) {
             wait_for_header = false;
             wait_for_op = true;
 
-            //bytes 0-1:
+            //bytes 0-1, total size of this frame:
             frame_bytes_left = *(uint16_t *) &bytes[0];
+            frame_bytes_left = frame_bytes_left - 6; //we already used 6 for this header
 
             //bytes 2-3:
-            //pixel counter and pos
+            //pixels per channel
             pixels_per_channel = *(uint16_t *) &bytes[2];
-            if (pixels_per_channel==0)
-                pixels_per_channel=CONFIG_LEDSTREAM_LEDS_PER_CHANNEL;
-            pixel_nr=0;
-            channel_nr=0;
+            if (pixels_per_channel == 0)
+                pixels_per_channel = CONFIG_LEDSTREAM_LEDS_PER_CHANNEL;
+            pixel_nr = 0;
+            channel_nr = 0;
 
             //bytes 4-5:
             show_time = *(uint16_t *) &bytes[4];
 
-
 //            ESP_LOGD(UDPBUFFER_TAG, "got header: showtime=%u, frame_length=%u", show_time, frame_bytes_left);
-            frame_bytes_left = frame_bytes_left - 6; //we already used 6 for this header
-//            Serial.println(show_time, HEX);
-            return true;
+            return (frame_bytes_left > 0);
         }
 
-        //from this point on we know the operation and we have all the bytes we need for QOI
+        //step3: store actual qois operation, and get more bytes if the operation needs it
+        if (wait_for_op) {
+            op = data;
+            bytes_received = 0;
+            wait_for_op = false;
+
+            if (op == QOI_OP_RGB)
+                bytes_needed =  3;
+            else if ((op & QOI_MASK_2) == QOI_OP_LUMA)
+                bytes_needed = 1;
+            else
+                bytes_needed = 0;
+
+            if (bytes_needed)
+                return (frame_bytes_left > 0);
+        }
+
+
+
+        //step4: from this point on we know the operation and we have all the bytes we need to execute the QOI operation
+        //now we loop between step 3 and 4 until the frame is complete.
 
         if (op == QOI_OP_RGB) {
 //            ESP_LOGD(UDPBUFFER_TAG, "RGB");
@@ -207,16 +198,16 @@ public:
         } else if ((op & QOI_MASK_2) == QOI_OP_RUN) {
             int run = (op & 0x3f) + 1;
 
-            while (run ) {
+            while (run) {
                 setNextPixel(px.rgba.r, px.rgba.g, px.rgba.b);
                 run--;
             }
             wait_for_op = true;
-            return true;
+            return (frame_bytes_left > 0);
 
         } else {
             ESP_LOGE(QOISTAG, "Illegal operation: %d", op);
-            return true;
+            return (frame_bytes_left > 0);
         }
 
         px.rgba.a = 255;
@@ -225,7 +216,7 @@ public:
 
         setNextPixel(px.rgba.r, px.rgba.g, px.rgba.b);
         wait_for_op = true;
-        return true;
+        return (frame_bytes_left > 0);
 
     }
 

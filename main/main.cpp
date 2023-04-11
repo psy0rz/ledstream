@@ -6,6 +6,8 @@
 
 #include "leds.hpp"
 
+//#include "fileserver.hpp"
+
 static const char *MAIN_TAG = "main";
 
 
@@ -26,6 +28,7 @@ extern "C" [[noreturn]] __attribute__((unused)) void app_main(void) {
     //settle
     delay(250);
 
+
     //Initialize NVS
     esp_err_t ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
@@ -40,6 +43,8 @@ extern "C" [[noreturn]] __attribute__((unused)) void app_main(void) {
     ESP_ERROR_CHECK(esp_event_loop_create_default());
 
     leds_init();
+
+
     wifi_init_sta();
     ethernet_init();
 
