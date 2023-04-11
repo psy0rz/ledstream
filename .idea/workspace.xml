@@ -15,10 +15,8 @@
       <config projectName="ledstream" targetName="__idf_esp_partition" />
       <config projectName="ledstream" targetName="gen_project_binary" />
       <config projectName="ledstream" targetName="encrypted-bootloader-flash" />
-      <config projectName="ledstream" targetName="otadata-flash" />
       <config projectName="ledstream" targetName="__idf_perfmon" />
       <config projectName="ledstream" targetName="__idf_esp_adc" />
-      <config projectName="ledstream" targetName="blank_ota_data" />
       <config projectName="ledstream" targetName="uf2" />
       <config projectName="ledstream" targetName="__idf_esp_websocket_client" />
       <config projectName="ledstream" targetName="app_check_size" />
@@ -35,7 +33,6 @@
       <config projectName="ledstream" targetName="__idf_esp_http_client" />
       <config projectName="ledstream" targetName="size-components" />
       <config projectName="ledstream" targetName="confserver" />
-      <config projectName="ledstream" targetName="read-otadata" />
       <config projectName="ledstream" targetName="menuconfig" />
       <config projectName="ledstream" targetName="__idf_sdmmc" />
       <config projectName="ledstream" targetName="efuse_common_table" />
@@ -46,7 +43,6 @@
       <config projectName="ledstream" targetName="partition_table" />
       <config projectName="ledstream" targetName="partition_table-flash" />
       <config projectName="ledstream" targetName="__idf_tcp_transport" />
-      <config projectName="ledstream" targetName="erase_otadata" />
       <config projectName="ledstream" targetName="size-files" />
       <config projectName="ledstream" targetName="apidoc" />
       <config projectName="ledstream" targetName="mbedx509" />
@@ -94,11 +90,9 @@
       <config projectName="ledstream" targetName="__idf_bootloader_support" />
       <config projectName="ledstream" targetName="__idf_app_trace" />
       <config projectName="ledstream" targetName="__idf_esp_serial_slave_link" />
-      <config projectName="ledstream" targetName="erase-otadata" />
       <config projectName="ledstream" targetName="efuse-custom-table" />
       <config projectName="ledstream" targetName="__idf_FastLED-idf" />
       <config projectName="ledstream" targetName="show_efuse_table" />
-      <config projectName="ledstream" targetName="read_otadata" />
       <config projectName="ledstream" targetName="__idf_wifi_provisioning" />
       <config projectName="ledstream" targetName="mbedcrypto" />
       <config projectName="ledstream" targetName="encrypted-flash" />
@@ -138,7 +132,6 @@
       <config projectName="ledstream" targetName="partition-table" />
       <config projectName="ledstream" targetName="__idf_esp_https_ota" />
       <config projectName="ledstream" targetName="__idf_esp_event" />
-      <config projectName="ledstream" targetName="encrypted-otadata-flash" />
     </generated>
   </component>
   <component name="CMakeSettings" AUTO_RELOAD="true">
@@ -147,11 +140,16 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="fixed timesync issues">
+    <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="fixes">
+      <change afterPath="$PROJECT_DIR$/.idea/csv-editor.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/main/fileserver.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/Kconfig.projbuild" beforeDir="false" afterPath="$PROJECT_DIR$/main/Kconfig.projbuild" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/timesync.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/timesync.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/leds.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/leds.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/ledstreamer.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/ledstreamer.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/qois.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/qois.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/udpbuffer.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/udpbuffer.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/wifi.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/wifi.hpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -201,6 +199,7 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
     &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
@@ -211,7 +210,7 @@
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;,
     &quot;structure.view.defaults.are.configured&quot;: &quot;true&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
@@ -617,11 +616,6 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="blank_ota_data" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="blank_ota_data" CONFIG_NAME="Default-esp">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="bootloader-flash" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="bootloader-flash" CONFIG_NAME="Default-esp">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -682,27 +676,12 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="encrypted-otadata-flash" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="encrypted-otadata-flash" CONFIG_NAME="Default-esp">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="encrypted-partition-table-flash" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="encrypted-partition-table-flash" CONFIG_NAME="Default-esp">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="erase-otadata" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="erase-otadata" CONFIG_NAME="Default-esp">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="erase_flash" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="erase_flash" CONFIG_NAME="Default-esp">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="erase_otadata" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="erase_otadata" CONFIG_NAME="Default-esp">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -757,11 +736,6 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="otadata-flash" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="otadata-flash" CONFIG_NAME="Default-esp">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="partition-table-flash" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="partition-table-flash" CONFIG_NAME="Default-esp">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -783,16 +757,6 @@
       </method>
     </configuration>
     <configuration name="partition_table_bin" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="partition_table_bin" CONFIG_NAME="Default-esp">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="read-otadata" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="read-otadata" CONFIG_NAME="Default-esp">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="read_otadata" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="read_otadata" CONFIG_NAME="Default-esp">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -853,13 +817,6 @@
       <item itemvalue="CMake Application.__idf_main" />
       <item itemvalue="CMake Application.__idf_app_trace" />
       <item itemvalue="CMake Application.__idf_app_update" />
-      <item itemvalue="CMake Application.blank_ota_data" />
-      <item itemvalue="CMake Application.encrypted-otadata-flash" />
-      <item itemvalue="CMake Application.erase-otadata" />
-      <item itemvalue="CMake Application.erase_otadata" />
-      <item itemvalue="CMake Application.otadata-flash" />
-      <item itemvalue="CMake Application.read-otadata" />
-      <item itemvalue="CMake Application.read_otadata" />
       <item itemvalue="CMake Application.__idf_asio" />
       <item itemvalue="CMake Application.bootloader-flash" />
       <item itemvalue="CMake Application.encrypted-bootloader-flash" />
@@ -997,21 +954,9 @@
       <workItem from="1679854381158" duration="13546000" />
       <workItem from="1680860645667" duration="427000" />
       <workItem from="1680861093700" duration="11881000" />
-      <workItem from="1680961204372" duration="7313000" />
-    </task>
-    <task id="LOCAL-00001" summary="stuff">
-      <created>1657441294224</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1657441294224</updated>
-    </task>
-    <task id="LOCAL-00002" summary="stuff">
-      <created>1657441309593</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1657441309593</updated>
+      <workItem from="1680961204372" duration="26741000" />
+      <workItem from="1681146560787" duration="617000" />
+      <workItem from="1681147197955" duration="3643000" />
     </task>
     <task id="LOCAL-00003" summary="stuff">
       <created>1657444246640</created>
@@ -1342,7 +1287,21 @@
       <option name="project" value="LOCAL" />
       <updated>1680963830366</updated>
     </task>
-    <option name="localTasksCounter" value="50" />
+    <task id="LOCAL-00050" summary="fixes">
+      <created>1680969076918</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1680969076919</updated>
+    </task>
+    <task id="LOCAL-00051" summary="fixes">
+      <created>1680969387359</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1680969387359</updated>
+    </task>
+    <option name="localTasksCounter" value="52" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1388,11 +1347,11 @@
     <MESSAGE value="workaround (max 50fps)" />
     <MESSAGE value="cleanups, added OTA updater" />
     <MESSAGE value="wifi notifier" />
-    <MESSAGE value="fixes" />
     <MESSAGE value="be more flexible with number of leds per channel. (incompatible protocol change!)" />
     <MESSAGE value="cleanup" />
     <MESSAGE value="fixed timesync issues" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed timesync issues" />
+    <MESSAGE value="fixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixes" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

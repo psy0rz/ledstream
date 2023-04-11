@@ -12,9 +12,8 @@ static const char *UDPBUFFER_TAG = "udpbuffer";
 //max number of currentPacket to buffer
 
 
-//#define QOIS_DATA_LEN 1472-4
-#define QOIS_HEADER_LEN 6
-#define QOIS_DATA_LEN (1460 - QOIS_HEADER_LEN)
+#define UDP_HEADER_LEN 6
+#define UDP_DATA_LEN (1460 - UDP_HEADER_LEN)
 
 
 struct udpPacketStruct {
@@ -22,7 +21,7 @@ struct udpPacketStruct {
     uint8_t reserved1;
     uint16_t time;
     uint16_t syncOffset;
-    uint8_t data[QOIS_DATA_LEN]; //contains multiple framestructs, with the first complete one starting at syncOffset
+    uint8_t data[UDP_DATA_LEN]; //contains multiple framestructs, with the first complete one starting at syncOffset
 };
 
 auto const udpPacketSize = sizeof(udpPacketStruct);
@@ -86,8 +85,6 @@ public:
         if (len) {
 
                 udpPacketStruct &udpPacket = packets[recvIndex];
-//                memset(&udpPacket, 0, sizeof(udpPacketStruct));
-//                memcpy(&udpPacket, data, len);
                 plens[recvIndex] = len;
 
 

@@ -53,7 +53,8 @@ public:
         if (udpBuffer.currentPacket == nullptr)
             return false;
 
-//        ESP_LOGW(LEDSTREAMER_TAG,"packetnr %d", udpBuffer.currentPacket->packetNr);
+//        ESP_LOGD(LEDSTREAMER_TAG, "packetnr %d, packet size %d", udpBuffer.currentPacket->packetNr,
+//                 udpBuffer.currentPlen);
 
         if (synced) {
             // still synced?
@@ -69,7 +70,7 @@ public:
 
         if (!synced) {
             // can we sync to this currentPacket?
-            if (udpBuffer.currentPacket->syncOffset < QOIS_DATA_LEN) {
+            if (udpBuffer.currentPacket->syncOffset < UDP_DATA_LEN) {
                 // reset everything and start from this currentPacket and syncoffset.
                 ESP_LOGW(LEDSTREAMER_TAG, "synced");
                 currentByteNr = udpBuffer.currentPacket->syncOffset;
@@ -97,7 +98,7 @@ public:
             auto packetLen = udpServer.process(udpPacket, udpPacketSize);
 
             if (packetLen > 0) {
-                ESP_LOGD(LEDSTREAMER_TAG, "packet %d bytes", packetLen);
+//                ESP_LOGD(LEDSTREAMER_TAG, "packet %d bytes", packetLen);
 
                 uint16_t time = udpBuffer.process(packetLen);
 
@@ -108,31 +109,35 @@ public:
 
         // leds are ready to be shown?
         if (ready) {
-            // its time to output the prepared leds buffer?
-            if (diff16(timeSync.remoteMillis(), qois.show_time) >= 0) {
+            // its time to output the prepared leds buffer? (or is the time too far in the future?)
+            auto diff = diff16(timeSync.remoteMillis(), qois.show_time);
+            if (diff >= 0 || diff < -1000) {
+//                ESP_LOGD(LEDSTREAMER_TAG, "show packet size %d", udpBuffer.currentPlen);
                 FastLED.show();
+
+//                ESP_LOGD(LEDSTREAMER_TAG, "show done packet size %d", udpBuffer.currentPlen);
                 ready = false;
+                qois.nextFrame();
             }
         } else {
             if (packetValid()) {
                 // feed available bytes to decoder until we run out, or until it doesnt
                 // want any more:
-
-                while (currentByteNr < udpBuffer.currentPlen - QOIS_HEADER_LEN) {
-                    if (!qois.decodeByte(udpBuffer.currentPacket->data[currentByteNr])) {
-                        //we've decoded a frame, so we're ready to show the leds:
-                        ready = true;
-                        qois.nextFrame();
-                        return;
-                    }
+                while (currentByteNr < udpBuffer.currentPlen - UDP_HEADER_LEN) {
+                    const auto wantsMore=qois.decodeByte(udpBuffer.currentPacket->data[currentByteNr]);
                     currentByteNr++;
+                    if (!wantsMore) {
+                        //frame is complete frame, we're ready to show the leds.
+                        ready = true;
+                        return;
+//                        ESP_LOGD(LEDSTREAMER_TAG, "ready packet size %d", udpBuffer.currentPlen);
+                    }
+//                    ESP_LOGD(LEDSTREAMER_TAG, "qois bytes left %d", qois.frame_bytes_left);
                 }
-                //                ESP_LOGD(UDPBUFFER_TAG, "trying to continue in next
-                //                currentPacket");
+                //continue in next packet..
+//                ESP_LOGD(LEDSTREAMER_TAG, "out of bytes");
                 currentByteNr = 0;
                 udpBuffer.currentPacket = nullptr;
-                if (udpBuffer.available() == 0)
-                    ESP_LOGW(LEDSTREAMER_TAG, "buffer underrun");
             }
         }
 
