@@ -5,6 +5,7 @@
 #include "ota.hpp"
 
 #include "leds.hpp"
+#include "fileserver.hpp"
 
 //#include "fileserver.hpp"
 
@@ -12,7 +13,7 @@ static const char *MAIN_TAG = "main";
 
 
 OTAUpdater ota_updater = OTAUpdater(reinterpret_cast<CRGB *>(leds));
-Ledstreamer ledstreamer = Ledstreamer();
+auto ledstreamer = Ledstreamer();
 
 
 //CRGB &getLed(uint16_t ledNr) {
@@ -44,9 +45,11 @@ extern "C" [[noreturn]] __attribute__((unused)) void app_main(void) {
 
     leds_init();
 
-
     wifi_init_sta();
     ethernet_init();
+
+    FileUploadHandler::startServer();
+
 
 //    wificheck();
     ledstreamer.begin(65000);
@@ -59,34 +62,6 @@ extern "C" [[noreturn]] __attribute__((unused)) void app_main(void) {
     while (true) {
         ledstreamer.process();
 
-//        if (millis() - lastTime > 1000) {
-//            ESP_LOGI(MAIN_TAG, "heartbeat");
-//
-//            lastTime = millis();
-//
-//        }
-
-
-
-
-
-        ///TEST
-//        FastLED.clear();
-//        test=(test+1)%300;
-//        leds[0][test]=CRGB::Red;
-//        leds[1][test]=CRGB::Green;
-//        FastLED.show();
-//        vTaskDelay(16/portTICK_PERIOD_MS);
-
-
-
-
-//        if (ledstreamer.idle()) {
-//            if (ledstreamer.timeSync.synced())
-//                notify(CRGB::Green, 1000, 2000);
-//            else
-//                notify(CRGB::Yellow, 500, 1000);
-//        }
     }
 
 }
