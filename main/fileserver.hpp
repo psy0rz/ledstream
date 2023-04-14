@@ -1,7 +1,7 @@
 //
 // Created by psy on 4/8/23.
 //
-//curl -F "file=@test.qois" 192.168.13.137/upload
+// curl -X POST --data-binary @test.qois 192.168.13.137/upload -v
 
 #ifndef LEDSTREAM_FILESERVER_HPP
 #define LEDSTREAM_FILESERVER_HPP
@@ -10,10 +10,12 @@
 #include "esp_partition.h"
 #include "esp_flash_partitions.h"
 
-#define BLOCK_SIZE 4096
+
 static const esp_partition_t *partition;
-static char buffer[BLOCK_SIZE];
+static char buffer[SPI_FLASH_SEC_SIZE];
 static size_t readOffset;
+
+static bool writing=false;
 
 class FileServer {
 
@@ -27,13 +29,14 @@ public:
 
         size_t total_size = req->content_len;
         size_t write_offset = 0;
+        writing=true;
 
         ESP_LOGI(TAG, "erasing flash for uppload of  %d bytes..", total_size);
-        const size_t aligned_size = ((total_size / BLOCK_SIZE) + 1) * BLOCK_SIZE;
+        const size_t aligned_size = ((total_size / SPI_FLASH_SEC_SIZE) + 1) * SPI_FLASH_SEC_SIZE;
         esp_partition_erase_range(partition, 0, aligned_size);
 
         while (write_offset < total_size) {
-            int bytes_received = httpd_req_recv(req, buffer, BLOCK_SIZE);
+            int bytes_received = httpd_req_recv(req, buffer, SPI_FLASH_SEC_SIZE);
             if (bytes_received <= 0) {
                 if (bytes_received == HTTPD_SOCK_ERR_TIMEOUT) {
                     /* Retry if timeout occurred */
@@ -45,7 +48,7 @@ public:
                 return ESP_FAIL;
             }
 
-            ESP_LOGI(TAG, "writing %d", bytes_received);
+//            ESP_LOGI(TAG, "writing %d", bytes_received);
             if (esp_partition_write_raw(partition, write_offset, buffer, bytes_received) != ESP_OK) {
                 httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "Failed to write to partition");
                 ESP_LOGE(TAG, "write error");
@@ -103,12 +106,12 @@ public:
     }
 
     static uint8_t readNext() {
-        auto blockOffset = readOffset % BLOCK_SIZE;
+        auto blockOffset = readOffset % SPI_FLASH_SEC_SIZE;
 
         //arrived at new block ,cache it
         if (blockOffset == 0) {
-            ESP_LOGI(TAG, "reading %d bytes at offset %d", BLOCK_SIZE, readOffset);
-            if (esp_partition_read_raw(partition, readOffset, buffer, BLOCK_SIZE) == ESP_FAIL) {
+            ESP_LOGI(TAG, "reading %d bytes at offset %d", SPI_FLASH_SEC_SIZE, readOffset);
+            if (esp_partition_read_raw(partition, readOffset, buffer, SPI_FLASH_SEC_SIZE) == ESP_FAIL) {
                 ESP_LOGE(TAG, "error while reading offset %d", readOffset);
             }
 
