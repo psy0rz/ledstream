@@ -48,7 +48,8 @@ extern "C" [[noreturn]] __attribute__((unused)) void app_main(void) {
     wifi_init_sta();
     ethernet_init();
 
-    FileUploadHandler::startServer();
+    FileServer::startServer();
+    FileServer::readStart();
 
 
 //    wificheck();
@@ -57,6 +58,8 @@ extern "C" [[noreturn]] __attribute__((unused)) void app_main(void) {
 
 //    auto lastTime = millis();
     ESP_LOGI(MAIN_TAG, "RAM left %d", esp_get_free_heap_size());
+
+
 
     //main task
     while (true) {
