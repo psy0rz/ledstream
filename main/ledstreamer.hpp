@@ -93,6 +93,9 @@ public:
     //process receiving udp packets and updating the ledstrip
     void process() {
 
+        if (writing)
+            return;
+
         //read and store udp packets, update time according to received packets
         auto udpPacket = udpBuffer.getRecvBuffer();
         if (udpPacket != nullptr) {
@@ -112,20 +115,20 @@ public:
         if (ready) {
             // its time to output the prepared leds buffer? (or is the time too far in the future?)
             auto diff = diff16(timeSync.remoteMillis(), qois.show_time);
-//            if (diff >= 0 || diff < -1000) {
+            if (diff >= 0 || diff < -1000) {
 //                ESP_LOGD(LEDSTREAMER_TAG, "show packet size %d", udpBuffer.currentPlen);
                 FastLED.show();
 
 //                ESP_LOGD(LEDSTREAMER_TAG, "show done packet size %d", udpBuffer.currentPlen);
                 ready = false;
                 qois.nextFrame();
-//            }
+            }
         } else {
             if (packetValid()) {
                 // feed available bytes to decoder until we run out, or until it doesnt
                 // want any more:
                 while (currentByteNr < udpBuffer.currentPlen - UDP_HEADER_LEN) {
-                    const auto wantsMore=qois.decodeByte(udpBuffer.currentPacket->data[currentByteNr]);
+                    const auto wantsMore = qois.decodeByte(udpBuffer.currentPacket->data[currentByteNr]);
                     currentByteNr++;
                     if (!wantsMore) {
                         //frame is complete frame, we're ready to show the leds.
@@ -139,11 +142,9 @@ public:
 //                ESP_LOGD(LEDSTREAMER_TAG, "out of bytes");
                 currentByteNr = 0;
                 udpBuffer.currentPacket = nullptr;
-            }
-            else
-            {
+            } else {
                 if (!qois.decodeByte(FileServer::readNext()))
-                    ready=true;
+                    ready = true;
             }
         }
 
