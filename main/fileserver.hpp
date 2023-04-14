@@ -35,6 +35,8 @@ public:
         const size_t aligned_size = ((total_size / SPI_FLASH_SEC_SIZE) + 1) * SPI_FLASH_SEC_SIZE;
         esp_partition_erase_range(partition, 0, aligned_size);
 
+        ESP_LOGI(TAG, "receiving data..");
+
         while (write_offset < total_size) {
             int bytes_received = httpd_req_recv(req, buffer, SPI_FLASH_SEC_SIZE);
             if (bytes_received <= 0) {
@@ -110,12 +112,14 @@ public:
 
         //arrived at new block ,cache it
         if (blockOffset == 0) {
-            ESP_LOGI(TAG, "reading %d bytes at offset %d", SPI_FLASH_SEC_SIZE, readOffset);
+//            ESP_LOGI(TAG, "reading %d bytes at offset %d", SPI_FLASH_SEC_SIZE, readOffset);
             if (esp_partition_read_raw(partition, readOffset, buffer, SPI_FLASH_SEC_SIZE) == ESP_FAIL) {
                 ESP_LOGE(TAG, "error while reading offset %d", readOffset);
             }
+//            ESP_LOGI(TAG, "reading completed");
 
         }
+
         readOffset++;
 
         return buffer[blockOffset];

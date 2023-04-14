@@ -116,10 +116,8 @@ public:
             // its time to output the prepared leds buffer? (or is the time too far in the future?)
             auto diff = diff16(timeSync.remoteMillis(), qois.show_time);
             if (diff >= 0 || diff < -1000) {
-//                ESP_LOGD(LEDSTREAMER_TAG, "show packet size %d", udpBuffer.currentPlen);
                 FastLED.show();
 
-//                ESP_LOGD(LEDSTREAMER_TAG, "show done packet size %d", udpBuffer.currentPlen);
                 ready = false;
                 qois.nextFrame();
             }
@@ -134,17 +132,15 @@ public:
                         //frame is complete frame, we're ready to show the leds.
                         ready = true;
                         return;
-//                        ESP_LOGD(LEDSTREAMER_TAG, "ready packet size %d", udpBuffer.currentPlen);
                     }
-//                    ESP_LOGD(LEDSTREAMER_TAG, "qois bytes left %d", qois.frame_bytes_left);
                 }
                 //continue in next packet..
-//                ESP_LOGD(LEDSTREAMER_TAG, "out of bytes");
                 currentByteNr = 0;
                 udpBuffer.currentPacket = nullptr;
             } else {
-                if (!qois.decodeByte(FileServer::readNext()))
+                    while (qois.decodeByte(FileServer::readNext())) { };
                     ready = true;
+//                    ESP_LOGI("bla", "fmrmae");
             }
         }
 
