@@ -1,6 +1,7 @@
 //
 // Created by psy on 4/8/23.
 //
+//curl -F "file=@test.qois" 192.168.13.137/upload
 
 #ifndef LEDSTREAM_FILESERVER_HPP
 #define LEDSTREAM_FILESERVER_HPP
@@ -11,46 +12,49 @@
 
 #define BLOCK_SIZE 4096
 static const esp_partition_t *partition;
+static char buffer[BLOCK_SIZE];
+static size_t readOffset;
 
-class FileUploadHandler {
+class FileServer {
 
 private:
     static const char *TAG;
 
 public:
 
-//    FileUploadHandler() {}
 
     static esp_err_t post_handler(httpd_req_t *req) {
 
-        static char buffer[BLOCK_SIZE];
-        size_t size = sizeof(buffer);
-
         size_t total_size = req->content_len;
-        size_t received_size = 0;
+        size_t write_offset = 0;
 
         ESP_LOGI(TAG, "erasing flash for uppload of  %d bytes..", total_size);
         const size_t aligned_size = ((total_size / BLOCK_SIZE) + 1) * BLOCK_SIZE;
         esp_partition_erase_range(partition, 0, aligned_size);
 
-        while (received_size < total_size) {
-            int bytes_received = httpd_req_recv(req, buffer, size);
-
-            if (bytes_received == 0) {
-                break;
+        while (write_offset < total_size) {
+            int bytes_received = httpd_req_recv(req, buffer, BLOCK_SIZE);
+            if (bytes_received <= 0) {
+                if (bytes_received == HTTPD_SOCK_ERR_TIMEOUT) {
+                    /* Retry if timeout occurred */
+                    continue;
+                }
+                ESP_LOGE(TAG, "File reception failed!");
+                /* Respond with 500 Internal Server Error */
+                httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "Failed to receive file");
+                return ESP_FAIL;
             }
 
-            received_size += bytes_received;
-
-            ESP_LOGD(TAG, "writing %d", bytes_received);
-            if (esp_partition_write_raw(partition, received_size - bytes_received, buffer, bytes_received) != ESP_OK) {
+            ESP_LOGI(TAG, "writing %d", bytes_received);
+            if (esp_partition_write_raw(partition, write_offset, buffer, bytes_received) != ESP_OK) {
                 httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "Failed to write to partition");
                 ESP_LOGE(TAG, "write error");
                 return ESP_FAIL;
             }
+            write_offset = write_offset + bytes_received;
         }
 
-        if (received_size != total_size) {
+        if (write_offset != total_size) {
             httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "Failed to receive complete data");
             ESP_LOGE(TAG, "incomplete");
             return ESP_FAIL;
@@ -92,8 +96,32 @@ public:
         return ESP_OK;
 
     }
+
+    static esp_err_t readStart() {
+        readOffset = 0;
+        return ESP_OK;
+    }
+
+    static uint8_t readNext() {
+        auto blockOffset = readOffset % BLOCK_SIZE;
+
+        //arrived at new block ,cache it
+        if (blockOffset == 0) {
+            ESP_LOGI(TAG, "reading %d bytes at offset %d", BLOCK_SIZE, readOffset);
+            if (esp_partition_read_raw(partition, readOffset, buffer, BLOCK_SIZE) == ESP_FAIL) {
+                ESP_LOGE(TAG, "error while reading offset %d", readOffset);
+            }
+
+        }
+        readOffset++;
+
+        return buffer[blockOffset];
+
+    }
+
+
 };
 
-const char *FileUploadHandler::TAG = "fileserver";
+const char *FileServer::TAG = "fileserver";
 
 #endif //LEDSTREAM_FILESERVER_HPP
