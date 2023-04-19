@@ -93,8 +93,8 @@ public:
     //process receiving udp packets and updating the ledstrip
     void process() {
 
-        if (writing)
-            return;
+//        if (writing)
+//            return;
 
         //read and store udp packets, update time according to received packets
         auto udpPacket = udpBuffer.getRecvBuffer();
