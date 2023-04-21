@@ -137,11 +137,12 @@ public:
                 //continue in next packet..
                 currentByteNr = 0;
                 udpBuffer.currentPacket = nullptr;
-            } else {
-                    while (qois.decodeByte(FileServer::readNext())) { };
-                    ready = true;
-//                    ESP_LOGI("bla", "fmrmae");
             }
+
+//            else {
+//                    while (qois.decodeByte(FileServer::readNext())) { };
+//                    ready = true;
+//            }
         }
 
     }
