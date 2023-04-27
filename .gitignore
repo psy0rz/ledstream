@@ -6,3 +6,4 @@
 /CMakeListsPrivate.txt
 cmake-build-*
 build
+/managed_components/
