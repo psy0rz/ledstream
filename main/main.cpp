@@ -48,8 +48,8 @@ extern "C" [[noreturn]] __attribute__((unused)) void app_main(void) {
     wifi_init_sta();
     ethernet_init();
 
-    FileServer::startServer();
-    FileServer::readStart();
+    fileserver_start();
+//    FileServer::readStart();
 
 
 //    wificheck();

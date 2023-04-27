@@ -9,126 +9,204 @@
 #include "esp_http_server.h"
 #include "esp_partition.h"
 #include "esp_flash_partitions.h"
+#include "cJSON.h"
+#include "esp_wifi.h"
+#include "esp_system.h"
+#include "esp_http_client.h"
+#include "cJSON.h"
+
+const char *FILESERVER_TAG = "fileserver";
 
 
-static const esp_partition_t *partition;
-static char buffer[SPI_FLASH_SEC_SIZE];
-static size_t readOffset;
+//flash stuff
+#define FILESERVER_FILEINFO_OFFSET           (SPI_FLASH_SEC_SIZE*0)
+#define FILESERVER_ANIMATION_OFFSET          (SPI_FLASH_SEC_SIZE*1)
 
-static bool writing=false;
+const esp_partition_t *fileserver_partition;
+char fileserver_buffer[SPI_FLASH_SEC_SIZE];
+size_t fileserver_read_offset;
 
-class FileServer {
+//animation stuff
+uint32_t fileserver_latest_timestamp = 0;
+struct file_info_t {
+    uint32_t timestamp;
+    size_t len;
 
-private:
-    static const char *TAG;
-
-public:
+} fileserver_current_file;
 
 
-    static esp_err_t post_handler(httpd_req_t *req) {
+char fileserver_download_url[100];
+char fileserver_status_url[100];
 
-        size_t total_size = req->content_len;
-        size_t write_offset = 0;
-        writing=true;
+//load fileserver_current_file from flash
+esp_err_t fileserver_load_file_info() {
+    if (esp_partition_read_raw(fileserver_partition, FILESERVER_FILEINFO_OFFSET, &fileserver_current_file,
+                               sizeof(fileserver_current_file)) !=
+        ESP_OK) {
+        ESP_LOGE(FILESERVER_TAG, "error while reading file info");
+        return ESP_FAIL;
+    }
+    return ESP_OK;
 
-        ESP_LOGI(TAG, "erasing flash for uppload of  %d bytes..", total_size);
-        const size_t aligned_size = ((total_size / SPI_FLASH_SEC_SIZE) + 1) * SPI_FLASH_SEC_SIZE;
-        esp_partition_erase_range(partition, 0, aligned_size);
+}
 
-        ESP_LOGI(TAG, "receiving data..");
+//store fileserver_current_file to flash
+esp_err_t fileserver_save_file_info() {
+    esp_partition_erase_range(fileserver_partition, FILESERVER_FILEINFO_OFFSET, SPI_FLASH_SEC_SIZE);
+    if (esp_partition_write_raw(fileserver_partition, FILESERVER_FILEINFO_OFFSET, &fileserver_current_file,
+                                sizeof(fileserver_current_file)) !=
+        ESP_OK) {
+        ESP_LOGE(FILESERVER_TAG, "error while reading file info");
+        return ESP_FAIL;
+    }
+    return ESP_OK;
+}
 
-        while (write_offset < total_size) {
-            int bytes_received = httpd_req_recv(req, buffer, SPI_FLASH_SEC_SIZE);
-            if (bytes_received <= 0) {
-                if (bytes_received == HTTPD_SOCK_ERR_TIMEOUT) {
-                    /* Retry if timeout occurred */
-                    continue;
+//check online for latest update timestamp
+void fileserver_get_online_timestamp() {
+
+    ESP_LOGI(FILESERVER_TAG, "Checking latest animation version at: %s", fileserver_status_url);
+
+    esp_http_client_config_t config = {
+            .url = fileserver_status_url,
+            .event_handler=[](esp_http_client_event_t *evt) {
+                switch (evt->event_id) {
+                    default:
+                        break;
+                    case HTTP_EVENT_ON_DATA:
+                        cJSON *root = cJSON_Parse((char *) evt->data);
+                        if (root != nullptr) {
+                            cJSON *timestamp = cJSON_GetObjectItem(root, "timestamp");
+                            if (timestamp != nullptr) {
+                                fileserver_latest_timestamp = timestamp->valueint;
+                                ESP_LOGI(FILESERVER_TAG, "Latest version: %d", fileserver_latest_timestamp);
+                            }
+                            cJSON_Delete(root);
+                        }
+
+                        break;
                 }
-                ESP_LOGE(TAG, "File reception failed!");
-                /* Respond with 500 Internal Server Error */
-                httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "Failed to receive file");
-                return ESP_FAIL;
+                return ESP_OK;
             }
+    };
+    esp_http_client_handle_t client = esp_http_client_init(&config);
+    esp_http_client_perform(client);
+    esp_http_client_cleanup(client);
 
-//            ESP_LOGI(TAG, "writing %d", bytes_received);
-            if (esp_partition_write_raw(partition, write_offset, buffer, bytes_received) != ESP_OK) {
-                httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "Failed to write to partition");
-                ESP_LOGE(TAG, "write error");
-                return ESP_FAIL;
+}
+
+void fileserver_download() {
+
+    //no download needed?
+    if (fileserver_latest_timestamp == 0 || fileserver_current_file.timestamp == fileserver_latest_timestamp)
+        return;
+
+    ESP_LOGI(FILESERVER_TAG, "Preparing flash for download of %s", fileserver_download_url);
+    esp_partition_erase_range(fileserver_partition, FILESERVER_ANIMATION_OFFSET,
+                              fileserver_partition->size - FILESERVER_ANIMATION_OFFSET);
+
+    ESP_LOGI(FILESERVER_TAG, "Downloading....");
+    fileserver_current_file.len = 0;
+
+
+    esp_http_client_config_t config = {
+            .url = fileserver_download_url,
+            .event_handler=[](esp_http_client_event_t *evt) {
+                switch (evt->event_id) {
+                    default:
+                        break;
+                    case HTTP_EVENT_ON_DATA:
+
+                        auto write_offset = fileserver_current_file.len + FILESERVER_ANIMATION_OFFSET;
+                        if (esp_partition_write_raw(fileserver_partition, write_offset, evt->data, evt->data_len) !=
+                            ESP_OK) {
+                            ESP_LOGE(FILESERVER_TAG, "flash write error at offset %d", write_offset);
+                            return ESP_FAIL;
+                        }
+
+                        fileserver_current_file.len += evt->data_len;
+
+                        break;
+                }
+                return ESP_OK;
             }
-            write_offset = write_offset + bytes_received;
-        }
-
-        if (write_offset != total_size) {
-            httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "Failed to receive complete data");
-            ESP_LOGE(TAG, "incomplete");
-            return ESP_FAIL;
-        }
-
-        httpd_resp_send(req, nullptr, 0);
-        ESP_LOGI(TAG, "recieve ok");
-
-        return ESP_OK;
+    };
+    esp_http_client_handle_t client = esp_http_client_init(&config);
+    if (esp_http_client_perform(client) == ESP_OK) {
+        //we did it, store new timestamp and write it to flash
+        ESP_LOGI(FILESERVER_TAG, "Download succes");
+        fileserver_current_file.timestamp = fileserver_latest_timestamp;
+        fileserver_save_file_info();
     }
-
-    static esp_err_t startServer() {
-        httpd_config_t config = HTTPD_DEFAULT_CONFIG();
-
-        httpd_handle_t server;
+    esp_http_client_cleanup(client);
 
 
-        partition = (esp_partition_t *) esp_partition_find_first(ESP_PARTITION_TYPE_ANY, ESP_PARTITION_SUBTYPE_ANY,
-                                                                 "ledstream");
-        if (partition == nullptr) {
-            ESP_LOGE(TAG, "Cant find ledstream partition");
-            return ESP_FAIL;
-        }
+}
 
-        if (httpd_start(&server, &config) != ESP_OK) {
-            ESP_LOGE(TAG, "Failed to start webserver");
-            return ESP_FAIL;
-        }
-
-        httpd_uri_t post_uri;
-        post_uri.uri = "/upload";
-        post_uri.method = HTTP_POST;
-        post_uri.handler = post_handler;
-        post_uri.user_ctx = nullptr;
-
-        httpd_register_uri_handler(server, &post_uri);
-
-        ESP_LOGI(TAG, "Started webserver");
-        return ESP_OK;
+[[noreturn]]  void fileserver_task(void *args) {
+    while (true) {
+        vTaskDelay(pdMS_TO_TICKS(10000));
+        fileserver_get_online_timestamp();
+        fileserver_download();
 
     }
+}
 
-    static esp_err_t readStart() {
-        readOffset = 0;
-        return ESP_OK;
+esp_err_t fileserver_start() {
+
+    fileserver_current_file.len = 0;
+    fileserver_current_file.timestamp = 0;
+
+
+    fileserver_partition = (esp_partition_t *) esp_partition_find_first(ESP_PARTITION_TYPE_ANY,
+                                                                        ESP_PARTITION_SUBTYPE_ANY, "ledstream");
+    if (fileserver_partition == nullptr) {
+        ESP_LOGE(FILESERVER_TAG, "Cant find ledstream partition");
+        return ESP_FAIL;
     }
 
-    static uint8_t readNext() {
-        auto blockOffset = readOffset % SPI_FLASH_SEC_SIZE;
+    fileserver_load_file_info();
 
-        //arrived at new block ,cache it
-        if (blockOffset == 0) {
-//            ESP_LOGI(TAG, "reading %d bytes at offset %d", SPI_FLASH_SEC_SIZE, readOffset);
-            if (esp_partition_read_raw(partition, readOffset, buffer, SPI_FLASH_SEC_SIZE) == ESP_FAIL) {
-                ESP_LOGE(TAG, "error while reading offset %d", readOffset);
-            }
-//            ESP_LOGI(TAG, "reading completed");
 
+    char mac_str[18];
+    get_mac_address(mac_str);
+
+    snprintf(fileserver_download_url, sizeof(fileserver_download_url), "%s/get/file/%s", CONFIG_LEDSTREAM_LEDDER_URL,
+             mac_str);
+    snprintf(fileserver_status_url, sizeof(fileserver_download_url), "%s/get/status/%s", CONFIG_LEDSTREAM_LEDDER_URL,
+             mac_str);
+
+    xTaskCreate(fileserver_task, "fileserver_task", 4096, nullptr, 1, nullptr);
+
+
+    return ESP_OK;
+
+}
+
+esp_err_t fileserver_read_start() {
+    fileserver_read_offset = 0;
+    return ESP_OK;
+}
+
+uint8_t fileserver_read_next() {
+    auto blockOffset = fileserver_read_offset % SPI_FLASH_SEC_SIZE;
+
+    //arrived at new block ,cache it
+    if (blockOffset == 0) {
+//            ESP_LOGI(FILESERVER_TAG, "reading %d bytes at offset %d", SPI_FLASH_SEC_SIZE, fileserver_read_offset);
+        if (esp_partition_read_raw(fileserver_partition, fileserver_read_offset, fileserver_buffer,
+                                   SPI_FLASH_SEC_SIZE) == ESP_FAIL) {
+            ESP_LOGE(FILESERVER_TAG, "error while reading offset %d", fileserver_read_offset);
         }
-
-        readOffset++;
-
-        return buffer[blockOffset];
+//            ESP_LOGI(FILESERVER_TAG, "reading completed");
 
     }
 
+    fileserver_read_offset++;
 
-};
+    return fileserver_buffer[blockOffset];
 
-const char *FileServer::TAG = "fileserver";
+}
+
 
 #endif //LEDSTREAM_FILESERVER_HPP
