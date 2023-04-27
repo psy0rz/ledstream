@@ -79,7 +79,6 @@
       <config projectName="ledstream" targetName="flash" />
       <config projectName="ledstream" targetName="__idf_esp_pm" />
       <config projectName="ledstream" targetName="__idf_mdns" />
-      <config projectName="ledstream" targetName="__idf_joltwallet__littlefs" />
       <config projectName="ledstream" targetName="__idf_driver" />
       <config projectName="ledstream" targetName="__idf_spi_flash" />
       <config projectName="ledstream" targetName="__idf_console" />
@@ -141,9 +140,16 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="cleanup up qois decoder and fixed a bug">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="cleanup">
+      <change beforePath="$PROJECT_DIR$/../esp/esp-idf/tools/catch/catch.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../esp/esp-idf/tools/catch/catch.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../esp/esp-idf/tools/idf_size.py" beforeDir="false" afterPath="$PROJECT_DIR$/../esp/esp-idf/tools/idf_size.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/Kconfig.projbuild" beforeDir="false" afterPath="$PROJECT_DIR$/main/Kconfig.projbuild" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/fileserver.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/fileserver.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/ota.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/ota.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/utils.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/utils.hpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -174,6 +180,11 @@
     <option name="PREVIEW_PUSH_PROTECTED_ONLY" value="true" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/../esp/esp-idf/components/esp_http_client/include/esp_http_client.h" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/../esp/esp-idf/components/json/cJSON/cJSON.h" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/../esp/esp-idf/examples/protocols/esp_http_client/main/esp_http_client_example.c" root0="SKIP_INSPECTION" />
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
@@ -188,33 +199,38 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
-    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;idf&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;,
-    &quot;structure.view.defaults.are.configured&quot;: &quot;true&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "git-widget-placeholder": "idf",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "structure.view.defaults.are.configured": "true",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/main" />
     </key>
   </component>
   <component name="RunManager" selected="CMake Application.app">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="__idf_FastLED-idf" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="__idf_FastLED-idf" CONFIG_NAME="Default-esp">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -421,11 +437,6 @@
       </method>
     </configuration>
     <configuration name="__idf_heap" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="__idf_heap" CONFIG_NAME="Default-esp">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="__idf_joltwallet__littlefs" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="__idf_joltwallet__littlefs" CONFIG_NAME="Default-esp">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -809,7 +820,6 @@
       <item itemvalue="CMake Application.uf2-app" />
       <item itemvalue="CMake Application.__idf_FastLED-idf" />
       <item itemvalue="CMake Application.__idf_main" />
-      <item itemvalue="CMake Application.__idf_joltwallet__littlefs" />
       <item itemvalue="CMake Application.__idf_app_trace" />
       <item itemvalue="CMake Application.__idf_app_update" />
       <item itemvalue="CMake Application.__idf_asio" />
@@ -956,14 +966,7 @@
       <workItem from="1681476992518" duration="10973000" />
       <workItem from="1681775550058" duration="16000" />
       <workItem from="1682584559578" duration="154000" />
-      <workItem from="1682584725269" duration="1000" />
-    </task>
-    <task id="LOCAL-00004" summary="stuff">
-      <created>1657450580615</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1657450580615</updated>
+      <workItem from="1682584725269" duration="22328000" />
     </task>
     <task id="LOCAL-00005" summary="stuff">
       <created>1657451898452</created>
@@ -1301,7 +1304,14 @@
       <option name="project" value="LOCAL" />
       <updated>1681219651501</updated>
     </task>
-    <option name="localTasksCounter" value="53" />
+    <task id="LOCAL-00053" summary="cleanup">
+      <created>1682584831177</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1682584831177</updated>
+    </task>
+    <option name="localTasksCounter" value="54" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1348,11 +1358,11 @@
     <MESSAGE value="cleanups, added OTA updater" />
     <MESSAGE value="wifi notifier" />
     <MESSAGE value="be more flexible with number of leds per channel. (incompatible protocol change!)" />
-    <MESSAGE value="cleanup" />
     <MESSAGE value="fixed timesync issues" />
     <MESSAGE value="fixes" />
     <MESSAGE value="cleanup up qois decoder and fixed a bug" />
-    <option name="LAST_COMMIT_MESSAGE" value="cleanup up qois decoder and fixed a bug" />
+    <MESSAGE value="cleanup" />
+    <option name="LAST_COMMIT_MESSAGE" value="cleanup" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

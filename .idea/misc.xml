@@ -2,8 +2,10 @@
 <project version="4">
   <component name="CMakeWorkspace" PROJECT_DIR="$PROJECT_DIR$" />
   <component name="CidrRootsConfiguration">
-    <libraryRoots>
+    <sourceRoots>
       <file path="$PROJECT_DIR$/../esp/esp-idf" />
+    </sourceRoots>
+    <libraryRoots>
       <file path="$PROJECT_DIR$/../esp/esp-idf4.4" />
     </libraryRoots>
     <excludeRoots>

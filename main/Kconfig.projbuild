@@ -171,6 +171,12 @@ menu "LEDSTREAM CONFIG"
         help
             URL of server which hosts the firmware image.
 
+    config LEDSTREAM_LEDDER_URL
+        string "Ledder URL"
+        default "http://192.168.13.154:3000"
+        help
+            URL of server which hosts the firmware image.
+
 
 
 endmenu
