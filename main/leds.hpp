@@ -80,6 +80,7 @@ void blink_led(CRGB rgb, int on, int total) {
 
 
 
+
 void progress_bar(int percentage) {
     static int last_percentage = -1;
 
@@ -90,11 +91,11 @@ void progress_bar(int percentage) {
 
     ESP_LOGI("progress", "%d%%", percentage);
 
-    const int NUM_LEDS = 8;
-    int num_leds_lit = ((percentage * NUM_LEDS) / 100);
+    const int bar_length = 8;
+    int num_leds_lit = ((percentage * bar_length) / 100);
 //        static int flash_state = 0;
 
-    for (int i = 0; i < NUM_LEDS; i++) {
+    for (int i = 0; i < bar_length; i++) {
         if (i < num_leds_lit) {
             leds[0][i] = CRGB::DarkGreen;
         } else {

@@ -24,6 +24,9 @@ private:
     uint8_t lastPacketNr;
     uint16_t currentByteNr;
 
+    //we start in static playback mode. if we receive an udp packet we switch to streaming and stay there.
+    bool streaming;
+
 
 public:
     TimeSync timeSync;
@@ -34,6 +37,7 @@ public:
         lastPacketNr = 0;
         currentByteNr = 0;
         synced = false;
+        streaming = false;
     }
 
     void begin(uint16_t port) {
@@ -93,15 +97,13 @@ public:
     //process receiving udp packets and updating the ledstrip
     void process() {
 
-//        if (writing)
-//            return;
-
-        //read and store udp packets, update time according to received packets
+        //read and store udp packets, update time according to received packets (for streaming mode)
         auto udpPacket = udpBuffer.getRecvBuffer();
         if (udpPacket != nullptr) {
             auto packetLen = udpServer.process(udpPacket, udpPacketSize);
 
             if (packetLen > 0) {
+                streaming = true;
 //                ESP_LOGD(LEDSTREAMER_TAG, "packet %d bytes", packetLen);
 
                 uint16_t time = udpBuffer.process(packetLen);
@@ -122,27 +124,47 @@ public:
                 qois.nextFrame();
             }
         } else {
-            if (packetValid()) {
-                // feed available bytes to decoder until we run out, or until it doesnt
-                // want any more:
-                while (currentByteNr < udpBuffer.currentPlen - UDP_HEADER_LEN) {
-                    const auto wantsMore = qois.decodeByte(udpBuffer.currentPacket->data[currentByteNr]);
-                    currentByteNr++;
-                    if (!wantsMore) {
-                        //frame is complete frame, we're ready to show the leds.
-                        ready = true;
-                        return;
-                    }
-                }
-                //continue in next packet..
-                currentByteNr = 0;
-                udpBuffer.currentPacket = nullptr;
-            }
+            //create new leds to be shown
 
-//            else {
-//                    while (qois.decodeByte(FileServer::readNext())) { };
-//                    ready = true;
-//            }
+            //streaming UDP mode:
+            if (streaming) {
+
+                if (packetValid()) {
+                    // feed available bytes to decoder until we run out, or until it doesnt
+                    // want any more:
+                    while (currentByteNr < udpBuffer.currentPlen - UDP_HEADER_LEN) {
+                        const auto wantsMore = qois.decodeByte(udpBuffer.currentPacket->data[currentByteNr]);
+                        currentByteNr++;
+                        if (!wantsMore) {
+                            //frame is complete frame, we're ready to show the leds.
+                            ready = true;
+                            return;
+                        }
+                    }
+                    //continue in next packet..
+                    currentByteNr = 0;
+                    udpBuffer.currentPacket = nullptr;
+                }
+            }
+                //static replay mode:
+            else {
+                //are we at the start of the file?
+                if (fileserver_read_offset == 0) {
+                    //restart qois decoder and timing
+                    qois.nextFrame();
+                    timeSync.reset();
+                    FastLED.clear();
+                }
+
+                //read a full frame
+                while (qois.decodeByte(fileserver_read_next()) ) {
+                    //happens when corrupt/downloading
+                    if (fileserver_read_offset==0)
+                        return;
+
+                };
+                ready = true;
+            }
         }
 
     }

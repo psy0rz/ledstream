@@ -21,10 +21,14 @@ const char *FILESERVER_TAG = "fileserver";
 //flash stuff
 #define FILESERVER_FILEINFO_OFFSET           (SPI_FLASH_SEC_SIZE*0)
 #define FILESERVER_ANIMATION_OFFSET          (SPI_FLASH_SEC_SIZE*1)
+int fileserver_max_file_size=0;
 
 const esp_partition_t *fileserver_partition;
 char fileserver_buffer[SPI_FLASH_SEC_SIZE];
 size_t fileserver_read_offset;
+
+
+bool fileserver_downloading;
 
 //animation stuff
 uint32_t fileserver_latest_timestamp = 0;
@@ -56,7 +60,7 @@ esp_err_t fileserver_save_file_info() {
     if (esp_partition_write_raw(fileserver_partition, FILESERVER_FILEINFO_OFFSET, &fileserver_current_file,
                                 sizeof(fileserver_current_file)) !=
         ESP_OK) {
-        ESP_LOGE(FILESERVER_TAG, "error while reading file info");
+        ESP_LOGE(FILESERVER_TAG, "error while writing file info");
         return ESP_FAIL;
     }
     return ESP_OK;
@@ -102,12 +106,16 @@ void fileserver_download() {
         return;
 
     ESP_LOGI(FILESERVER_TAG, "Preparing flash for download of %s", fileserver_download_url);
-    esp_partition_erase_range(fileserver_partition, FILESERVER_ANIMATION_OFFSET,
-                              fileserver_partition->size - FILESERVER_ANIMATION_OFFSET);
+
+    //store timestamp to prevent download loops in case of crash.
+    fileserver_current_file.len = 0;
+    fileserver_current_file.timestamp=fileserver_latest_timestamp;
+    fileserver_downloading=true;
+    fileserver_save_file_info();
+
+    esp_partition_erase_range(fileserver_partition, FILESERVER_ANIMATION_OFFSET,fileserver_max_file_size );
 
     ESP_LOGI(FILESERVER_TAG, "Downloading....");
-    fileserver_current_file.len = 0;
-
 
     esp_http_client_config_t config = {
             .url = fileserver_download_url,
@@ -132,13 +140,18 @@ void fileserver_download() {
             }
     };
     esp_http_client_handle_t client = esp_http_client_init(&config);
-    if (esp_http_client_perform(client) == ESP_OK) {
-        //we did it, store new timestamp and write it to flash
+    if (esp_http_client_perform(client)==ESP_OK)
         ESP_LOGI(FILESERVER_TAG, "Download succes");
-        fileserver_current_file.timestamp = fileserver_latest_timestamp;
-        fileserver_save_file_info();
-    }
+    else
+        ESP_LOGE(FILESERVER_TAG, "Download failed.");
+
+    //To prevent endless flash-loops in case something keeps going wrong, we always store the timestamp to prevent repeats.
+    fileserver_current_file.timestamp = fileserver_latest_timestamp;
+    fileserver_save_file_info();
+
     esp_http_client_cleanup(client);
+    fileserver_downloading=false;
+    fileserver_read_offset=0;
 
 
 }
@@ -156,6 +169,7 @@ esp_err_t fileserver_start() {
 
     fileserver_current_file.len = 0;
     fileserver_current_file.timestamp = 0;
+    fileserver_downloading=false;
 
 
     fileserver_partition = (esp_partition_t *) esp_partition_find_first(ESP_PARTITION_TYPE_ANY,
@@ -165,13 +179,17 @@ esp_err_t fileserver_start() {
         return ESP_FAIL;
     }
 
+
+    fileserver_max_file_size=fileserver_partition->size - FILESERVER_ANIMATION_OFFSET;
+
+
     fileserver_load_file_info();
 
 
     char mac_str[18];
     get_mac_address(mac_str);
 
-    snprintf(fileserver_download_url, sizeof(fileserver_download_url), "%s/get/file/%s", CONFIG_LEDSTREAM_LEDDER_URL,
+    snprintf(fileserver_download_url, sizeof(fileserver_download_url), "%s/get/render/%s", CONFIG_LEDSTREAM_LEDDER_URL,
              mac_str);
     snprintf(fileserver_status_url, sizeof(fileserver_download_url), "%s/get/status/%s", CONFIG_LEDSTREAM_LEDDER_URL,
              mac_str);
@@ -183,26 +201,56 @@ esp_err_t fileserver_start() {
 
 }
 
-esp_err_t fileserver_read_start() {
+//jump to start of file
+esp_err_t fileserver_read_restart() {
     fileserver_read_offset = 0;
     return ESP_OK;
 }
 
+
+//blocks calling task until download is complete and does progress output
+bool wait_download()
+{
+    if (fileserver_downloading) {
+        while (fileserver_downloading) {
+            FastLED.clear();
+            progress_bar((fileserver_current_file.len*100)/ fileserver_max_file_size);
+            vTaskDelay(pdMS_TO_TICKS(1000));
+        }
+        FastLED.clear(true);
+
+        return true;
+    }
+
+    return false;
+
+}
+
+//read next byte of file
 uint8_t fileserver_read_next() {
     auto blockOffset = fileserver_read_offset % SPI_FLASH_SEC_SIZE;
 
+    //wait until download complete and restart
+    if (wait_download())
+        return 0;
+
+
     //arrived at new block ,cache it
     if (blockOffset == 0) {
-//            ESP_LOGI(FILESERVER_TAG, "reading %d bytes at offset %d", SPI_FLASH_SEC_SIZE, fileserver_read_offset);
-        if (esp_partition_read_raw(fileserver_partition, fileserver_read_offset, fileserver_buffer,
+        if (esp_partition_read_raw(fileserver_partition, FILESERVER_ANIMATION_OFFSET + fileserver_read_offset,
+                                   fileserver_buffer,
                                    SPI_FLASH_SEC_SIZE) == ESP_FAIL) {
             ESP_LOGE(FILESERVER_TAG, "error while reading offset %d", fileserver_read_offset);
+            fileserver_read_restart();
+            return 0;
         }
-//            ESP_LOGI(FILESERVER_TAG, "reading completed");
 
     }
 
+    //increase offset and loop
     fileserver_read_offset++;
+    if (fileserver_read_offset >= fileserver_current_file.len)
+        fileserver_read_restart();
 
     return fileserver_buffer[blockOffset];
 
