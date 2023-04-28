@@ -37,6 +37,16 @@ public:
         lastDebugOutput=0;
     };
 
+    //reset so that remotemillis() starts at 0. (used for local replay mode)
+    void reset()
+    {
+        desynced=false;
+        correction=0;
+        remoteStartTime=0;
+        localStartTime=millis();
+
+    }
+
     // can either use specified time, or time received via multicast.
     // use time=0 to only use multicast
     void process(uint16_t syncTime) {

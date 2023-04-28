@@ -140,16 +140,13 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="cleanup">
-      <change beforePath="$PROJECT_DIR$/../esp/esp-idf/tools/catch/catch.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../esp/esp-idf/tools/catch/catch.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../esp/esp-idf/tools/idf_size.py" beforeDir="false" afterPath="$PROJECT_DIR$/../esp/esp-idf/tools/idf_size.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="static animation downloader wip">
+      <change beforePath="$PROJECT_DIR$/../esp/esp-idf/components/openthread/openthread" beforeDir="false" afterPath="$PROJECT_DIR$/../esp/esp-idf/components/openthread/openthread" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/Kconfig.projbuild" beforeDir="false" afterPath="$PROJECT_DIR$/main/Kconfig.projbuild" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/fileserver.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/fileserver.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/ota.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/ota.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/utils.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/utils.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/leds.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/leds.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/ledstreamer.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/ledstreamer.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/timesync.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/timesync.hpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -966,7 +963,7 @@
       <workItem from="1681476992518" duration="10973000" />
       <workItem from="1681775550058" duration="16000" />
       <workItem from="1682584559578" duration="154000" />
-      <workItem from="1682584725269" duration="22328000" />
+      <workItem from="1682584725269" duration="32826000" />
     </task>
     <task id="LOCAL-00005" summary="stuff">
       <created>1657451898452</created>
@@ -1362,7 +1359,8 @@
     <MESSAGE value="fixes" />
     <MESSAGE value="cleanup up qois decoder and fixed a bug" />
     <MESSAGE value="cleanup" />
-    <option name="LAST_COMMIT_MESSAGE" value="cleanup" />
+    <MESSAGE value="static animation downloader wip" />
+    <option name="LAST_COMMIT_MESSAGE" value="static animation downloader wip" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
