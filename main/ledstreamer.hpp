@@ -97,6 +97,8 @@ public:
     //process receiving udp packets and updating the ledstrip
     void process() {
 
+        wait_download();
+
         //read and store udp packets, update time according to received packets (for streaming mode)
         auto udpPacket = udpBuffer.getRecvBuffer();
         if (udpPacket != nullptr) {

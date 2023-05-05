@@ -230,9 +230,6 @@ bool wait_download()
 uint8_t fileserver_read_next() {
     auto blockOffset = fileserver_read_offset % SPI_FLASH_SEC_SIZE;
 
-    //wait until download complete and restart
-    if (wait_download())
-        return 0;
 
 
     //arrived at new block ,cache it

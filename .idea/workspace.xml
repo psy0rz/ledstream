@@ -140,13 +140,11 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="static animation downloader wip">
+    <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="offline static animations work now \o/">
       <change beforePath="$PROJECT_DIR$/../esp/esp-idf/components/openthread/openthread" beforeDir="false" afterPath="$PROJECT_DIR$/../esp/esp-idf/components/openthread/openthread" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/fileserver.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/fileserver.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/leds.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/leds.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/ledstreamer.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/ledstreamer.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/timesync.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/timesync.hpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -963,14 +961,7 @@
       <workItem from="1681476992518" duration="10973000" />
       <workItem from="1681775550058" duration="16000" />
       <workItem from="1682584559578" duration="154000" />
-      <workItem from="1682584725269" duration="32826000" />
-    </task>
-    <task id="LOCAL-00005" summary="stuff">
-      <created>1657451898452</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1657451898452</updated>
+      <workItem from="1682584725269" duration="39022000" />
     </task>
     <task id="LOCAL-00006" summary="stuff">
       <created>1657453292952</created>
@@ -1308,7 +1299,14 @@
       <option name="project" value="LOCAL" />
       <updated>1682584831177</updated>
     </task>
-    <option name="localTasksCounter" value="54" />
+    <task id="LOCAL-00054" summary="offline static animations work now \o/">
+      <created>1682684265573</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1682684265573</updated>
+    </task>
+    <option name="localTasksCounter" value="55" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1360,7 +1358,8 @@
     <MESSAGE value="cleanup up qois decoder and fixed a bug" />
     <MESSAGE value="cleanup" />
     <MESSAGE value="static animation downloader wip" />
-    <option name="LAST_COMMIT_MESSAGE" value="static animation downloader wip" />
+    <MESSAGE value="offline static animations work now \o/" />
+    <option name="LAST_COMMIT_MESSAGE" value="offline static animations work now \o/" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
