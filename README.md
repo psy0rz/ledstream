@@ -31,6 +31,14 @@ Every time you want to use it you have to activate it one time:
  source ~/esp/esp-idf/export.sh
 ```
 
+### In Jetbrains Clion
+
+In clion you can go to Build,Exectution,Deployment -> Toolchains and add a toolchain named esp.
+
+Choose to let it load the environment from the file ~/esp/esp-idf/export.sh
+
+Now clion understands and autocompletes all the ESP-idf stuff! 
+
 ## Run menuconfig and look at pins that are used.
 
 ```
