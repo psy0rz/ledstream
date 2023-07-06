@@ -80,8 +80,21 @@ main/wifi-config.h:
 ```
 
 ## Build and flash:
+
+
+
+
+The first time you're using an espchip you might need to do this:
+
 ```
- idf.py -D SDKCONFIG=sdkconfig.rein1 app-flash
+idf.py partition-table-flash
+idf.py bootloader-flash
+```
+
+After that you can use this to flash and monitor the program:
+
+```
+ idf.py -D SDKCONFIG=sdkconfig.rein1 app-flash monitor
 ```
 
 Now configure ledder to stream to your display. The number of leds and number of channels should exactly match!
