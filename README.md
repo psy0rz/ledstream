@@ -43,6 +43,8 @@ Now clion understands and autocompletes all the ESP-idf stuff!
 
 ## Run menuconfig and look at pins that are used.
 
+Run the following commands from the ledstream github directory.
+
 ```
 idf.py menuconfig
 ```
@@ -84,11 +86,10 @@ main/wifi-config.h:
 ## Build and flash:
 
 
-
-
-The first time you're using an espchip you might need to do this:
+The first time you're using a new ESPchip you might need to do this:
 
 ```
+idf.py build
 idf.py partition-table-flash
 idf.py bootloader-flash
 ```
@@ -98,9 +99,7 @@ After that you can use this to flash and monitor the program:
 ```
  idf.py -D SDKCONFIG=sdkconfig.rein1 app-flash monitor
 ```
-
-Keyboard shortcuts of IDF monitor: <https://github.com/espressif/esp-idf/blob/master/docs/en/api-guides/tools/idf-monitor.rst#keyboard-shortcuts>
-
+Press `ctrl + ]` to exit monitoring. Keyboard shortcuts of IDF monitor: <https://github.com/espressif/esp-idf/blob/master/docs/en/api-guides/tools/idf-monitor.rst#keyboard-shortcuts>
 
 Now configure ledder to stream to your display. The number of leds and number of channels should exactly match!
 
