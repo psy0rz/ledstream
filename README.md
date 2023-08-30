@@ -9,6 +9,8 @@
 
 ## Get and build esp-idf toolkit
 
+(if you're experienced with docker you can use the ./dockeridf instead of idf.py and skip this)
+
 **Important: You need version esp-idf toolkit version 4.4. Version 5 will not work!**
 
 This example uses Linux and a regular ESP32, full instructions are here: https://docs.espressif.com/projects/esp-idf/en/latest/esp32/get-started/linux-macos-setup.html#get-started-configure
