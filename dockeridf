@@ -1,0 +1,4 @@
+#!/bin/bash
+
+docker run -it --rm -v $PWD:/project -w /project -u $UID -e HOME=/tmp espressif/idf:v4.4.5 idf.py $@
+
