@@ -33,6 +33,8 @@ Every time you want to use it you have to activate it one time:
 
 ### In Jetbrains Clion
 
+(this section is optional, only if you want to use Clion)
+
 In clion you can go to Build,Exectution,Deployment -> Toolchains and add a toolchain named esp.
 
 Choose to let it load the environment from the file ~/esp/esp-idf/export.sh
@@ -97,6 +99,10 @@ After that you can use this to flash and monitor the program:
  idf.py -D SDKCONFIG=sdkconfig.rein1 app-flash monitor
 ```
 
+Keyboard shortcuts of IDF monitor: <https://github.com/espressif/esp-idf/blob/master/docs/en/api-guides/tools/idf-monitor.rst#keyboard-shortcuts>
+
+
 Now configure ledder to stream to your display. The number of leds and number of channels should exactly match!
 
 In ledder you will find displayconf-example.js, the examples that use DisplayQOISudp() are used with ledstream.
+
