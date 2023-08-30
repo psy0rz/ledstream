@@ -24,7 +24,6 @@
 #include "ota.hpp"
 #include "leds.hpp"
 
-#define ESP_WIFI_SCAN_AUTH_MODE_THRESHOLD WIFI_AUTH_WPA2_PSK
 
 /* FreeRTOS event group to signal when we are connected*/
 static EventGroupHandle_t s_wifi_event_group;
@@ -112,7 +111,12 @@ void wifi_init_sta() {
 
     strcpy(reinterpret_cast<char *>(wifi_config.sta.ssid), WIFI_SSID);
     strcpy(reinterpret_cast<char *>(wifi_config.sta.password), WIFI_PASS);
-    wifi_config.sta.threshold.authmode = ESP_WIFI_SCAN_AUTH_MODE_THRESHOLD;
+
+    if (strlen(WIFI_PASS) == 0)
+        wifi_config.sta.threshold.authmode = WIFI_AUTH_OPEN;
+    else
+        wifi_config.sta.threshold.authmode = WIFI_AUTH_WPA2_PSK;
+
     wifi_config.sta.sae_pwe_h2e = WPA3_SAE_PWE_BOTH;
 
     ESP_LOGI(WIFI_TAG, "connecting to SSID:%s password:%s", wifi_config.sta.ssid, wifi_config.sta.password);
