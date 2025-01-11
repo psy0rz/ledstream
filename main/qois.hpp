@@ -1,11 +1,11 @@
 //
 // Created by psy on 7/10/22.
 //
+#include <cstring>
 
 #ifndef LEDSTREAM_QOIS_HPP
 #define LEDSTREAM_QOIS_HPP
 
-#include <FastLED.h>
 #include <leds.hpp>
 
 #define QOI_ZEROARR(a) memset((a),0,sizeof(a))
@@ -87,6 +87,7 @@ public:
     // and CONFIG_LEDSTREAM_LEDS_PER_CHANNEL (whats actually statically compiled in ledstream)
     void setNextPixel(const uint8_t r, const uint8_t g, const uint8_t b) {
 
+#ifdef CONFIG_LEDSTREAM_MODE_WS2812
         //only set if we're in range
         if (channel_nr < CONFIG_LEDSTREAM_CHANNELS && pixel_nr < CONFIG_LEDSTREAM_LEDS_PER_CHANNEL) {
 
@@ -94,10 +95,8 @@ public:
             leds[channel_nr][pixel_nr].g = g;
             leds[channel_nr][pixel_nr].b = b;
 
-//            if (pixel_nr == 28)
-//                ESP_LOGD(QOISTAG, "pixel: chan %d, nr %d, %dr %dg %db", channel_nr, pixel_nr, r, g, b);
         }
-
+#endif
         pixel_nr++;
         if (pixel_nr == pixels_per_channel) {
             channel_nr++;
@@ -137,8 +136,11 @@ public:
             //bytes 2-3:
             //pixels per channel
             pixels_per_channel = *(uint16_t *) &bytes[2];
+
+#ifdef LEDSTREAM_MODE_WS2812
             if (pixels_per_channel == 0)
                 pixels_per_channel = CONFIG_LEDSTREAM_LEDS_PER_CHANNEL;
+#endif
             pixel_nr = 0;
             channel_nr = 0;
 

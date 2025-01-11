@@ -85,85 +85,12 @@ menu "LEDSTREAM CONFIG"
                 Set PHY address according your board schematic.
     endif # LEDSTREAM_USE_INTERNAL_ETHERNET
 
-    config LEDSTREAM_CHANNELS
-        int "Channels"
-        range 1 8
-        default 8
 
-
-    config LEDSTREAM_LEDS_PER_CHANNEL
-        int "Leds per channel"
-        range 1 600
-        default 512
-
-
-    config LEDSTREAM_CHANNEL0_PIN
-        int "Channel 0 pin"
-        range -1 LEDSTREAM_GPIO_RANGE_MAX
-        default 12
-        help
-            Use -1 to disable. (only to this with the last channels)
-
-    config LEDSTREAM_CHANNEL1_PIN
-        int "Channel 1 pin"
-        range -1 LEDSTREAM_GPIO_RANGE_MAX
-        default 2
-        help
-            Use -1 to disable. (only to this with the last channels)
-
-    config LEDSTREAM_CHANNEL2_PIN
-        int "Channel 2 pin"
-        range -1 LEDSTREAM_GPIO_RANGE_MAX
-        default 15
-        help
-            Use -1 to disable. (only to this with the last channels)
-
-    config LEDSTREAM_CHANNEL3_PIN
-        int "Channel 3 pin"
-        range -1 LEDSTREAM_GPIO_RANGE_MAX
-        default 4
-        help
-            Use -1 to disable. (only to this with the last channels)
-
-    config LEDSTREAM_CHANNEL4_PIN
-        int "Channel 4 pin"
-        range -1 LEDSTREAM_GPIO_RANGE_MAX
-        default 14
-        help
-            Use -1 to disable. (only to this with the last channels)
-
-    config LEDSTREAM_CHANNEL5_PIN
-        int "Channel 5 pin"
-        range -1 LEDSTREAM_GPIO_RANGE_MAX
-        default 17
-        help
-            Use -1 to disable. (only to this with the last channels)
-
-    config LEDSTREAM_CHANNEL6_PIN
-        int "Channel 6 pin"
-        range -1 LEDSTREAM_GPIO_RANGE_MAX
-        default 32
-        help
-            Use -1 to disable. (only to this with the last channels)
-
-    config LEDSTREAM_CHANNEL7_PIN
-        int "Channel 7 pin"
-        range -1 LEDSTREAM_GPIO_RANGE_MAX
-        default 33
-        help
-            Use -1 to disable. (only to this with the last channels)
 
     config LEDSTREAM_UDP_BUFFERS
         int "UDP buffers"
         range 1 600
         default 50
-
-    config LEDSTREAM_MAX_MILLIAMPS
-        int "Max milliamps"
-        range -1 100000
-        default -1
-
-
 
     config LEDSTREAM_FIRMWARE_UPGRADE_URL
         string "Firmware Upgrade URL"
@@ -177,6 +104,106 @@ menu "LEDSTREAM CONFIG"
         help
             URL of server which hosts the firmware image.
 
+
+    choice
+            prompt "Led controller type"
+            default LEDSTREAM_MODE_WS2812
+
+        config LEDSTREAM_MODE_WS2812
+            bool "Use WS2812 leds with FastLED-IDF"
+
+        config LEDSTREAM_MODE_HUB75
+            bool "Use HUB75 ledboard with ESP32-HUB75-MatrixPanel-DMA"
+
+    endchoice
+
+
+
+    ########################################## WS2812 stuff
+
+    config LEDSTREAM_CHANNELS
+        int "Channels"
+        range 1 8
+        default 8
+        depends on LEDSTREAM_MODE_WS2812
+
+
+    config LEDSTREAM_LEDS_PER_CHANNEL
+        int "Leds per channel"
+        range 1 600
+        default 512
+        depends on LEDSTREAM_MODE_WS2812
+
+    config LEDSTREAM_CHANNEL0_PIN
+        int "Channel 0 pin"
+        range -1 LEDSTREAM_GPIO_RANGE_MAX
+        default 12
+        help
+            Use -1 to disable. (only to this with the last channels)
+        depends on LEDSTREAM_MODE_WS2812
+
+    config LEDSTREAM_CHANNEL1_PIN
+        int "Channel 1 pin"
+        range -1 LEDSTREAM_GPIO_RANGE_MAX
+        default 2
+        help
+            Use -1 to disable. (only to this with the last channels)
+        depends on LEDSTREAM_MODE_WS2812
+
+    config LEDSTREAM_CHANNEL2_PIN
+        int "Channel 2 pin"
+        range -1 LEDSTREAM_GPIO_RANGE_MAX
+        default 15
+        help
+            Use -1 to disable. (only to this with the last channels)
+        depends on LEDSTREAM_MODE_WS2812
+
+    config LEDSTREAM_CHANNEL3_PIN
+        int "Channel 3 pin"
+        range -1 LEDSTREAM_GPIO_RANGE_MAX
+        default 4
+        help
+            Use -1 to disable. (only to this with the last channels)
+        depends on LEDSTREAM_MODE_WS2812
+
+    config LEDSTREAM_CHANNEL4_PIN
+        int "Channel 4 pin"
+        range -1 LEDSTREAM_GPIO_RANGE_MAX
+        default 14
+        help
+            Use -1 to disable. (only to this with the last channels)
+        depends on LEDSTREAM_MODE_WS2812
+
+    config LEDSTREAM_CHANNEL5_PIN
+        int "Channel 5 pin"
+        range -1 LEDSTREAM_GPIO_RANGE_MAX
+        default 17
+        help
+            Use -1 to disable. (only to this with the last channels)
+        depends on LEDSTREAM_MODE_WS2812
+
+    config LEDSTREAM_CHANNEL6_PIN
+        int "Channel 6 pin"
+        range -1 LEDSTREAM_GPIO_RANGE_MAX
+        default 32
+        help
+            Use -1 to disable. (only to this with the last channels)
+        depends on LEDSTREAM_MODE_WS2812
+
+    config LEDSTREAM_CHANNEL7_PIN
+        int "Channel 7 pin"
+        range -1 LEDSTREAM_GPIO_RANGE_MAX
+        default 33
+        help
+            Use -1 to disable. (only to this with the last channels)
+        depends on LEDSTREAM_MODE_WS2812
+
+
+    config LEDSTREAM_MAX_MILLIAMPS
+        int "Max milliamps"
+        range -1 100000
+        default -1
+        depends on LEDSTREAM_MODE_WS2812
 
 
 endmenu

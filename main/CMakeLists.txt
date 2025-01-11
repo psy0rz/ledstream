@@ -1,4 +1,11 @@
 idf_component_register(SRCS "main.cpp" "ethernet.cpp"
-                    INCLUDE_DIRS ".")
+                    INCLUDE_DIRS "."
+
+
+
+
+)
+
+
 
 #target_compile_options(${COMPONENT_LIB} PRIVATE "-Wno-format")

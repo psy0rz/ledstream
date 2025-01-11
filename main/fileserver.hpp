@@ -213,11 +213,11 @@ bool wait_download()
 {
     if (fileserver_downloading) {
         while (fileserver_downloading) {
-            FastLED.clear();
-            progress_bar((fileserver_current_file.len*100)/ fileserver_max_file_size);
+            // FastLED.clear();
+            // progress_bar((fileserver_current_file.len*100)/ fileserver_max_file_size);
             vTaskDelay(pdMS_TO_TICKS(1000));
         }
-        FastLED.clear(true);
+        // FastLED.clear(true);
 
         return true;
     }

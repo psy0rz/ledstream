@@ -1,6 +1,7 @@
 
+#include <esp_log.h>
+
 #include "utils.hpp"
-#include <FastLED.h>
 
 // This class tries to sync the local time against the remote time.
 // It does this by looking at the remotetime that was received by either
@@ -43,7 +44,7 @@ public:
         desynced=false;
         correction=0;
         remoteStartTime=0;
-        localStartTime=millis();
+        localStartTime=ms();
 
     }
 
@@ -51,7 +52,7 @@ public:
     // use time=0 to only use multicast
     void process(uint16_t syncTime) {
 
-        uint16_t now = millis();
+        uint16_t now = ms();
         uint16_t localDelta = now - localStartTime;
         uint16_t remoteDelta = syncTime - remoteStartTime;
 
@@ -95,7 +96,7 @@ public:
     }
 
     uint16_t remoteMillis() const {
-        return ((millis() - localStartTime + remoteStartTime + correction));
+        return ((ms() - localStartTime + remoteStartTime + correction));
     }
 
 };

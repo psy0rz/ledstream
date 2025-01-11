@@ -15,7 +15,7 @@
 
 class OTAUpdater {
 public:
-    OTAUpdater(CRGB *leds) : leds(leds) {
+    OTAUpdater()  {
         updating = false;
     }
 
@@ -36,7 +36,6 @@ private:
 
     bool updating;
 
-    CRGB *leds;
 
     int total_length = 0;
     int downloaded_length = 0;

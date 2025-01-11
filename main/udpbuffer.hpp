@@ -74,7 +74,7 @@ public:
     // 0=no time/dropped packet
     uint16_t process(uint16_t len) {
 
-        uint16_t now=millis();
+        uint16_t now=ms();
         if (diff16(now, lastStatsTime)>1000)
         {
             lastStatsTime=now;
