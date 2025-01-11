@@ -1,8 +1,15 @@
 #ifndef HEADER_LEDS
 #define HEADER_LEDS
 
-#include <FastLED.h>
+
 #include "utils.h"
+
+#include "ESP32-HUB75-MatrixPanel-I2S-DMA.h"
+
+MatrixPanel_I2S_DMA *dma_display = nullptr;
+
+#ifdef CONFIG_LEDSTREAM_MODE_WS2812
+#include <FastLED.h>
 
 #define COLOR_ORDER GRB
 
@@ -80,6 +87,33 @@ void blink_led(CRGB rgb, int on, int total) {
 
 
 
+#endif
+
+#ifdef CONFIG_LEDSTREAM_MODE_HUB75
+
+void leds_init()
+{
+
+    HUB75_I2S_CFG mxconfig(/* width = */ 64, /* height = */ 32, /* chain = */ 1);
+
+        // HUB75_I2S_CFG mxconfig(/* width = */ 64, /* height = */ 64, /* chain = */ 1);
+
+        dma_display = new MatrixPanel_I2S_DMA(mxconfig);
+        dma_display->begin();
+    vTaskDelay(1000 / portTICK_PERIOD_MS);
+        dma_display->setBrightness8(255);
+        dma_display->clearScreen();
+    dma_display->drawPixelRGB888(10,10,255,255,255);
+    dma_display->drawPixelRGB888(11,10,255,255,255);
+    dma_display->drawPixelRGB888(10,10,255,255,255);
+    dma_display->drawPixelRGB888(10,10,255,255,255);
+
+
+}
+
+#endif
+
+
 
 void progress_bar(int percentage) {
     static int last_percentage = -1;
@@ -91,6 +125,7 @@ void progress_bar(int percentage) {
 
     ESP_LOGI("progress", "%d%%", percentage);
 
+#ifdef CONFIG_LEDSTREAM_MODE_WS2812
     const int bar_length = 8;
     int num_leds_lit = ((percentage * bar_length) / 100);
 //        static int flash_state = 0;
@@ -103,7 +138,10 @@ void progress_bar(int percentage) {
         }
     }
     FastLED.show();
+#endif
 }
+
+
 
 #endif
 

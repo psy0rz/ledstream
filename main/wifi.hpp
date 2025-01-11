@@ -42,11 +42,13 @@ bool wifi_disconnected = true;
 
 static void wifi_blinker(void *pvParameter) {
     while (1) {
-        while (wifi_disconnected)
-            blink_led(CRGB(50, 0, 0), 250, 500);
 
-        status_led(CRGB(0, 50, 0));
-        while (!wifi_disconnected)
+        //XXX
+        // while (wifi_disconnected)
+        //     blink_led(CRGB(50, 0, 0), 250, 500);
+        //
+        // status_led(CRGB(0, 50, 0));
+        // while (!wifi_disconnected)
             vTaskDelay(1000 / portTICK_PERIOD_MS);
 
     }

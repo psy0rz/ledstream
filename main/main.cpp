@@ -1,6 +1,6 @@
 #include "ledstreamer.hpp"
 #include "wifi.hpp"
-#include <FastLED.h>
+// #include <FastLED.h>
 #include "ethernet.h"
 #include "ota.hpp"
 
@@ -12,7 +12,7 @@
 static const char *MAIN_TAG = "main";
 
 
-OTAUpdater ota_updater = OTAUpdater(reinterpret_cast<CRGB *>(leds));
+OTAUpdater ota_updater = OTAUpdater();
 auto ledstreamer = Ledstreamer();
 
 
@@ -21,13 +21,10 @@ auto ledstreamer = Ledstreamer();
 //}
 
 
-
-
-
 extern "C" [[noreturn]] __attribute__((unused)) void app_main(void) {
 
     //settle
-    delay(250);
+    vTaskDelay(250 / portTICK_PERIOD_MS);
 
 
     //Initialize NVS

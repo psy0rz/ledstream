@@ -1,8 +1,10 @@
-#ifndef utils_h
-#define utils_h
+#ifndef utils_hpp
+#define utils_hpp
 
 #include <cstdint>
+#include <esp_attr.h>
 #include <esp_mac.h>
+#include <esp_timer.h>
 
 
 signed long diffUnsignedLong(unsigned long first, unsigned long second) {
@@ -38,6 +40,19 @@ void get_mac_address(char *mac_str) {
     uint8_t mac[6];
     esp_read_mac(mac, ESP_MAC_WIFI_STA);
     sprintf(mac_str, "%02X:%02X:%02X:%02X:%02X:%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+}
+
+
+unsigned long IRAM_ATTR ms()
+{
+    return (unsigned long) (esp_timer_get_time() / 1000ULL);
+}
+
+bool duty_cycle(unsigned long on, unsigned long total, unsigned long starttime = 0) {
+    if (!starttime)
+        return ((ms() % total) < on);
+    else
+        return (((ms() - starttime) % total) < on);
 }
 
 

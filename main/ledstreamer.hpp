@@ -120,8 +120,9 @@ public:
             // its time to output the prepared leds buffer? (or is the time too far in the future?)
             auto diff = diff16(timeSync.remoteMillis(), qois.show_time);
             if (diff >= 0 || diff < -1000) {
+#ifdef CONFIG_LEDSTREAM_MODE_WS2812
                 FastLED.show();
-
+#endif
                 ready = false;
                 qois.nextFrame();
             }
@@ -155,7 +156,9 @@ public:
                     //restart qois decoder and timing
                     qois.nextFrame();
                     timeSync.reset();
+#ifdef CONFIG_LEDSTREAM_MODE_WS2812
                     FastLED.clear();
+#endif
                 }
 
                 //read a full frame

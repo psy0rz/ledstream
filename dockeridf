@@ -1,5 +1,5 @@
 #!/bin/bash
 PORT=/dev/ttyUSB0
 
-docker run -it --device $PORT --rm -v $PWD:/project -w /project -u root -e HOME=/tmp espressif/idf:v4.4.5 idf.py $@
+docker run -it --device $PORT --rm -v $PWD:/project -w /project -u root -e HOME=/tmp espressif/idf:v4.4.8 idf.py $@
 
