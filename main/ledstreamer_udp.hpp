@@ -106,64 +106,67 @@ public:
     }
 
     //process receiving udp packets and updating the ledstrip
-    void process()
+   void process()
     {
-        //read and store udp packets, update time according to received packets (for streaming mode)
-        auto udpPacket = udpBuffer.getRecvBuffer();
-        if (udpPacket != nullptr)
+        while (1)
         {
-            auto packetLen = udpServer.process(udpPacket, udpPacketSize);
-
-            if (packetLen > 0)
+            //read and store udp packets, update time according to received packets (for streaming mode)
+            auto udpPacket = udpBuffer.getRecvBuffer();
+            if (udpPacket != nullptr)
             {
-                //                ESP_LOGD(LEDSTREAMER_TAG, "packet %d bytes", packetLen);
+                auto packetLen = udpServer.process(udpPacket, udpPacketSize);
 
-                uint16_t time = udpBuffer.process(packetLen);
-
-                if (time)
-                    timeSync.process(time);
-            }
-        }
-
-        // leds are ready to be shown?
-        if (ready)
-        {
-            // its time to output the prepared leds buffer? (or is the time too far in the future?)
-            auto diff = diff16(timeSync.remoteMillis(), qois.show_time);
-            if (diff >= 0 || diff < -1000)
-            {
-                leds_show();
-                ready = false;
-                qois.reset();
-            }
-        }
-        else
-        {
-            //create new leds to be shown
-
-
-            if (packetValid())
-            {
-                // feed available bytes to decoder until we run out, or until it doesnt
-                // want any more:
-                while (currentByteNr < udpBuffer.currentPlen - UDP_HEADER_LEN)
+                if (packetLen > 0)
                 {
-                    const auto wantsMore = qois.decodeByte(udpBuffer.currentPacket->data[currentByteNr]);
-                    currentByteNr++;
-                    if (!wantsMore)
-                    {
-                        //frame is complete frame, we're ready to show the leds.
-                        ready = true;
+                    //                ESP_LOGD(LEDSTREAMER_TAG, "packet %d bytes", packetLen);
 
-                        //-12, -11 zonder double buff
-                        //-10, -5 met double buff
-                        // ESP_LOGI(LEDSTREAMER_TAG, "%d mS",  diff16(timeSync.remoteMillis(), qois.show_time));
-                        return;
-                    }
+                    uint16_t time = udpBuffer.process(packetLen);
+
+                    if (time)
+                        timeSync.process(time);
                 }
-                //continue in next packet..
-                currentByteNr = 0;
-                udpBuffer.currentPacket = nullptr;
+            }
+
+            // leds are ready to be shown?
+            if (ready)
+            {
+                // its time to output the prepared leds buffer? (or is the time too far in the future?)
+                auto diff = diff16(timeSync.remoteMillis(), qois.show_time);
+                if (diff >= 0 || diff < -1000)
+                {
+                    leds_show();
+                    ready = false;
+                    qois.reset();
+                }
+            }
+            else
+            {
+                //create new leds to be shown
+
+
+                if (packetValid())
+                {
+                    // feed available bytes to decoder until we run out, or until it doesnt
+                    // want any more:
+                    while (currentByteNr < udpBuffer.currentPlen - UDP_HEADER_LEN)
+                    {
+                        const auto wantsMore = qois.decodeByte(udpBuffer.currentPacket->data[currentByteNr]);
+                        currentByteNr++;
+                        if (!wantsMore)
+                        {
+                            //frame is complete frame, we're ready to show the leds.
+                            ready = true;
+
+                            //-12, -11 zonder double buff
+                            //-10, -5 met double buff
+                            // ESP_LOGI(LEDSTREAMER_TAG, "%d mS",  diff16(timeSync.remoteMillis(), qois.show_time));
+                            return;
+                        }
+                    }
+                    //continue in next packet..
+                    currentByteNr = 0;
+                    udpBuffer.currentPacket = nullptr;
+                }
             }
         }
     }
