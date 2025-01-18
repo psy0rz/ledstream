@@ -19,6 +19,8 @@ uint16_t leds_pixels_per_channel = 0;
 
 void leds_init()
 {
+    ESP_LOGI("leds", "Initializing HUB75 library...");
+
     HUB75_I2S_CFG::i2s_pins _pins = {
         CONFIG_LEDSTREAM_R1,
         CONFIG_LEDSTREAM_G1,

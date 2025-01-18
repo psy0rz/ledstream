@@ -1,7 +1,7 @@
-#include "leds.hpp"
-#include "sdkconfig.h"
 
+#include "sdkconfig.h"
 #ifdef CONFIG_LEDSTREAM_MODE_WS2812
+#include "leds.hpp"
 #include <FastLED.h>
 
 
@@ -16,6 +16,9 @@ uint16_t leds_pixel_nr;
 
 void leds_init()
 {
+    ESP_LOGI("leds", "Initializing FastLED-idf library...")
+
+
 #if CONFIG_LEDSTREAM_CHANNELS > 0
     FastLED.addLeds<WS2811, CONFIG_LEDSTREAM_CHANNEL0_PIN, COLOR_ORDER>(leds[0], CONFIG_LEDSTREAM_LEDS_PER_CHANNEL);
 #endif

@@ -5,7 +5,7 @@
 #include "ota.hpp"
 
 #include "leds.hpp"
-#include "fileserver.hpp"
+// #include "fileserver.hpp"
 
 //#include "fileserver.hpp"
 
@@ -13,7 +13,6 @@ static const char *MAIN_TAG = "main";
 
 
 OTAUpdater ota_updater = OTAUpdater();
-auto ledstreamer = Ledstreamer();
 
 
 //CRGB &getLed(uint16_t ledNr) {
@@ -21,13 +20,21 @@ auto ledstreamer = Ledstreamer();
 //}
 
 
+Qois qois;
+Ledstreamer ledstreamer = Ledstreamer(qois);
+
 extern "C" [[noreturn]] __attribute__((unused)) void app_main(void) {
+
+
+    ESP_LOGI(MAIN_TAG, "Ledstreamer boot...");
+
 
     //settle
     vTaskDelay(250 / portTICK_PERIOD_MS);
 
 
     //Initialize NVS
+    ESP_LOGI(MAIN_TAG, "Prepare NVS");
     esp_err_t ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
         ESP_ERROR_CHECK(nvs_flash_erase());
@@ -45,8 +52,8 @@ extern "C" [[noreturn]] __attribute__((unused)) void app_main(void) {
     wifi_init_sta();
     ethernet_init();
 
-    fileserver_start();
-//    FileServer::readStart();
+    // fileserver_start();
+
 
 
 //    wificheck();
@@ -59,6 +66,8 @@ extern "C" [[noreturn]] __attribute__((unused)) void app_main(void) {
 
 
     //main task
+    ESP_LOGI(MAIN_TAG, "Start mainloop:");
+
     while (true) {
         ledstreamer.process();
 

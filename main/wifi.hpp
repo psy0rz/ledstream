@@ -88,6 +88,8 @@ void wifi_init_sta() {
     ESP_LOGW(WIFI_TAG,"No SSID specified, wifi disabled");
     return ;
 #else
+    ESP_LOGI(WIFI_TAG,"Initialize wifi...");
+
 //    xTaskCreate(&wifi_blinker, "wifi_blinker", 1024, NULL, 5, NULL);
 
 
