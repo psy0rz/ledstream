@@ -5,7 +5,7 @@
 
 #include "ESP32-HUB75-MatrixPanel-I2S-DMA.h"
 
-MatrixPanel_I2S_DMA* dma_display  = nullptr;
+MatrixPanel_I2S_DMA*   dma_display  = nullptr;
 
 uint8_t leds_x  = 0;
 uint8_t leds_y  = 0;
@@ -33,13 +33,13 @@ void leds_init()
 
 };
     HUB75_I2S_CFG mxconfig(CONFIG_LEDSTREAM_WIDTH, CONFIG_LEDSTREAM_HEIGHT, CONFIG_LEDSTREAM_CHAIN, _pins);
-
+    mxconfig.double_buff=true;
 
     dma_display = new MatrixPanel_I2S_DMA(mxconfig);
     dma_display->begin();
-    vTaskDelay(1000 / portTICK_PERIOD_MS);
-    dma_display->setBrightness8(55);
-    dma_display->fillScreenRGB888(255,0,0);
+
+     dma_display->setBrightness8(255);
+
 }
 
 
@@ -51,10 +51,11 @@ void  leds_reset()
 
 void  leds_show()
 {
+    dma_display->flipDMABuffer();
 }
 
 
-void  leds_setNextPixel(const uint8_t r, const uint8_t g, const uint8_t b)
+void   leds_setNextPixel(const uint8_t r, const uint8_t g, const uint8_t b)
 {
     dma_display->drawPixelRGB888(leds_x, leds_y, r, g, b);
 
