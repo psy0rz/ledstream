@@ -38,7 +38,7 @@ public:
         lastPacketNr = 0;
         currentByteNr = 0;
         synced = false;
-        streaming = false;
+        streaming = true;
     }
 
     void begin(uint16_t port) {
@@ -141,6 +141,10 @@ public:
                         if (!wantsMore) {
                             //frame is complete frame, we're ready to show the leds.
                             ready = true;
+
+                            //-12, -11 zonder double buff
+                            //-10, -5 met double buff
+                            // ESP_LOGI(LEDSTREAMER_TAG, "%d mS",  diff16(timeSync.remoteMillis(), qois.show_time));
                             return;
                         }
                     }

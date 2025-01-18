@@ -84,7 +84,7 @@ public:
     // and CONFIG_LEDSTREAM_LEDS_PER_CHANNEL (whats actually statically compiled in ledstream)
 
     //returns true when we need more data. false means frame is complete
-    bool decodeByte(uint8_t data) {
+    bool  decodeByte(uint8_t data) {
 
 //        ESP_LOGD(UDPBUFFER_TAG, "decode byte: data=%d waitshowtime=%d, waitop=%d, bytes_needed=%d, op=%d", data,wait_for_header, wait_for_op, bytes_needed, op);
         if (frame_bytes_left == 0) {
