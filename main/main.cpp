@@ -6,7 +6,7 @@
 
 #include "qois.hpp"
 #include "ledstreamer_udp.hpp"
-
+#include "ledstreamer_http.hpp"
 static const char *MAIN_TAG = "main";
 
 
@@ -18,8 +18,7 @@ OTAUpdater ota_updater = OTAUpdater();
 //}
 
 
-Qois qois;
-LedstreamerUDP ledstreamer_udp = LedstreamerUDP(qois);
+LedstreamerUDP ledstreamer_udp = LedstreamerUDP();
 
 
  [[noreturn]] void ledstreamer_udp_task(void *args)
@@ -28,6 +27,7 @@ LedstreamerUDP ledstreamer_udp = LedstreamerUDP(qois);
     while (true)
         ledstreamer_udp.process();
 }
+
 
 extern "C"  __attribute__((unused)) void app_main(void) {
 
@@ -75,7 +75,8 @@ extern "C"  __attribute__((unused)) void app_main(void) {
     //main task
     ESP_LOGI(MAIN_TAG, "Start mainloop:");
 
-    xTaskCreate(ledstreamer_udp_task, "ledstreamer_udp_task", 4096, nullptr, 1, nullptr);
+     xTaskCreate(ledstreamer_udp_task, "ledstreamer_udp_task", 4096, nullptr, 1, nullptr);
+     xTaskCreate(ledstreamer_http_task, "ledstreamer_http_task", 4096, nullptr, 1, nullptr);
 
 
 

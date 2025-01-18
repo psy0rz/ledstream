@@ -22,7 +22,6 @@ class LedstreamerUDP
 private:
     UdpServer udpServer;
     UdpBuffer udpBuffer;
-    Qois& qois;
 
     bool ready;
     bool synced;
@@ -32,8 +31,8 @@ private:
 public:
     TimeSync timeSync;
 
-    explicit LedstreamerUDP(Qois& qois)
-        : udpServer(), udpBuffer(), qois(qois), timeSync()
+    explicit LedstreamerUDP()
+        : udpServer(), udpBuffer(),  timeSync()
     {
         ready = false;
         lastPacketNr = 0;
@@ -106,7 +105,7 @@ public:
     }
 
     //process receiving udp packets and updating the ledstrip
-   void process()
+    void process()
     {
         while (1)
         {
