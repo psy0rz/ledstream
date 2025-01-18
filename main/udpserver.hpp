@@ -26,11 +26,14 @@ public:
         struct sockaddr_in dest_addr;
         memset(&dest_addr, 0, sizeof(dest_addr));
         dest_addr= {
+            .sin_len=sizeof(dest_addr),
                 .sin_family = AF_INET,
                 .sin_port=htons(port),
                 .sin_addr={
                         .s_addr=htonl(INADDR_ANY)
                 },
+            .sin_zero = {},
+
 
         };
 

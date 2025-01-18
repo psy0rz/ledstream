@@ -1,13 +1,11 @@
-#include "ledstreamer.hpp"
 #include "wifi.hpp"
-// #include <FastLED.h>
 #include "ethernet.h"
 #include "ota.hpp"
 
 #include "leds.hpp"
-// #include "fileserver.hpp"
 
-//#include "fileserver.hpp"
+#include "qois.hpp"
+#include "ledstreamer_udp.hpp"
 
 static const char *MAIN_TAG = "main";
 
@@ -21,7 +19,7 @@ OTAUpdater ota_updater = OTAUpdater();
 
 
 Qois qois;
-Ledstreamer ledstreamer = Ledstreamer(qois);
+LedstreamerUDP ledstreamer = LedstreamerUDP(qois);
 
 extern "C" [[noreturn]] __attribute__((unused)) void app_main(void) {
 
