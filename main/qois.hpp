@@ -208,5 +208,6 @@ public:
 
 };
 
+Qois qois;
 
 #endif //LEDSTREAM_QOIS_HPP
