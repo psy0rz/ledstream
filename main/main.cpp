@@ -19,9 +19,18 @@ OTAUpdater ota_updater = OTAUpdater();
 
 
 Qois qois;
-LedstreamerUDP ledstreamer = LedstreamerUDP(qois);
+LedstreamerUDP ledstreamer_udp = LedstreamerUDP(qois);
 
-extern "C" [[noreturn]] __attribute__((unused)) void app_main(void) {
+
+ [[noreturn]] void ledstreamer_udp_task(void *args)
+
+{
+    while (true)
+        ledstreamer_udp.process();
+}
+
+extern "C"  __attribute__((unused)) void app_main(void) {
+
 
 
     ESP_LOGI(MAIN_TAG, "Ledstreamer boot...");
@@ -55,7 +64,7 @@ extern "C" [[noreturn]] __attribute__((unused)) void app_main(void) {
 
 
 //    wificheck();
-    ledstreamer.begin(65000);
+    ledstreamer_udp.begin(65000);
 
 
 //    auto lastTime = millis();
@@ -66,9 +75,8 @@ extern "C" [[noreturn]] __attribute__((unused)) void app_main(void) {
     //main task
     ESP_LOGI(MAIN_TAG, "Start mainloop:");
 
-    while (true) {
-        ledstreamer.process();
+    xTaskCreate(ledstreamer_udp_task, "ledstreamer_udp_task", 4096, nullptr, 1, nullptr);
 
-    }
+
 
 }

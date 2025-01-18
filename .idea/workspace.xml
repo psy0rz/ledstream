@@ -154,6 +154,7 @@
     <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="seperate udpstreamer">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/ledstreamer_udp.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/ledstreamer_udp.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/main.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -189,6 +190,7 @@
     <setting file="file://$PROJECT_DIR$/../esp/esp-idf/components/json/cJSON/cJSON.h" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/../esp/esp-idf/examples/protocols/esp_http_client/main/esp_http_client_example.c" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/main/leds_hub75.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///home/psy/ledstream/main/ledstreamer_udp.hpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/main/main.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/managed_components/hub75/src/platforms/esp32/esp32_i2s_parallel_dma.cpp" root0="FORCE_HIGHLIGHTING" />
   </component>
@@ -1350,7 +1352,7 @@
       <option name="project" value="LOCAL" />
       <updated>1686338058682</updated>
     </task>
-    <option name="localTasksCounter" value="58" />
+    <option name="localTasksCounter" value="59" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
