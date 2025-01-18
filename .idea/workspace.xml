@@ -151,14 +151,11 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="doc">
+    <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="seperate qois from ledstreamer">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/ethernet.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/ethernet.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/leds_hub75.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/leds_hub75.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/leds_ws2812.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/leds_ws2812.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/ledstreamer.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/ledstreamer.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/qois.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/qois.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/udpserver.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/udpserver.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/wifi.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/wifi.hpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -1356,7 +1353,7 @@
       <option name="project" value="LOCAL" />
       <updated>1686338058682</updated>
     </task>
-    <option name="localTasksCounter" value="56" />
+    <option name="localTasksCounter" value="57" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1383,7 +1380,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="refactor wip debugging hell" />
     <MESSAGE value="refactor wip" />
     <MESSAGE value="finally fixed qois/udpstreamer" />
     <MESSAGE value="sender determines lag" />
@@ -1408,7 +1404,8 @@
     <MESSAGE value="static animation downloader wip" />
     <MESSAGE value="offline static animations work now \o/" />
     <MESSAGE value="doc" />
-    <option name="LAST_COMMIT_MESSAGE" value="doc" />
+    <MESSAGE value="seperate qois from ledstreamer" />
+    <option name="LAST_COMMIT_MESSAGE" value="seperate qois from ledstreamer" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
