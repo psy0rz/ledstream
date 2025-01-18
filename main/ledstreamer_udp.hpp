@@ -6,7 +6,6 @@
 //In other cases its better to use the TCP streamer.
 
 
-
 #ifndef LEDSTREAM_LEDSTREAMER_UDP_HPP
 #define LEDSTREAM_LEDSTREAMER_UDP_HPP
 
@@ -142,7 +141,6 @@ public:
         {
             //create new leds to be shown
 
-            //streaming UDP mode:
 
             if (packetValid())
             {

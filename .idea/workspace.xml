@@ -151,12 +151,9 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="seperate qois from ledstreamer">
+    <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="seperate udpstreamer">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/ledstreamer.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/ledstreamer.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/udpserver.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/udpserver.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/wifi.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/wifi.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/ledstreamer_udp.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/ledstreamer_udp.hpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -1353,7 +1350,7 @@
       <option name="project" value="LOCAL" />
       <updated>1686338058682</updated>
     </task>
-    <option name="localTasksCounter" value="57" />
+    <option name="localTasksCounter" value="58" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1380,7 +1377,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="refactor wip" />
     <MESSAGE value="finally fixed qois/udpstreamer" />
     <MESSAGE value="sender determines lag" />
     <MESSAGE value="\o/" />
@@ -1405,7 +1401,8 @@
     <MESSAGE value="offline static animations work now \o/" />
     <MESSAGE value="doc" />
     <MESSAGE value="seperate qois from ledstreamer" />
-    <option name="LAST_COMMIT_MESSAGE" value="seperate qois from ledstreamer" />
+    <MESSAGE value="seperate udpstreamer" />
+    <option name="LAST_COMMIT_MESSAGE" value="seperate udpstreamer" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
