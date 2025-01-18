@@ -1,6 +1,15 @@
 //
 // Created by psy on 7/10/22.
 //
+
+//QOIS decoder:
+//-You keep feeding it bytes (decodeByte())
+//-It will call leds_setNextPixel for every decoded pixel.
+//-When its done it will return false and the show_time will be set to the absolute time in mS when to show the frame.
+//-Its up to the caller to call leds_show() at precisely the show_time.
+//-Call reset to get it ready for the next frame. (this will also call leds_reset())
+
+
 #include <cstring>
 
 #ifndef LEDSTREAM_QOIS_HPP
@@ -57,7 +66,7 @@ public:
     }
 
     //get ready for next frame
-    void nextFrame() {
+    void reset() {
 //        ESP_LOGD(UDPBUFFER_TAG, "start frame");
 
         px.rgba.r = 0;

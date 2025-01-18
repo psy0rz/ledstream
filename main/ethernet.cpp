@@ -73,6 +73,9 @@ bool ethernet_init(void) {
 
 
 #if CONFIG_LEDSTREAM_USE_INTERNAL_ETHERNET
+
+    ESP_LOGI(TAG, "Init ethernet...");
+
     // Create new default instance of esp-netif for Ethernet
     esp_netif_config_t cfg = ESP_NETIF_DEFAULT_ETH();
     esp_netif_t *eth_netif = esp_netif_new(&cfg);

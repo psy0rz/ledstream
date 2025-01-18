@@ -18,22 +18,21 @@ class Ledstreamer {
 private:
     UdpServer udpServer;
     UdpBuffer udpBuffer;
-    Qois qois;
+    Qois &qois;
 
     bool ready;
     bool synced;
     uint8_t lastPacketNr;
     uint16_t currentByteNr;
 
-    //we start in static playback mode. if we receive an udp packet we switch to streaming and stay there.
     bool streaming;
 
 
 public:
     TimeSync timeSync;
 
-    Ledstreamer()
-            : udpServer(), udpBuffer(), qois(), timeSync() {
+    explicit Ledstreamer(Qois & qois)
+            : udpServer(), udpBuffer(), qois(qois), timeSync() {
         ready = false;
         lastPacketNr = 0;
         currentByteNr = 0;
@@ -42,7 +41,8 @@ public:
     }
 
     void begin(uint16_t port) {
-        qois.nextFrame();
+        ESP_LOGI(LEDSTREAMER_TAG, "Init ledstreamer...");
+        qois.reset();
         timeSync.begin();
         udpBuffer.reset();
         udpServer.begin(port);
@@ -82,7 +82,7 @@ public:
                 ESP_LOGW(LEDSTREAMER_TAG, "synced");
                 currentByteNr = udpBuffer.currentPacket->syncOffset;
                 lastPacketNr = udpBuffer.currentPacket->packetNr;
-                qois.nextFrame();
+                qois.reset();
                 synced = true;
                 return true;
             }
@@ -124,7 +124,7 @@ public:
             if (diff >= 0 || diff < -1000) {
                 leds_show();
                 ready = false;
-                qois.nextFrame();
+                qois.reset();
             }
         } else {
             //create new leds to be shown
@@ -158,7 +158,7 @@ public:
                 //are we at the start of the file?
                 if (fileserver_read_offset == 0) {
                     //restart qois decoder and timing
-                    qois.nextFrame();
+                    qois.reset();
                     timeSync.reset();
                     leds_reset();
                 }
