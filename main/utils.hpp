@@ -56,4 +56,30 @@ bool duty_cycle(unsigned long on, unsigned long total, unsigned long starttime =
 }
 
 
+void progress_bar(int percentage) {
+//     static int last_percentage = -1;
+//
+//     if (last_percentage == percentage)
+//         return;
+//
+//     last_percentage = percentage;
+//
+//     ESP_LOGI("progress", "%d%%", percentage);
+//
+// #ifdef CONFIG_LEDSTREAM_MODE_WS2812
+//     const int bar_length = 8;
+//     int num_leds_lit = ((percentage * bar_length) / 100);
+// //        static int flash_state = 0;
+//
+//     for (int i = 0; i < bar_length; i++) {
+//         if (i < num_leds_lit) {
+//             leds[0][i] = CRGB::DarkGreen;
+//         } else {
+//             leds[0][i] = CRGB::DarkRed;
+//         }
+//     }
+//     FastLED.show();
+}
+
+
 #endif

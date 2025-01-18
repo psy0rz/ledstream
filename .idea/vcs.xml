@@ -35,6 +35,5 @@
     <mapping directory="$PROJECT_DIR$/../esp/esp-idf/examples/build_system/cmake/import_lib/main/lib/tinyxml2" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../esp/esp-idf/examples/peripherals/secure_element/atecc608_ecdsa/components/esp-cryptoauthlib" vcs="Git" />
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/components/ESP32-HUB75-MatrixPanel-DMA" vcs="Git" />
   </component>
 </project>

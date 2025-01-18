@@ -45,10 +45,6 @@ class Qois {
 //    int px_len;
     bool wait_for_header;
 
-    //stuff to determine which pixel to set
-    uint16_t pixels_per_channel;
-    uint16_t channel_nr;
-    uint16_t pixel_nr;
 
 public:
 //    CRGB *pixels;
@@ -58,7 +54,6 @@ public:
 
     Qois() {
         QOI_ZEROARR(index);
-        nextFrame();
     }
 
     //get ready for next frame
@@ -81,28 +76,12 @@ public:
 //todo: keep
         QOI_ZEROARR(index);
 
+        leds_reset();
+
     }
 
     //sets the next pixel, keeping in mind pixel_per_channel (what ledder says we SHOULD use)
     // and CONFIG_LEDSTREAM_LEDS_PER_CHANNEL (whats actually statically compiled in ledstream)
-    void setNextPixel(const uint8_t r, const uint8_t g, const uint8_t b) {
-
-#ifdef CONFIG_LEDSTREAM_MODE_WS2812
-        //only set if we're in range
-        if (channel_nr < CONFIG_LEDSTREAM_CHANNELS && pixel_nr < CONFIG_LEDSTREAM_LEDS_PER_CHANNEL) {
-
-            leds[channel_nr][pixel_nr].r = r;
-            leds[channel_nr][pixel_nr].g = g;
-            leds[channel_nr][pixel_nr].b = b;
-
-        }
-#endif
-        pixel_nr++;
-        if (pixel_nr == pixels_per_channel) {
-            channel_nr++;
-            pixel_nr = 0;
-        }
-    }
 
     //returns true when we need more data. false means frame is complete
     bool decodeByte(uint8_t data) {
@@ -135,14 +114,9 @@ public:
 
             //bytes 2-3:
             //pixels per channel
-            pixels_per_channel = *(uint16_t *) &bytes[2];
+            leds_pixels_per_channel = *(uint16_t *) &bytes[2];
 
-#ifdef LEDSTREAM_MODE_WS2812
-            if (pixels_per_channel == 0)
-                pixels_per_channel = CONFIG_LEDSTREAM_LEDS_PER_CHANNEL;
-#endif
-            pixel_nr = 0;
-            channel_nr = 0;
+
 
             //bytes 4-5:
             show_time = *(uint16_t *) &bytes[4];
@@ -201,7 +175,7 @@ public:
             int run = (op & 0x3f) + 1;
 
             while (run) {
-                setNextPixel(px.rgba.r, px.rgba.g, px.rgba.b);
+                leds_setNextPixel(px.rgba.r, px.rgba.g, px.rgba.b);
                 run--;
             }
             wait_for_op = true;
@@ -216,7 +190,7 @@ public:
         index[QOI_COLOR_HASH(px) % 64] = px;
         //        ESP_LOGD(UDPBUFFER_TAG, "write pixel %d", px_pos);
 
-        setNextPixel(px.rgba.r, px.rgba.g, px.rgba.b);
+        leds_setNextPixel(px.rgba.r, px.rgba.g, px.rgba.b);
         wait_for_op = true;
         return (frame_bytes_left > 0);
 
