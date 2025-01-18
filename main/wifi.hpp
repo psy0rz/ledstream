@@ -15,11 +15,12 @@
 #include "freertos/event_groups.h"
 #include "freertos/task.h"
 #include "nvs_flash.h"
+#include "sdkconfig.h"
+
 
 #include "lwip/err.h"
 #include "lwip/sys.h"
 
-#include "wifi-config.h"
 
 #include "ota.hpp"
 #include "leds.hpp"
@@ -83,7 +84,7 @@ static void wifi_event_handler(void *arg,
 void wifi_init_sta() {
 
 
-#ifndef WIFI_SSID
+#ifndef CONFIG_LEDSTREAM_WIFI_SSID
     ESP_LOGW(WIFI_TAG,"No SSID specified, wifi disabled");
     return ;
 #else
@@ -111,10 +112,10 @@ void wifi_init_sta() {
     wifi_config_t wifi_config;
     memset(&wifi_config, 0, sizeof(wifi_config_t));
 
-    strcpy(reinterpret_cast<char *>(wifi_config.sta.ssid), WIFI_SSID);
-    strcpy(reinterpret_cast<char *>(wifi_config.sta.password), WIFI_PASS);
+    strcpy(reinterpret_cast<char *>(wifi_config.sta.ssid), CONFIG_LEDSTREAM_WIFI_SSID);
+    strcpy(reinterpret_cast<char *>(wifi_config.sta.password), CONFIG_LEDSTREAM_WIFI_PASS);
 
-    if (strlen(WIFI_PASS) == 0)
+    if (strlen(CONFIG_LEDSTREAM_WIFI_PASS) == 0)
         wifi_config.sta.threshold.authmode = WIFI_AUTH_OPEN;
     else
         wifi_config.sta.threshold.authmode = WIFI_AUTH_WPA2_PSK;

@@ -10,6 +10,7 @@
 #include "udpbuffer.hpp"
 #include "udpserver.hpp"
 #include "fileserver.hpp"
+#include "leds.hpp"
 
 static const char *LEDSTREAMER_TAG = "ledstreamer";
 
@@ -41,6 +42,7 @@ public:
     }
 
     void begin(uint16_t port) {
+        qois.nextFrame();
         timeSync.begin();
         udpBuffer.reset();
         udpServer.begin(port);
@@ -120,9 +122,7 @@ public:
             // its time to output the prepared leds buffer? (or is the time too far in the future?)
             auto diff = diff16(timeSync.remoteMillis(), qois.show_time);
             if (diff >= 0 || diff < -1000) {
-#ifdef CONFIG_LEDSTREAM_MODE_WS2812
-                FastLED.show();
-#endif
+                leds_show();
                 ready = false;
                 qois.nextFrame();
             }
@@ -156,9 +156,7 @@ public:
                     //restart qois decoder and timing
                     qois.nextFrame();
                     timeSync.reset();
-#ifdef CONFIG_LEDSTREAM_MODE_WS2812
-                    FastLED.clear();
-#endif
+                    leds_reset();
                 }
 
                 //read a full frame

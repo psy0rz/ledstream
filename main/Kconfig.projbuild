@@ -2,6 +2,16 @@
 
 menu "LEDSTREAM CONFIG"
 
+    config LEDSTREAM_WIFI_SSID
+        string "Wifi SSID"
+        default ""
+        help
+            Leave blank to disable wifi
+
+    config LEDSTREAM_WIFI_PASS
+        string "Wifi Password"
+        default ""
+
     config LEDSTREAM_GPIO_RANGE_MIN
         int
         default 0
@@ -204,6 +214,98 @@ menu "LEDSTREAM CONFIG"
         range -1 100000
         default -1
         depends on LEDSTREAM_MODE_WS2812
+
+    ########################################## HUB75 stuff
+
+    config LEDSTREAM_WIDTH
+        int "HUB75 display width"
+        default 64
+        depends on LEDSTREAM_MODE_HUB75
+
+    config LEDSTREAM_HEIGHT
+        int "HUB75 display height"
+        default 32
+        depends on LEDSTREAM_MODE_HUB75
+
+    config LEDSTREAM_CHAIN
+        int "HUB75 chain length"
+        default 1
+        depends on LEDSTREAM_MODE_HUB75
+
+
+    config LEDSTREAM_R1
+        int "HUB75 R1 pin"
+        default 25
+        depends on LEDSTREAM_MODE_HUB75
+
+    config LEDSTREAM_G1
+        int "HUB75 G1 pin"
+        default 26
+        depends on LEDSTREAM_MODE_HUB75
+
+    config LEDSTREAM_B1
+        int "HUB75 B1 pin"
+        default 27
+        depends on LEDSTREAM_MODE_HUB75
+
+
+    config LEDSTREAM_R2
+        int "HUB75 R2 pin"
+        default 14
+        depends on LEDSTREAM_MODE_HUB75
+
+    config LEDSTREAM_G2
+        int "HUB75 G2 pin"
+        default 12
+        depends on LEDSTREAM_MODE_HUB75
+
+    config LEDSTREAM_B2
+        int "HUB75 B2 pin"
+        default 13
+        depends on LEDSTREAM_MODE_HUB75
+
+    config LEDSTREAM_A
+        int "HUB75 A pin"
+        # originaly 23
+        default 02
+        depends on LEDSTREAM_MODE_HUB75
+
+    config LEDSTREAM_B
+        int "HUB75 B pin"
+        # originaly 19
+        default 00
+        depends on LEDSTREAM_MODE_HUB75
+
+    config LEDSTREAM_C
+        int "HUB75 C pin"
+        default 5
+        depends on LEDSTREAM_MODE_HUB75
+
+    config LEDSTREAM_D
+        int "HUB75 D pin"
+        default 17
+        depends on LEDSTREAM_MODE_HUB75
+
+    config LEDSTREAM_E
+        int "HUB75 E pin (for 1/32 scan panels)"
+        default -1
+        depends on LEDSTREAM_MODE_HUB75
+
+
+    config LEDSTREAM_CLK
+        int "HUB75 CLK pin"
+        default 16
+        depends on LEDSTREAM_MODE_HUB75
+    config LEDSTREAM_LAT
+        int "HUB75 LAT pin"
+        default 4
+        depends on LEDSTREAM_MODE_HUB75
+    config LEDSTREAM_OE
+        int "HUB75 OE pin"
+        default 15
+        depends on LEDSTREAM_MODE_HUB75
+
+
 
 
 endmenu

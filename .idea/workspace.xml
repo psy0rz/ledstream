@@ -78,6 +78,7 @@
       <config projectName="ledstream" targetName="__idf_openssl" />
       <config projectName="ledstream" targetName="__idf_unity" />
       <config projectName="ledstream" targetName="__idf_esp_adc_cal" />
+      <config projectName="ledstream" targetName="__idf_hub75" />
       <config projectName="ledstream" targetName="__idf_jsmn" />
       <config projectName="ledstream" targetName="bootloader" />
       <config projectName="ledstream" targetName="__ldgen_output_sections.ld" />
@@ -129,7 +130,6 @@
       <config projectName="ledstream" targetName="__idf_esp_http_server" />
       <config projectName="ledstream" targetName="__idf_esp_hw_support" />
       <config projectName="ledstream" targetName="__idf_newlib" />
-      <config projectName="ledstream" targetName="__idf_ESP32-HUB75-MatrixPanel-DMA" />
       <config projectName="ledstream" targetName="__idf_esp_phy" />
       <config projectName="ledstream" targetName="__idf_esp_hid" />
       <config projectName="ledstream" targetName="size" />
@@ -152,26 +152,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="doc">
-      <change afterPath="$PROJECT_DIR$/.idea/editor.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/ESP32-HUB75-MatrixPanel-DMA/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/components/ESP32-HUB75-MatrixPanel-DMA/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dockeridf" beforeDir="false" afterPath="$PROJECT_DIR$/dockeridf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/main/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/Kconfig.projbuild" beforeDir="false" afterPath="$PROJECT_DIR$/main/Kconfig.projbuild" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/fileserver.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/fileserver.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/idf_component.yml" beforeDir="false" afterPath="$PROJECT_DIR$/main/idf_component.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/leds.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/leds.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/ledstreamer.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/ledstreamer.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/ota.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/ota.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/qois.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/qois.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/timesync.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/timesync.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/udpbuffer.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/udpbuffer.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/utils.h" beforeDir="false" afterPath="$PROJECT_DIR$/main/utils.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/utils.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/utils.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/wifi.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/wifi.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sdkconfig.psy" beforeDir="false" afterPath="$PROJECT_DIR$/sdkconfig.psy" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -203,9 +185,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/../esp/esp-idf/components/esp_http_client/include/esp_http_client.h" root0="SKIP_INSPECTION" />
-    <setting file="file://$PROJECT_DIR$/../esp/esp-idf/components/json/cJSON/cJSON.h" root0="SKIP_INSPECTION" />
-    <setting file="file://$PROJECT_DIR$/../esp/esp-idf/examples/protocols/esp_http_client/main/esp_http_client_example.c" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/../.cache/JetBrains/CLion2024.1/.docker/2024_1/Docker/espressif_idf_v4_4_8/opt/esp/idf/components/esp_wifi/include/esp_wifi.h" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -222,31 +202,31 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.RadMigrateCodeStyle": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.cidr.known.project.marker": "true",
-    "RunOnceActivity.readMode.enableVisualFormatting": "true",
-    "RunOnceActivity.west.config.association.type.startup.service": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "cf.first.check.clang-format": "false",
-    "cidr.known.project.marker": "true",
-    "git-widget-placeholder": "idf",
-    "last_opened_file_path": "/home/psy/ESP32-HUB75-MatrixPanel-DMA/examples/esp-idf/without-gfx/main/main.cpp",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "preferences.keymap",
-    "structure.view.defaults.are.configured": "true",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.RadMigrateCodeStyle&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.west.config.association.type.startup.service&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;hub75&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/psy/ESP32-HUB75-MatrixPanel-DMA/examples/esp-idf/without-gfx/main/main.cpp&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;CMakeSettings&quot;,
+    &quot;structure.view.defaults.are.configured&quot;: &quot;true&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/main" />
@@ -254,11 +234,6 @@
   </component>
   <component name="RunManager" selected="CMake Application.app">
     <configuration name="Unnamed" type="CMakeRunConfiguration" factoryName="Application" nameIsGenerated="true" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="app" CONFIG_NAME="Default-epsidf4">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="__idf_ESP32-HUB75-MatrixPanel-DMA" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="__idf_ESP32-HUB75-MatrixPanel-DMA" CONFIG_NAME="Default-epsidf4">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -469,6 +444,11 @@
       </method>
     </configuration>
     <configuration name="__idf_heap" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="__idf_heap" CONFIG_NAME="Default-epsidf4">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="__idf_hub75" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="__idf_hub75" CONFIG_NAME="Default-epsidf4">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -875,7 +855,6 @@
       <item itemvalue="CMake Application.__idf_driver" />
       <item itemvalue="CMake Application.__idf_efuse" />
       <item itemvalue="CMake Application.__idf_esp-tls" />
-      <item itemvalue="CMake Application.__idf_ESP32-HUB75-MatrixPanel-DMA" />
       <item itemvalue="CMake Application.__idf_esp_adc_cal" />
       <item itemvalue="CMake Application.__idf_esp_common" />
       <item itemvalue="CMake Application.__idf_esp_eth" />
@@ -906,6 +885,7 @@
       <item itemvalue="CMake Application.__idf_freertos" />
       <item itemvalue="CMake Application.__idf_hal" />
       <item itemvalue="CMake Application.__idf_heap" />
+      <item itemvalue="CMake Application.__idf_hub75" />
       <item itemvalue="CMake Application.__idf_jsmn" />
       <item itemvalue="CMake Application.__idf_json" />
       <item itemvalue="CMake Application.__idf_libsodium" />
@@ -1018,6 +998,9 @@
       <workItem from="1736623297433" duration="18000" />
       <workItem from="1736623352404" duration="586000" />
       <workItem from="1736623950944" duration="7589000" />
+      <workItem from="1736677670837" duration="4461000" />
+      <workItem from="1736684134540" duration="896000" />
+      <workItem from="1737190666093" duration="9972000" />
     </task>
     <task id="LOCAL-00007" summary="stuff">
       <created>1657485084555</created>
