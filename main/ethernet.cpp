@@ -2,6 +2,8 @@
 // Created by psy on 1/17/23.
 //Copied and stripped from IDF basic ethernet example
 #include "ethernet.h"
+#if CONFIG_LEDSTREAM_USE_INTERNAL_ETHERNET
+
 
 #include <string.h>
 #include <driver/gpio.h>
@@ -72,7 +74,6 @@ bool ethernet_init(void) {
 
 
 
-#if CONFIG_LEDSTREAM_USE_INTERNAL_ETHERNET
 
     ESP_LOGI(TAG, "Init ethernet...");
 
@@ -114,7 +115,6 @@ bool ethernet_init(void) {
         return (false);
     /* attach Ethernet driver to TCP/IP stack */
     ESP_ERROR_CHECK(esp_netif_attach(eth_netif, esp_eth_new_netif_glue(eth_handle)));
-#endif //CONFIG_LEDSTREAM_USE_INTERNAL_ETHERNET
 
 
     // Register user defined event handers
@@ -122,11 +122,11 @@ bool ethernet_init(void) {
     ESP_ERROR_CHECK(esp_event_handler_register(IP_EVENT, IP_EVENT_ETH_GOT_IP, &got_ip_event_handler, NULL));
 
     /* start Ethernet driver state machine */
-#if CONFIG_LEDSTREAM_USE_INTERNAL_ETHERNET
     ESP_ERROR_CHECK(esp_eth_start(eth_handle));
-#endif // CONFIG_LEDSTREAM_USE_INTERNAL_ETHERNET
 
 
     return (true);
 
 }
+
+#endif

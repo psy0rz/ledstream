@@ -43,7 +43,7 @@ public:
     void begin(uint16_t port)
     {
         ESP_LOGI(LEDSTREAMER_TAG, "Init ledstreamer...");
-        qois.reset();
+        qois_reset();
         timeSync.begin();
         udpBuffer.reset();
         udpServer.begin(port);
@@ -89,7 +89,7 @@ public:
                 ESP_LOGW(LEDSTREAMER_TAG, "synced");
                 currentByteNr = udpBuffer.currentPacket->syncOffset;
                 lastPacketNr = udpBuffer.currentPacket->packetNr;
-                qois.reset();
+                qois_reset();
                 synced = true;
                 return true;
             }
@@ -101,7 +101,7 @@ public:
 
     bool idle() const
     {
-        return (abs(diff16(timeSync.remoteMillis(), qois.show_time)) > 1000);
+        return (abs(diff16(timeSync.remoteMillis(), qois_show_time)) > 1000);
     }
 
     //process receiving udp packets and updating the ledstrip
@@ -130,12 +130,12 @@ public:
             if (ready)
             {
                 // its time to output the prepared leds buffer? (or is the time too far in the future?)
-                auto diff = diff16(timeSync.remoteMillis(), qois.show_time);
+                auto diff = diff16(timeSync.remoteMillis(), qois_show_time);
                 if (diff >= 0 || diff < -1000)
                 {
                     leds_show();
                     ready = false;
-                    qois.reset();
+                    qois_reset();
                 }
             }
             else
@@ -149,7 +149,7 @@ public:
                     // want any more:
                     while (currentByteNr < udpBuffer.currentPlen - UDP_HEADER_LEN)
                     {
-                        const auto wantsMore = qois.decodeByte(udpBuffer.currentPacket->data[currentByteNr]);
+                        const auto wantsMore = qois_decodeByte(udpBuffer.currentPacket->data[currentByteNr]);
                         currentByteNr++;
                         if (!wantsMore)
                         {
