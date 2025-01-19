@@ -24,7 +24,7 @@ menu "LEDSTREAM CONFIG"
         default 48 if IDF_TARGET_ESP32S3
 
     config LEDSTREAM_USE_INTERNAL_ETHERNET
-        depends on IDF_TARGET_ESP32
+        depends on IDF_TARGET_ESP32 || IDF_TARGET_ESP32S3
         select ETH_USE_ESP32_EMAC
         bool "Internal EMAC"
         default "y"

@@ -57,8 +57,11 @@ extern "C"  __attribute__((unused)) void app_main(void) {
     leds_init();
 
     wifi_init_sta();
-    ethernet_init();
 
+#if CONFIG_LEDSTREAM_USE_INTERNAL_ETHERNET
+
+     ethernet_init();
+#endif
     // fileserver_start();
 
 
@@ -68,7 +71,7 @@ extern "C"  __attribute__((unused)) void app_main(void) {
 
 
 //    auto lastTime = millis();
-    ESP_LOGI(MAIN_TAG, "RAM left %d", esp_get_free_heap_size());
+//    ESP_LOGI(MAIN_TAG, "RAM left %lu", esp_get_free_heap_size());
 
 
 
