@@ -103,6 +103,7 @@
       <config projectName="ledstream" targetName="__idf_app_trace" />
       <config projectName="ledstream" targetName="__idf_esp_serial_slave_link" />
       <config projectName="ledstream" targetName="efuse-custom-table" />
+      <config projectName="ledstream" targetName="__idf_FastLED-idf" />
       <config projectName="ledstream" targetName="show_efuse_table" />
       <config projectName="ledstream" targetName="__idf_wifi_provisioning" />
       <config projectName="ledstream" targetName="mbedcrypto" />
@@ -152,87 +153,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="http stream wip">
-      <change beforePath="$PROJECT_DIR$/.idea/csv-editor.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/csv-editor.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/CMakeLists.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/ESP-IDF.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/FastLED.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/FastLED.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/Kconfig" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/LICENSE" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/PORTING.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/bitswap.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/bitswap.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/chipsets.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/color.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/colorpalettes.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/colorpalettes.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/colorutils.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/colorutils.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/component.mk" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/controller.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/cpp_compat.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/dmx.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/fastled_config.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/fastled_delay.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/fastled_progmem.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/fastpin.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/fastspi.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/fastspi_bitbang.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/fastspi_dma.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/fastspi_nop.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/fastspi_ref.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/fastspi_types.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/hal/LICENSE.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/hal/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/hal/esp32-hal-cpu.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/hal/esp32-hal-gpio.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/hal/esp32-hal-gpio.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/hal/esp32-hal-i2c.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/hal/esp32-hal-log.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/hal/esp32-hal-misc.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/hal/esp32-hal-timer.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/hal/esp32-hal.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/hsv2rgb.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/hsv2rgb.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/keywords.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/led_sysdefs.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/lib8tion.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/lib8tion.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/lib8tion/math8.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/lib8tion/random8.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/lib8tion/scale8.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/lib8tion/trig8.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/library.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/library.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/noise.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/noise.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/pixelset.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/pixeltypes.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/platforms.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/platforms.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/platforms/esp/32/clockless_block_esp32.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/platforms/esp/32/clockless_i2s_esp32.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/platforms/esp/32/clockless_rmt_esp32.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/platforms/esp/32/clockless_rmt_esp32.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/platforms/esp/32/fastled_esp32.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/platforms/esp/32/fastpin_esp32.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/platforms/esp/32/fastspi_esp32.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/platforms/esp/32/led_sysdefs_esp32.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/power_mgt.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/power_mgt.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/release_notes.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/FastLED-idf/wiring.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/Kconfig.projbuild" beforeDir="false" afterPath="$PROJECT_DIR$/main/Kconfig.projbuild" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/ethernet.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/ethernet.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/idf_component.yml" beforeDir="false" afterPath="$PROJECT_DIR$/main/idf_component.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/ledstreamer_http.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/ledstreamer_http.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/ledstreamer_udp.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/ledstreamer_udp.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/main.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/qois.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/qois.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sdkconfig" beforeDir="false" afterPath="$PROJECT_DIR$/sdkconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sdkconfig.defaults" beforeDir="false" afterPath="$PROJECT_DIR$/sdkconfig.defaults" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -328,6 +250,11 @@
       </method>
     </configuration>
     <configuration name="Unnamed" type="CMakeRunConfiguration" factoryName="Application" nameIsGenerated="true" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="app" CONFIG_NAME="Default-epsidf4">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="__idf_FastLED-idf" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="__idf_FastLED-idf" CONFIG_NAME="Default-epsidf4">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -957,6 +884,7 @@
       <item itemvalue="CMake Application.__idf_esp_wifi" />
       <item itemvalue="CMake Application.__idf_espcoredump" />
       <item itemvalue="CMake Application.__idf_expat" />
+      <item itemvalue="CMake Application.__idf_FastLED-idf" />
       <item itemvalue="CMake Application.__idf_fatfs" />
       <item itemvalue="CMake Application.__idf_freemodbus" />
       <item itemvalue="CMake Application.__idf_freertos" />
@@ -1078,7 +1006,7 @@
       <workItem from="1736677670837" duration="4461000" />
       <workItem from="1736684134540" duration="896000" />
       <workItem from="1737190666093" duration="9972000" />
-      <workItem from="1737309971297" duration="5533000" />
+      <workItem from="1737309971297" duration="7709000" />
     </task>
     <task id="LOCAL-00007" summary="stuff">
       <created>1657485084555</created>

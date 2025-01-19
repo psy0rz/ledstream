@@ -26,20 +26,19 @@ inline void IRAM_ATTR stream()
                 break;
             case HTTP_EVENT_ON_DATA:
 
-                int datai = 0;
 
                  // ESP_LOGI(LEDSTREAMER_HTTP_TAG, "got %d bytes..", evt->data_len);
+                uint16_t buffer_offset=0;
 
-                 while (datai < evt->data_len)
+                 while (buffer_offset < evt->data_len)
                  {
-                     if (!qois_decodeByte(((uint8_t*)evt->data)[datai]))
+                     if (!qois_decodeBytes((uint8_t*)evt->data, evt->data_len, buffer_offset))
                      {
                          leds_show();
                          qois_reset();
                          // vTaskDelay(16 / portTICK_PERIOD_MS);
                      }
 
-                     datai++;
                  }
 
 

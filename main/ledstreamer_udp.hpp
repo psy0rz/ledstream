@@ -149,7 +149,8 @@ public:
                     // want any more:
                     while (currentByteNr < udpBuffer.currentPlen - UDP_HEADER_LEN)
                     {
-                        const auto wantsMore = qois_decodeByte(udpBuffer.currentPacket->data[currentByteNr]);
+                        const auto wantsMore =false; //XXX: FIX
+                            //qois_decodeByte(udpBuffer.currentPacket->data[currentByteNr]);
                         currentByteNr++;
                         if (!wantsMore)
                         {

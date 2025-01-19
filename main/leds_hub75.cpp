@@ -39,7 +39,7 @@ void leds_init()
 
     };
     HUB75_I2S_CFG mxconfig(CONFIG_LEDSTREAM_WIDTH, CONFIG_LEDSTREAM_HEIGHT, CONFIG_LEDSTREAM_CHAIN, _pins);
-    mxconfig.double_buff = true;
+    mxconfig.double_buff = false;
 
     dma_display = new MatrixPanel_I2S_DMA(mxconfig);
     dma_display->begin();
@@ -48,21 +48,21 @@ void leds_init()
 }
 
 
-void leds_reset()
+void IRAM_ATTR leds_reset()
 {
     leds_x = 0;
     leds_y = 0;
 }
 
-void leds_show()
+void IRAM_ATTR leds_show()
 {
-    dma_display->flipDMABuffer();
+    // IRAM_ATTR dma_display->flipDMABuffer();
 }
 
 
-void leds_setNextPixel(const uint8_t r, const uint8_t g, const uint8_t b)
+void IRAM_ATTR leds_setNextPixel(const uint8_t r, const uint8_t g, const uint8_t b)
 {
-    dma_display->drawPixelRGB888(leds_x, leds_y, r, g, b);
+    IRAM_ATTR  dma_display->drawPixelRGB888(leds_x, leds_y, r, g, b);
 
     leds_x++;
     if (leds_x >= CONFIG_LEDSTREAM_WIDTH)
