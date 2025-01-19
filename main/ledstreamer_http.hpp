@@ -4,6 +4,7 @@
 
 #ifndef LEDSTREA_HTTP_HPP
 #define LEDSTREA_HTTP_HPP
+
 #include "qois.hpp"
 
 const char* LEDSTREAMER_HTTP_TAG = "ledstreamer_http";
@@ -14,6 +15,7 @@ inline void IRAM_ATTR stream()
     ESP_LOGI(LEDSTREAMER_HTTP_TAG, "Connecting..");
 
     qois_reset();
+
 
     esp_http_client_config_t config = {
         .url = "http://192.168.13.154:3000/get/stream/panel1",
@@ -27,19 +29,23 @@ inline void IRAM_ATTR stream()
             case HTTP_EVENT_ON_DATA:
 
 
-                 // ESP_LOGI(LEDSTREAMER_HTTP_TAG, "got %d bytes..", evt->data_len);
-                uint16_t buffer_offset=0;
+                // ESP_LOGI(LEDSTREAMER_HTTP_TAG, "got %d bytes..", evt->data_len);
+                uint16_t buffer_offset = 0;
 
-                 while (buffer_offset < evt->data_len)
-                 {
-                     if (!qois_decodeBytes((uint8_t*)evt->data, evt->data_len, buffer_offset))
-                     {
-                         leds_show();
-                         qois_reset();
-                         // vTaskDelay(16 / portTICK_PERIOD_MS);
-                     }
+                while (buffer_offset < evt->data_len)
+                {
+                    if (!qois_decodeBytes((uint8_t*)evt->data, evt->data_len, buffer_offset))
+                    {
 
-                 }
+                        ESP_LOGI(LEDSTREAMER_HTTP_TAG, "%lld", (qois_local_show_time-esp_timer_get_time()));
+                        while (esp_timer_get_time() < qois_local_show_time){};
+
+
+                        leds_show();
+                        qois_reset();
+
+                    }
+                }
 
 
                 break;

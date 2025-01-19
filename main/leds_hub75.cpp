@@ -1,3 +1,5 @@
+#include <utils.hpp>
+
 #include "sdkconfig.h"
 
 
@@ -5,7 +7,7 @@
 
 #include "ESP32-HUB75-MatrixPanel-I2S-DMA.h"
 
-#
+#define DOUBLE_BUFFERING 1
 
 MatrixPanel_I2S_DMA* dma_display = nullptr;
 
@@ -14,7 +16,6 @@ uint8_t leds_y = 0;
 
 //unused in this library for now
 uint16_t leds_pixels_per_channel = 0;
-
 
 
 void leds_init()
@@ -39,7 +40,11 @@ void leds_init()
 
     };
     HUB75_I2S_CFG mxconfig(CONFIG_LEDSTREAM_WIDTH, CONFIG_LEDSTREAM_HEIGHT, CONFIG_LEDSTREAM_CHAIN, _pins);
-    mxconfig.double_buff = false;
+
+#ifdef DOUBLE_BUFFERING
+    mxconfig.double_buff = true;
+#endif
+
 
     dma_display = new MatrixPanel_I2S_DMA(mxconfig);
     dma_display->begin();
@@ -56,13 +61,15 @@ void IRAM_ATTR leds_reset()
 
 void IRAM_ATTR leds_show()
 {
-    // IRAM_ATTR dma_display->flipDMABuffer();
+#ifdef DOUBLE_BUFFERING
+    IRAM_ATTR dma_display->flipDMABuffer();
+#endif
 }
 
 
 void IRAM_ATTR leds_setNextPixel(const uint8_t r, const uint8_t g, const uint8_t b)
 {
-    IRAM_ATTR  dma_display->drawPixelRGB888(leds_x, leds_y, r, g, b);
+    dma_display->drawPixelRGB888(leds_x, leds_y, r, g, b);
 
     leds_x++;
     if (leds_x >= CONFIG_LEDSTREAM_WIDTH)

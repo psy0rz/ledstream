@@ -7,17 +7,17 @@
 #include <esp_timer.h>
 
 
-signed long diffUnsignedLong(unsigned long first, unsigned long second) {
+inline signed long diffUnsignedLong(unsigned long first, unsigned long second) {
     unsigned long abs_diff = (first > second) ? (first - second) : (second - first);
     return (first > second) ? (signed long) abs_diff : -(signed long) abs_diff;
 }
 
-int diff16(uint16_t first, uint16_t second) {
+inline int diff16(uint16_t first, uint16_t second) {
     uint16_t abs_diff = (first > second) ? (first - second) : (second - first);
     return (first > second) ? (int16_t) abs_diff : -(int16_t) abs_diff;
 }
 
-void wificheck() {
+inline void wificheck() {
 //    if (WiFi.status() == WL_CONNECTED)
 //      return;
 //
@@ -36,19 +36,19 @@ void wificheck() {
 }
 
 
-void get_mac_address(char *mac_str) {
+inline void get_mac_address(char *mac_str) {
     uint8_t mac[6];
     esp_read_mac(mac, ESP_MAC_WIFI_STA);
     sprintf(mac_str, "%02X:%02X:%02X:%02X:%02X:%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
 }
 
 
-unsigned long IRAM_ATTR ms()
+inline unsigned long IRAM_ATTR ms()
 {
     return (unsigned long) (esp_timer_get_time() / 1000ULL);
 }
 
-bool duty_cycle(unsigned long on, unsigned long total, unsigned long starttime = 0) {
+inline bool duty_cycle(unsigned long on, unsigned long total, unsigned long starttime = 0) {
     if (!starttime)
         return ((ms() % total) < on);
     else
@@ -56,7 +56,7 @@ bool duty_cycle(unsigned long on, unsigned long total, unsigned long starttime =
 }
 
 
-void progress_bar(int percentage) {
+inline void progress_bar(int percentage) {
 //     static int last_percentage = -1;
 //
 //     if (last_percentage == percentage)
