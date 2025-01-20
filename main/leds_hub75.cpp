@@ -7,6 +7,7 @@
 
 #include "ESP32-HUB75-MatrixPanel-I2S-DMA.h"
 
+//slower, but prevents tearing
 #define DOUBLE_BUFFERING 1
 
 MatrixPanel_I2S_DMA* dma_display = nullptr;
@@ -62,7 +63,7 @@ void IRAM_ATTR leds_reset()
 void IRAM_ATTR leds_show()
 {
 #ifdef DOUBLE_BUFFERING
-    IRAM_ATTR dma_display->flipDMABuffer();
+    dma_display->flipDMABuffer();
 #endif
 }
 

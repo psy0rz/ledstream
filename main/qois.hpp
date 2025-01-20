@@ -140,17 +140,11 @@ inline  IRAM_ATTR bool qois_decodeBytes(const uint8_t buffer[], uint16_t buffer_
             qois_show_time = *(uint16_t*)&qois_bytes[4];
 
             qois_local_show_time=qois_local_time_offset+(qois_show_time*1000);
-            if (abs(qois_local_show_time-esp_timer_get_time())>1000000)
+            if (abs(qois_local_show_time-esp_timer_get_time())>100000)
             {
                 ESP_LOGI(QOISTAG,"Resettting local time offset");
                 qois_local_time_offset = esp_timer_get_time()-(qois_show_time*1000);
                 qois_local_show_time=qois_local_time_offset+(qois_show_time*1000);
-            }else if (qois_local_show_time-esp_timer_get_time()<0)
-            {
-                //we're behind, correct a bit
-                ESP_LOGI(QOISTAG,"Correcting time");
-                qois_local_time_offset=qois_local_time_offset+1000;
-
             }
 
             //            ESP_LOGD(UDPBUFFER_TAG, "got header: showtime=%u, frame_length=%u", show_time, frame_bytes_left);
