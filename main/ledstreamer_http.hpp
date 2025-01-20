@@ -37,8 +37,18 @@ inline void IRAM_ATTR stream()
                     if (!qois_decodeBytes((uint8_t*)evt->data, evt->data_len, buffer_offset))
                     {
 
-                        ESP_LOGI(LEDSTREAMER_HTTP_TAG, "%lld", (qois_local_show_time-esp_timer_get_time()));
-                        while (esp_timer_get_time() < qois_local_show_time){};
+                        // ESP_LOGI(LEDSTREAMER_HTTP_TAG, "%lld", (qois_local_show_time-esp_timer_get_time()));
+                        if (esp_timer_get_time() > qois_local_show_time)
+                        {
+                            //we're behind, correct a bit
+                            // ESP_LOGI(QOISTAG,"Correcting +1mS");
+                            qois_local_time_offset=qois_local_time_offset+1000;
+
+                        }
+                        else
+                        {
+                            while (esp_timer_get_time() < qois_local_show_time){};
+                        }
 
 
                         leds_show();

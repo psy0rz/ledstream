@@ -1,16 +1,16 @@
 dependencies:
   hub75:
-    component_hash: e14662be3a01ea1a16efd66f8c9f1a053db277a8094a06f5862e51de4ad81fbd
+    component_hash: fb2c82653fd419a8cdd30933bff3b80dcf49c08e76f0333a3181bfa4d575203a
     source:
       git: https://github.com/mrcodetastic/ESP32-HUB75-MatrixPanel-DMA.git
       path: .
       type: git
-    version: c4ecdcfeeb5aa668d92ddf3c3c74bc93316f6e10
+    version: 447254d2b406110ca2aaf4bed9cd8f858b4192a5
   idf:
     component_hash: null
     source:
       type: idf
     version: 4.4.8
-manifest_hash: 7d286166e5d53e09e60437b0677dc980591bea7780053d6a353687fdeb8e5e2c
+manifest_hash: 642ee7508e4a1b444caff14e88470bc1df593d65deac11880d9de982590ef40c
 target: esp32
 version: 1.0.0

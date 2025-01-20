@@ -8,7 +8,7 @@ dependencies:
 
   hub75:
     git: https://github.com/mrcodetastic/ESP32-HUB75-MatrixPanel-DMA.git
-    version: 3.0.11
+    version: master
 
 
 
