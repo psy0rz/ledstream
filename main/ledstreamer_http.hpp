@@ -12,13 +12,13 @@ const char* LEDSTREAMER_HTTP_TAG = "ledstreamer_http";
 
 inline void IRAM_ATTR stream()
 {
-    ESP_LOGI(LEDSTREAMER_HTTP_TAG, "Connecting..");
+    ESP_LOGI(LEDSTREAMER_HTTP_TAG, "Connecting: %s", CONFIG_LEDSTREAM_LEDDER_URL);
 
     qois_reset();
 
 
     esp_http_client_config_t config = {
-        .url = "http://192.168.13.154:3000/get/stream/panel1",
+        .url = CONFIG_LEDSTREAM_LEDDER_URL,
         .event_handler = [](esp_http_client_event_t* evt)
 
         {

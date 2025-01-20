@@ -7,8 +7,8 @@
 
 #include "ESP32-HUB75-MatrixPanel-I2S-DMA.h"
 
-//slower, but prevents tearing
-#define DOUBLE_BUFFERING 1
+//prevents tearing, but TOO slow. (animations like HSNL will skip frames)
+//#define DOUBLE_BUFFERING 1
 
 MatrixPanel_I2S_DMA* dma_display = nullptr;
 
