@@ -222,6 +222,8 @@ menu "LEDSTREAM CONFIG"
     config LEDSTREAM_WIDTH
         int "HUB75 display width"
         default 64
+
+
         depends on LEDSTREAM_MODE_HUB75
 
     config LEDSTREAM_HEIGHT
@@ -235,76 +237,105 @@ menu "LEDSTREAM CONFIG"
         depends on LEDSTREAM_MODE_HUB75
 
 
+    ### headerstrip 1
     config LEDSTREAM_R1
         int "HUB75 R1 pin"
-        default 25
+        default 25 if IDF_TARGET_ESP32
+        default 4 if IDF_TARGET_ESP32S3
         depends on LEDSTREAM_MODE_HUB75
 
     config LEDSTREAM_G1
         int "HUB75 G1 pin"
-        default 26
+        default 26  if IDF_TARGET_ESP32
+        default 5 if IDF_TARGET_ESP32S3
         depends on LEDSTREAM_MODE_HUB75
 
     config LEDSTREAM_B1
         int "HUB75 B1 pin"
-        default 27
+        default 27 if IDF_TARGET_ESP32
+        default 6 if IDF_TARGET_ESP32S3
         depends on LEDSTREAM_MODE_HUB75
 
 
     config LEDSTREAM_R2
         int "HUB75 R2 pin"
-        default 14
+        default 14 if IDF_TARGET_ESP32
+        default 7 if IDF_TARGET_ESP32S3
         depends on LEDSTREAM_MODE_HUB75
 
     config LEDSTREAM_G2
         int "HUB75 G2 pin"
-        default 12
+        default 12 if IDF_TARGET_ESP32
+        default 15 if IDF_TARGET_ESP32S3
         depends on LEDSTREAM_MODE_HUB75
 
     config LEDSTREAM_B2
         int "HUB75 B2 pin"
-        default 13
+        default 13 if IDF_TARGET_ESP32
+        default 16 if IDF_TARGET_ESP32S3
+        depends on LEDSTREAM_MODE_HUB75
+
+
+
+    ### headerstrip 2
+
+    #(GND)
+
+    config LEDSTREAM_OE
+        int "HUB75 OE pin"
+        default 15 if IDF_TARGET_ESP32
+#         default 2 if IDF_TARGET_ESP32S3
+        default 19 if IDF_TARGET_ESP32S3
         depends on LEDSTREAM_MODE_HUB75
 
     config LEDSTREAM_A
         int "HUB75 A pin"
         # originaly 23
-        default 02
+        default 02 if IDF_TARGET_ESP32
+#         default 18 if IDF_TARGET_ESP32S3
+        default 20 if IDF_TARGET_ESP32S3
         depends on LEDSTREAM_MODE_HUB75
 
     config LEDSTREAM_B
         int "HUB75 B pin"
         # originaly 19
-        default 00
+        default 00 if IDF_TARGET_ESP32
+#         default 8 if IDF_TARGET_ESP32S3
+        default 21 if IDF_TARGET_ESP32S3
         depends on LEDSTREAM_MODE_HUB75
 
-    config LEDSTREAM_C
-        int "HUB75 C pin"
-        default 5
+    config LEDSTREAM_LAT
+        int "HUB75 LAT pin"
+        default 4 if IDF_TARGET_ESP32
+#         default 40 if IDF_TARGET_ESP32S3
+        default 47 if IDF_TARGET_ESP32S3
+        depends on LEDSTREAM_MODE_HUB75
+
+    config LEDSTREAM_CLK
+        int "HUB75 CLK pin"
+        default 16 if IDF_TARGET_ESP32
+#         default 41 if IDF_TARGET_ESP32S3
+        default 48 if IDF_TARGET_ESP32S3
         depends on LEDSTREAM_MODE_HUB75
 
     config LEDSTREAM_D
         int "HUB75 D pin"
-        default 17
+        default 17 if IDF_TARGET_ESP32
+#         default 42 if IDF_TARGET_ESP32S3
+        default 45 if IDF_TARGET_ESP32S3
         depends on LEDSTREAM_MODE_HUB75
+
+    config LEDSTREAM_C
+        int "HUB75 C pin"
+        default 5 if IDF_TARGET_ESP32
+#         default 3 if IDF_TARGET_ESP32S3
+        default 0 if IDF_TARGET_ESP32S3
+        depends on LEDSTREAM_MODE_HUB75
+
 
     config LEDSTREAM_E
         int "HUB75 E pin (for 1/32 scan panels)"
         default -1
-        depends on LEDSTREAM_MODE_HUB75
-
-
-    config LEDSTREAM_CLK
-        int "HUB75 CLK pin"
-        default 16
-        depends on LEDSTREAM_MODE_HUB75
-    config LEDSTREAM_LAT
-        int "HUB75 LAT pin"
-        default 4
-        depends on LEDSTREAM_MODE_HUB75
-    config LEDSTREAM_OE
-        int "HUB75 OE pin"
-        default 15
         depends on LEDSTREAM_MODE_HUB75
 
 
