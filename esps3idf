@@ -1,4 +1,4 @@
 #!/bin/bash
 set -e
 
-idf.py -B ./build-esp32s3 -DCONFIG_IDF_TARGET="esp32s3" -DCOMPONENTS="ESP32-HUB75-MatrixPanel-DMA" -DSDKCONFIG=sdkconfig.s3 $@
+idf.py -B ./build-esp32s3 -DIDF_TARGET="esp32s3" -DCOMPONENTS="ESP32-HUB75-MatrixPanel-DMA" -DSDKCONFIG=sdkconfig.esp32s3 $@
