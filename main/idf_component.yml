@@ -6,9 +6,6 @@ dependencies:
 #    version: "5.4"
     version: "4.4.8"
 
-  hub75:
-    git: https://github.com/mrcodetastic/ESP32-HUB75-MatrixPanel-DMA.git
-    version: master
 
 
 

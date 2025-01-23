@@ -121,9 +121,11 @@ menu "LEDSTREAM CONFIG"
 
         config LEDSTREAM_MODE_WS2812
             bool "Use WS2812 leds with FastLED-IDF"
+            depends on IDF_TARGET_ESP32
 
         config LEDSTREAM_MODE_HUB75
             bool "Use HUB75 ledboard with ESP32-HUB75-MatrixPanel-DMA"
+
 
     endchoice
 
