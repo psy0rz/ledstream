@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.5)
 
+set(EXCLUDE_COMPONENTS "FastLED-idf")
+
+
 set(srcs
  		"FastLED.cpp"
 		"bitswap.cpp"
