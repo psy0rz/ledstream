@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$/../esp/esp-idf" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../esp/esp-idf/components/asio/asio" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../esp/esp-idf/components/bootloader/subproject/components/micro-ecc/micro-ecc" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../esp/esp-idf/components/bt/controller/lib_esp32" vcs="Git" />

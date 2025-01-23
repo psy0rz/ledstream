@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CMakeSharedSettings">
+    <configurations>
+      <configuration PROFILE_NAME="esp32s3-hub75" ENABLED="true" TOOLCHAIN_NAME="epsidf4" GENERATION_OPTIONS="-G Ninja -DPYTHON_DEPS_CHECKED=1 -DESP_PLATFORM=1 -DIDF_TARGET=esp32s3 -DCOMPONENTS=ESP32-HUB75-MatrixPanel-DMA -DSDKCONFIG=sdkconfig.esp32s3 -DCCACHE_ENABLE=0" />
+    </configurations>
+  </component>
+</project>
