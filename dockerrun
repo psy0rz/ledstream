@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+
+
+docker run -it --privileged --rm -v $PWD:/project -w /project -u root -e HOME=/tmp espressif/idf:v4.4.8 $@
+
+
+
+
+
