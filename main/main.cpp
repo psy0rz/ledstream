@@ -33,7 +33,7 @@ extern "C"  __attribute__((unused)) void app_main(void) {
 
 
 
-    ESP_LOGI(MAIN_TAG, "Ledstreamer boot....");
+    ESP_LOGI(MAIN_TAG, "Starting ledstreamer...");
 
 
     //settle

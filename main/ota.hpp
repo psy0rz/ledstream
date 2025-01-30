@@ -62,7 +62,7 @@ private:
 
     void update_firmware() {
 
-        ESP_LOGI(TAG, "Checking2 for updates at %s ...", CONFIG_LEDSTREAM_FIRMWARE_UPGRADE_URL);
+        ESP_LOGI(TAG, "Checking for updates at %s ...", CONFIG_LEDSTREAM_FIRMWARE_UPGRADE_URL);
 
         esp_err_t err;
         esp_http_client_config_t config = {};
