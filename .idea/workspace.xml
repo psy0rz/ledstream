@@ -23,101 +23,108 @@
   <component name="CMakeRunConfigurationManager">
     <generated>
       <config projectName="ledstream" targetName="efuse_custom_table" />
-      <config projectName="ledstream" targetName="bootloader" />
       <config projectName="ledstream" targetName="__idf_esp_partition" />
       <config projectName="ledstream" targetName="gen_project_binary" />
       <config projectName="ledstream" targetName="encrypted-bootloader-flash" />
+      <config projectName="ledstream" targetName="otadata-flash" />
       <config projectName="ledstream" targetName="__idf_esp_adc" />
+      <config projectName="ledstream" targetName="blank_ota_data" />
+      <config projectName="ledstream" targetName="uf2" />
+      <config projectName="ledstream" targetName="__idf_esp_websocket_client" />
+      <config projectName="ledstream" targetName="app_check_size" />
+      <config projectName="ledstream" targetName="monitor" />
+      <config projectName="ledstream" targetName="encrypted-app-flash" />
+      <config projectName="ledstream" targetName="show-efuse-table" />
+      <config projectName="ledstream" targetName="__idf_esp_netif" />
+      <config projectName="ledstream" targetName="memory_ld" />
+      <config projectName="ledstream" targetName="__idf_wpa_supplicant" />
+      <config projectName="ledstream" targetName="__idf_pthread" />
+      <config projectName="ledstream" targetName="__idf_esp-tls" />
+      <config projectName="ledstream" targetName="__idf_esp_http_client" />
+      <config projectName="ledstream" targetName="size-components" />
+      <config projectName="ledstream" targetName="confserver" />
+      <config projectName="ledstream" targetName="read-otadata" />
+      <config projectName="ledstream" targetName="menuconfig" />
+      <config projectName="ledstream" targetName="efuse_common_table" />
+      <config projectName="ledstream" targetName="__idf_esp_rom" />
+      <config projectName="ledstream" targetName="__idf_espcoredump" />
+      <config projectName="ledstream" targetName="__idf_esp_lcd" />
+      <config projectName="ledstream" targetName="partition_table" />
+      <config projectName="ledstream" targetName="partition_table-flash" />
+      <config projectName="ledstream" targetName="__idf_tcp_transport" />
+      <config projectName="ledstream" targetName="erase_otadata" />
+      <config projectName="ledstream" targetName="size-files" />
+      <config projectName="ledstream" targetName="apidoc" />
+      <config projectName="ledstream" targetName="mbedx509" />
+      <config projectName="ledstream" targetName="__idf_xtensa" />
+      <config projectName="ledstream" targetName="bootloader-flash" />
+      <config projectName="ledstream" targetName="mbedtls" />
+      <config projectName="ledstream" targetName="__idf_esp_common" />
+      <config projectName="ledstream" targetName="efuse-common-table" />
+      <config projectName="ledstream" targetName="lib" />
+      <config projectName="ledstream" targetName="partition-table-flash" />
+      <config projectName="ledstream" targetName="__idf_efuse" />
+      <config projectName="ledstream" targetName="__idf_app_update" />
+      <config projectName="ledstream" targetName="__idf_esp_app_format" />
+      <config projectName="ledstream" targetName="__idf_nvs_flash" />
+      <config projectName="ledstream" targetName="__idf_esp_system" />
+      <config projectName="ledstream" targetName="__idf_log" />
+      <config projectName="ledstream" targetName="__idf_esp_timer" />
+      <config projectName="ledstream" targetName="__idf_esp_gdbstub" />
+      <config projectName="ledstream" targetName="__idf_esp_ringbuf" />
+      <config projectName="ledstream" targetName="bootloader" />
       <config projectName="ledstream" targetName="__ldgen_output_sections.ld" />
       <config projectName="ledstream" targetName="__idf_mbedtls" />
       <config projectName="ledstream" targetName="partition_table_bin" />
       <config projectName="ledstream" targetName="__idf_esp_ipc" />
       <config projectName="ledstream" targetName="dfu" />
       <config projectName="ledstream" targetName="flash" />
-      <config projectName="ledstream" targetName="uf2" />
       <config projectName="ledstream" targetName="__idf_esp_pm" />
-      <config projectName="ledstream" targetName="__idf_esp_websocket_client" />
-      <config projectName="ledstream" targetName="app_check_size" />
-      <config projectName="ledstream" targetName="monitor" />
-      <config projectName="ledstream" targetName="encrypted-app-flash" />
-      <config projectName="ledstream" targetName="show-efuse-table" />
       <config projectName="ledstream" targetName="__idf_driver" />
       <config projectName="ledstream" targetName="__idf_spi_flash" />
       <config projectName="ledstream" targetName="__idf_console" />
       <config projectName="ledstream" targetName="ledstream.elf" />
-      <config projectName="ledstream" targetName="__idf_esp_netif" />
       <config projectName="ledstream" targetName="__idf_hal" />
-      <config projectName="ledstream" targetName="memory_ld" />
       <config projectName="ledstream" targetName="custom_bundle" />
-      <config projectName="ledstream" targetName="__idf_wpa_supplicant" />
-      <config projectName="ledstream" targetName="__idf_pthread" />
       <config projectName="ledstream" targetName="erase_flash" />
-      <config projectName="ledstream" targetName="__idf_esp-tls" />
       <config projectName="ledstream" targetName="__idf_bootloader_support" />
-      <config projectName="ledstream" targetName="__idf_esp_http_client" />
       <config projectName="ledstream" targetName="__idf_app_trace" />
-      <config projectName="ledstream" targetName="size-components" />
-      <config projectName="ledstream" targetName="confserver" />
       <config projectName="ledstream" targetName="efuse-custom-table" />
-      <config projectName="ledstream" targetName="menuconfig" />
+      <config projectName="ledstream" targetName="erase-otadata" />
       <config projectName="ledstream" targetName="show_efuse_table" />
-      <config projectName="ledstream" targetName="efuse_common_table" />
+      <config projectName="ledstream" targetName="read_otadata" />
       <config projectName="ledstream" targetName="mbedcrypto" />
-      <config projectName="ledstream" targetName="__idf_esp_rom" />
       <config projectName="ledstream" targetName="encrypted-flash" />
-      <config projectName="ledstream" targetName="__idf_espcoredump" />
-      <config projectName="ledstream" targetName="__idf_esp_lcd" />
       <config projectName="ledstream" targetName="__idf_soc" />
       <config projectName="ledstream" targetName="__idf_heap" />
-      <config projectName="ledstream" targetName="partition_table" />
       <config projectName="ledstream" targetName="dfu-list" />
       <config projectName="ledstream" targetName="encrypted-partition-table-flash" />
-      <config projectName="ledstream" targetName="partition_table-flash" />
       <config projectName="ledstream" targetName="__idf_lwip" />
       <config projectName="ledstream" targetName="__idf_tcpip_adapter" />
       <config projectName="ledstream" targetName="uf2-app" />
-      <config projectName="ledstream" targetName="__idf_tcp_transport" />
       <config projectName="ledstream" targetName="_project_elf_src" />
       <config projectName="ledstream" targetName="app-flash" />
-      <config projectName="ledstream" targetName="size-files" />
       <config projectName="ledstream" targetName="save-defconfig" />
       <config projectName="ledstream" targetName="__idf_cxx" />
       <config projectName="ledstream" targetName="__idf_http_parser" />
-      <config projectName="ledstream" targetName="apidoc" />
-      <config projectName="ledstream" targetName="mbedx509" />
       <config projectName="ledstream" targetName="efuse_test_table" />
-      <config projectName="ledstream" targetName="__idf_xtensa" />
-      <config projectName="ledstream" targetName="bootloader-flash" />
       <config projectName="ledstream" targetName="__idf_esp_wifi" />
-      <config projectName="ledstream" targetName="mbedtls" />
-      <config projectName="ledstream" targetName="__idf_esp_common" />
-      <config projectName="ledstream" targetName="efuse-common-table" />
-      <config projectName="ledstream" targetName="lib" />
       <config projectName="ledstream" targetName="__idf_esp_hw_support" />
       <config projectName="ledstream" targetName="__idf_newlib" />
-      <config projectName="ledstream" targetName="partition-table-flash" />
-      <config projectName="ledstream" targetName="__idf_efuse" />
       <config projectName="ledstream" targetName="__idf_ESP32-HUB75-MatrixPanel-DMA" />
       <config projectName="ledstream" targetName="dfu-flash" />
-      <config projectName="ledstream" targetName="__idf_app_update" />
       <config projectName="ledstream" targetName="__idf_esp_phy" />
       <config projectName="ledstream" targetName="size" />
       <config projectName="ledstream" targetName="__idf_nghttp" />
-      <config projectName="ledstream" targetName="__idf_esp_app_format" />
       <config projectName="ledstream" targetName="__idf_main" />
-      <config projectName="ledstream" targetName="__idf_nvs_flash" />
       <config projectName="ledstream" targetName="Z_DUMMY_TARGET" />
       <config projectName="ledstream" targetName="app" />
       <config projectName="ledstream" targetName="__idf_freertos" />
-      <config projectName="ledstream" targetName="__idf_esp_system" />
-      <config projectName="ledstream" targetName="__idf_log" />
       <config projectName="ledstream" targetName="__idf_vfs" />
       <config projectName="ledstream" targetName="partition-table" />
       <config projectName="ledstream" targetName="__idf_esp_https_ota" />
       <config projectName="ledstream" targetName="__idf_esp_event" />
-      <config projectName="ledstream" targetName="__idf_esp_timer" />
-      <config projectName="ledstream" targetName="__idf_esp_gdbstub" />
-      <config projectName="ledstream" targetName="__idf_esp_ringbuf" />
+      <config projectName="ledstream" targetName="encrypted-otadata-flash" />
     </generated>
   </component>
   <component name="CMakeSettings">
@@ -125,9 +132,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="http stream wip">
+      <change beforePath="$PROJECT_DIR$/.idea/cmake.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/cmake.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/ledstream.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/leds_hub75.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/leds_hub75.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/ledstreamer_http.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/ledstreamer_http.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/ota.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/ota.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/utils.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/utils.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/partitions.csv" beforeDir="false" afterPath="$PROJECT_DIR$/partitions.csv" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -160,11 +174,11 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/../.cache/JetBrains/CLion2024.1/.docker/2024_1/Docker/espressif_idf_v4_4_8/opt/esp/idf/components/esp_http_client/include/esp_http_client.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../.cache/JetBrains/CLion2024.1/.docker/2024_1/Docker/espressif_idf_v4_4_8/opt/esp/idf/components/esp_https_ota/include/esp_https_ota.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/main/ethernet.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/main/leds_hub75.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/main/ledstreamer_http.hpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/main/main.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/managed_components/hub75/src/platforms/esp32/esp32_i2s_parallel_dma.cpp" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -181,40 +195,45 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.RadMigrateCodeStyle&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.west.config.association.type.startup.service&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
-    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;hub75&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/psy/ESP32-HUB75-MatrixPanel-DMA/examples/esp-idf/without-gfx/main/main.cpp&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;CMakeSettings&quot;,
-    &quot;structure.view.defaults.are.configured&quot;: &quot;true&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.RadMigrateCodeStyle": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "RunOnceActivity.west.config.association.type.startup.service": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "git-widget-placeholder": "hub75",
+    "last_opened_file_path": "/home/psy/ESP32-HUB75-MatrixPanel-DMA/examples/esp-idf/without-gfx/main/main.cpp",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.standard": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.standard": "",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "CMakeSettings",
+    "structure.view.defaults.are.configured": "true",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/main" />
     </key>
   </component>
   <component name="RunManager" selected="CMake Application.Unnamed">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Unnamed" type="CMakeRunConfiguration" factoryName="Application" nameIsGenerated="true" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="app" CONFIG_NAME="esp32s3-hub75">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -465,6 +484,11 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
+    <configuration name="blank_ota_data" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="blank_ota_data" CONFIG_NAME="esp32s3-hub75">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="bootloader-flash" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="bootloader-flash" CONFIG_NAME="esp32s3-hub75">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -540,12 +564,27 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
+    <configuration name="encrypted-otadata-flash" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="encrypted-otadata-flash" CONFIG_NAME="esp32s3-hub75">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="encrypted-partition-table-flash" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="encrypted-partition-table-flash" CONFIG_NAME="esp32s3-hub75">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
+    <configuration name="erase-otadata" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="erase-otadata" CONFIG_NAME="esp32s3-hub75">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="erase_flash" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="erase_flash" CONFIG_NAME="esp32s3-hub75">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="erase_otadata" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="erase_otadata" CONFIG_NAME="esp32s3-hub75">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -600,6 +639,11 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
+    <configuration name="otadata-flash" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="otadata-flash" CONFIG_NAME="esp32s3-hub75">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="partition-table-flash" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="partition-table-flash" CONFIG_NAME="esp32s3-hub75">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -621,6 +665,16 @@
       </method>
     </configuration>
     <configuration name="partition_table_bin" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="partition_table_bin" CONFIG_NAME="esp32s3-hub75">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="read-otadata" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="read-otadata" CONFIG_NAME="esp32s3-hub75">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="read_otadata" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="read_otadata" CONFIG_NAME="esp32s3-hub75">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -662,6 +716,9 @@
     </configuration>
     <list>
       <item itemvalue="CMake Application.Unnamed" />
+      <item itemvalue="CMake Application.blank_ota_data" />
+      <item itemvalue="CMake Application.erase-otadata" />
+      <item itemvalue="CMake Application.read-otadata" />
       <item itemvalue="CMake Application.bootloader" />
       <item itemvalue="CMake Application.efuse-common-table" />
       <item itemvalue="CMake Application.efuse-custom-table" />
@@ -674,6 +731,7 @@
       <item itemvalue="CMake Application.flash" />
       <item itemvalue="CMake Application.gen_project_binary" />
       <item itemvalue="CMake Application.monitor" />
+      <item itemvalue="CMake Application.otadata-flash" />
       <item itemvalue="CMake Application.partition-table-flash" />
       <item itemvalue="CMake Application.custom_bundle" />
       <item itemvalue="CMake Application.apidoc" />
@@ -746,9 +804,12 @@
       <item itemvalue="CMake Application.encrypted-app-flash" />
       <item itemvalue="CMake Application.encrypted-bootloader-flash" />
       <item itemvalue="CMake Application.encrypted-flash" />
+      <item itemvalue="CMake Application.encrypted-otadata-flash" />
       <item itemvalue="CMake Application.encrypted-partition-table-flash" />
+      <item itemvalue="CMake Application.erase_otadata" />
       <item itemvalue="CMake Application.partition_table" />
       <item itemvalue="CMake Application.partition_table-flash" />
+      <item itemvalue="CMake Application.read_otadata" />
       <item itemvalue="CMake Application.show_efuse_table" />
     </list>
   </component>
@@ -827,6 +888,7 @@
       <workItem from="1737649006555" duration="342000" />
       <workItem from="1737649396997" duration="5553000" />
       <workItem from="1738234363711" duration="1201000" />
+      <workItem from="1738245174281" duration="3922000" />
     </task>
     <task id="LOCAL-00007" summary="stuff">
       <created>1657485084555</created>

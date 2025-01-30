@@ -27,8 +27,6 @@ inline void IRAM_ATTR stream()
             default:
                 break;
 
-            case HTTP_EVENT_ON_HEADER:
-                ESP_LOGI(LEDSTREAMER_HTTP_TAG, "HTTP_ON_HEADER: %s", evt->header_value);
             case HTTP_EVENT_ON_DATA:
 
 
