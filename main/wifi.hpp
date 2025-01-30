@@ -132,6 +132,8 @@ void wifi_init_sta() {
     ESP_ERROR_CHECK(esp_wifi_start());
     esp_wifi_set_ps(WIFI_PS_NONE);
 
+    esp_wifi_set_max_tx_power(20);
+
 
     ESP_LOGI(WIFI_TAG, "wifi_init_sta finished.");
 
