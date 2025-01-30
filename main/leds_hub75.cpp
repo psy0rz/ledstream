@@ -42,6 +42,8 @@ void leds_init()
     };
     HUB75_I2S_CFG mxconfig(CONFIG_LEDSTREAM_WIDTH, CONFIG_LEDSTREAM_HEIGHT, CONFIG_LEDSTREAM_CHAIN, _pins);
 
+    mxconfig.clkphase=false;
+
 #ifdef DOUBLE_BUFFERING
     mxconfig.double_buff = true;
 #endif

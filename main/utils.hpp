@@ -5,6 +5,7 @@
 #include <esp_attr.h>
 #include <esp_mac.h>
 #include <esp_timer.h>
+#include "esp_log.h"
 
 
 inline signed long diffUnsignedLong(unsigned long first, unsigned long second) {
@@ -57,14 +58,14 @@ inline bool duty_cycle(unsigned long on, unsigned long total, unsigned long star
 
 
 inline void progress_bar(int percentage) {
-//     static int last_percentage = -1;
+     static int last_percentage = -1;
 //
-//     if (last_percentage == percentage)
-//         return;
+     if (last_percentage == percentage)
+         return;
 //
-//     last_percentage = percentage;
+     last_percentage = percentage;
 //
-//     ESP_LOGI("progress", "%d%%", percentage);
+     ESP_LOGI("OTA","updating.. %d%%", percentage);
 //
 // #ifdef CONFIG_LEDSTREAM_MODE_WS2812
 //     const int bar_length = 8;
