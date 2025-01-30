@@ -133,9 +133,7 @@
   <component name="ChangeListManager">
     <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="http stream wip">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/ota.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/ota.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/partitions.csv" beforeDir="false" afterPath="$PROJECT_DIR$/partitions.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/wifi.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/wifi.hpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -169,11 +167,14 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/../.cache/JetBrains/CLion2024.1/.docker/2024_1/Docker/espressif_idf_v4_4_8/opt/esp/idf/components/esp_http_client/include/esp_http_client.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../.cache/JetBrains/CLion2024.1/.docker/2024_1/Docker/espressif_idf_v4_4_8/opt/esp/idf/components/esp_https_ota/include/esp_https_ota.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../.cache/JetBrains/CLion2024.1/.docker/2024_1/Docker/espressif_idf_v4_4_8/opt/esp/idf/components/esp_wifi/include/esp_wifi.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/main/ethernet.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/main/leds_hub75.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/main/ledstreamer_http.hpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="mock:///home/psy/ledstream/main/main.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///home/psy/ledstream/main/main.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/main/main.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///home/psy/ledstream/main/ota.hpp" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -883,7 +884,7 @@
       <workItem from="1737649006555" duration="342000" />
       <workItem from="1737649396997" duration="5553000" />
       <workItem from="1738234363711" duration="1201000" />
-      <workItem from="1738245174281" duration="6813000" />
+      <workItem from="1738245174281" duration="12229000" />
     </task>
     <task id="LOCAL-00007" summary="stuff">
       <created>1657485084555</created>
