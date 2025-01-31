@@ -132,7 +132,7 @@ inline void IRAM_ATTR qois_show()
     // }
 
     //busyloop delay
-    ESP_LOGI(QOISTAG, "%lld ms", (local_show_time-esp_timer_get_time())/1000);
+    // ESP_LOGI(QOISTAG, "%lld ms", (local_show_time-esp_timer_get_time())/1000);
     while (esp_timer_get_time()<local_show_time)
     {
 
