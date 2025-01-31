@@ -56,10 +56,11 @@ static bool qois_wait_for_op __attribute__((aligned(4)));
 static bool qois_wait_for_header __attribute__((aligned(4)));
 
 //    CRGB *pixels;
-static uint16_t qois_show_time __attribute__((aligned(4)));
+static int64_t qois_show_time_us __attribute__((aligned(4))) = 0;
+static int64_t qois_time_offset_us __attribute__((aligned(4))) = 0;
 
-int64_t qois_local_time_offset = 0;
-int64_t qois_local_show_time = 0;
+// int64_t qois_local_time_offset = 0;
+// int64_t qois_local_show_time = 0;
 
 
 static uint16_t qois_frame_bytes_left __attribute__((aligned(4)));
@@ -90,21 +91,51 @@ inline void IRAM_ATTR qois_reset()
 }
 
 
+#define QOIS_TIME_STEP_US 100
+#define QOIS_TIME_MAX_DIFF_US 500000
+
 //does timing and displaying of actual descoded buffer
 inline void IRAM_ATTR qois_show()
 {
-    // ESP_LOGI(LEDSTREAMER_HTTP_TAG, "%lld", (qois_local_show_time-esp_timer_get_time()));
-    if (esp_timer_get_time() > qois_local_show_time)
+    int64_t now = esp_timer_get_time(); //100
+    int64_t local_show_time = qois_time_offset_us +qois_show_time_us; //91+10=101
+
+    int64_t diff = local_show_time - now;//101-100=1
+
+
+    if (abs(diff) > QOIS_TIME_MAX_DIFF_US)
     {
-        //we're behind, correct a bit
-        // ESP_LOGI(QOISTAG,"Correcting +1mS");
-        qois_local_time_offset = qois_local_time_offset + 1000;
+        //difference too big, step correction
+        ESP_LOGI(QOISTAG, "Resetting local time offset");
+        qois_time_offset_us = now-qois_show_time_us+16000; //start by lagging 1 frame (16ms)
+        local_show_time = now;
     }
     else
     {
-        while (esp_timer_get_time() < qois_local_show_time)
+        //we never want to be too late, so keep increasing the offset until this is the case.
+        if (diff < 0)
         {
-        };
+            ESP_LOGI(QOISTAG, "%lld mS late", -diff/1000);
+            qois_time_offset_us = qois_time_offset_us + QOIS_TIME_STEP_US;
+        }
+    }
+
+    //use task delay:
+    // TickType_t xLastWakeTime;
+    // xLastWakeTime = xTaskGetTickCount();
+    //
+    // int32_t wait=(local_show_time-esp_timer_get_time())/1000/portTICK_PERIOD_MS;
+    // if (wait>0)
+    // {
+    //     ESP_LOGI(QOISTAG, "%d tick", wait);
+    //     vTaskDelayUntil( &xLastWakeTime, wait );
+    // }
+
+    //busyloop delay
+    ESP_LOGI(QOISTAG, "%lld ms", (local_show_time-esp_timer_get_time())/1000);
+    while (esp_timer_get_time()<local_show_time)
+    {
+
     }
 
 
@@ -158,15 +189,8 @@ inline IRAM_ATTR void qois_decodeBytes(const uint8_t buffer[], uint16_t buffer_l
 
 
             //bytes 4-5:
-            qois_show_time = *(uint16_t*)&qois_bytes[4];
+            qois_show_time_us = (*(uint16_t*)&qois_bytes[4]) * 1000;
 
-            qois_local_show_time = qois_local_time_offset + (qois_show_time * 1000);
-            if (abs(qois_local_show_time - esp_timer_get_time()) > 100000)
-            {
-                ESP_LOGI(QOISTAG, "Resettting local time offset");
-                qois_local_time_offset = esp_timer_get_time() - (qois_show_time * 1000);
-                qois_local_show_time = qois_local_time_offset + (qois_show_time * 1000);
-            }
 
             //            ESP_LOGD(UDPBUFFER_TAG, "got header: showtime=%u, frame_length=%u", show_time, frame_bytes_left);
             continue;
