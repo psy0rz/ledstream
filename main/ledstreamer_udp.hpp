@@ -101,7 +101,7 @@ public:
 
     bool idle() const
     {
-        return (abs(diff16(timeSync.remoteMillis(), qois_show_time)) > 1000);
+        return (abs(diff16(timeSync.remoteMillis(), qois_show_time_us)) > 1000);
     }
 
     //process receiving udp packets and updating the ledstrip
@@ -130,7 +130,7 @@ public:
             if (ready)
             {
                 // its time to output the prepared leds buffer? (or is the time too far in the future?)
-                auto diff = diff16(timeSync.remoteMillis(), qois_show_time);
+                auto diff = diff16(timeSync.remoteMillis(), qois_show_time_us);
                 if (diff >= 0 || diff < -1000)
                 {
                     leds_show();

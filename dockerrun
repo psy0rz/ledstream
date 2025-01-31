@@ -2,7 +2,7 @@
 
 
 
-docker run -it --privileged --rm -v $PWD:/project -w /project -u root -e HOME=/tmp espressif/idf:v4.4.8 $@
+docker run -it --privileged --rm --name ledstream -v $PWD:/project -w /project -u root -e HOME=/tmp espressif/idf:v4.4.8 $@
 
 
 
