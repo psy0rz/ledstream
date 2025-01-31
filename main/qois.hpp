@@ -58,8 +58,8 @@ static bool qois_wait_for_header __attribute__((aligned(4)));
 //    CRGB *pixels;
 static uint16_t qois_show_time __attribute__((aligned(4)));
 
-int64_t qois_local_time_offset=0;
-int64_t qois_local_show_time=0;
+int64_t qois_local_time_offset = 0;
+int64_t qois_local_show_time = 0;
 
 
 static uint16_t qois_frame_bytes_left __attribute__((aligned(4)));
@@ -89,19 +89,40 @@ inline void IRAM_ATTR qois_reset()
     leds_reset();
 }
 
-//sets the next pixel, keeping in mind pixel_per_channel (what ledder says we SHOULD use)
-// and CONFIG_LEDSTREAM_LEDS_PER_CHANNEL (whats actually statically compiled in ledstream)
 
-//returns true when we need more data. false means frame is complete, ready to show at show_time.
-inline  IRAM_ATTR bool qois_decodeBytes(const uint8_t buffer[], uint16_t buffer_len, uint16_t& buffer_offset)
+//does timing and displaying of actual descoded buffer
+inline void IRAM_ATTR qois_show()
+{
+    // ESP_LOGI(LEDSTREAMER_HTTP_TAG, "%lld", (qois_local_show_time-esp_timer_get_time()));
+    if (esp_timer_get_time() > qois_local_show_time)
+    {
+        //we're behind, correct a bit
+        // ESP_LOGI(QOISTAG,"Correcting +1mS");
+        qois_local_time_offset = qois_local_time_offset + 1000;
+    }
+    else
+    {
+        while (esp_timer_get_time() < qois_local_show_time)
+        {
+        };
+    }
+
+
+    leds_show();
+    qois_reset();
+}
+
+
+//processes and displays the whole buffer
+inline IRAM_ATTR void qois_decodeBytes(const uint8_t buffer[], uint16_t buffer_len, uint16_t buffer_offset)
 {
     uint8_t data;
     while (buffer_offset < buffer_len)
     {
-        //        ESP_LOGD(UDPBUFFER_TAG, "decode byte: data=%d waitshowtime=%d, waitop=%d, bytes_needed=%d, op=%d", data,wait_for_header, wait_for_op, bytes_needed, op);
+        //frame complete? show
         if (qois_frame_bytes_left == 0)
         {
-            return false;
+            qois_show();
         }
 
         //consume next byte from input buffer
@@ -139,12 +160,12 @@ inline  IRAM_ATTR bool qois_decodeBytes(const uint8_t buffer[], uint16_t buffer_
             //bytes 4-5:
             qois_show_time = *(uint16_t*)&qois_bytes[4];
 
-            qois_local_show_time=qois_local_time_offset+(qois_show_time*1000);
-            if (abs(qois_local_show_time-esp_timer_get_time())>100000)
+            qois_local_show_time = qois_local_time_offset + (qois_show_time * 1000);
+            if (abs(qois_local_show_time - esp_timer_get_time()) > 100000)
             {
-                ESP_LOGI(QOISTAG,"Resettting local time offset");
-                qois_local_time_offset = esp_timer_get_time()-(qois_show_time*1000);
-                qois_local_show_time=qois_local_time_offset+(qois_show_time*1000);
+                ESP_LOGI(QOISTAG, "Resettting local time offset");
+                qois_local_time_offset = esp_timer_get_time() - (qois_show_time * 1000);
+                qois_local_show_time = qois_local_time_offset + (qois_show_time * 1000);
             }
 
             //            ESP_LOGD(UDPBUFFER_TAG, "got header: showtime=%u, frame_length=%u", show_time, frame_bytes_left);
@@ -213,7 +234,7 @@ inline  IRAM_ATTR bool qois_decodeBytes(const uint8_t buffer[], uint16_t buffer_
 
             while (run)
             {
-                 leds_setNextPixel(qois_px.rgba.r, qois_px.rgba.g, qois_px.rgba.b);
+                leds_setNextPixel(qois_px.rgba.r, qois_px.rgba.g, qois_px.rgba.b);
                 run--;
             }
             qois_wait_for_op = true;
@@ -232,9 +253,6 @@ inline  IRAM_ATTR bool qois_decodeBytes(const uint8_t buffer[], uint16_t buffer_
         leds_setNextPixel(qois_px.rgba.r, qois_px.rgba.g, qois_px.rgba.b);
         qois_wait_for_op = true;
     }
-
-    return true;
-
 }
 
 
