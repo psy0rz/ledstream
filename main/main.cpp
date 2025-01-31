@@ -7,7 +7,7 @@
 #include "qois.hpp"
 #include "ledstreamer_udp.hpp"
 #include "ledstreamer_http.hpp"
-#include "fileserver.hpp"
+// #include "fileserver.hpp"
 
 static const char* MAIN_TAG = "main";
 
@@ -64,7 +64,7 @@ extern "C" __attribute__((unused)) void app_main(void)
 
      ethernet_init();
 #endif
-    fileserver_start();
+    // fileserver_start();
 
     //    wificheck();
     ledstreamer_udp.begin(65000);
@@ -75,5 +75,6 @@ extern "C" __attribute__((unused)) void app_main(void)
     ESP_LOGI(MAIN_TAG, "Start mainloop:");
 
     xTaskCreate(ledstreamer_udp_task, "ledstreamer_udp_task", 4096, nullptr, 1, nullptr);
-    xTaskCreate(ledstreamer_http_task, "ledstreamer_http_task", 4096, nullptr, 1, nullptr);
+
+    ledstreamer_http_init();
 }
