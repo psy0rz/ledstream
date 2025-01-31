@@ -27,6 +27,19 @@ inline void IRAM_ATTR stream()
             default:
                 break;
 
+
+            case HTTP_EVENT_ON_HEADER:
+                ESP_LOGI(LEDSTREAMER_HTTP_TAG, "HTTP_ON_HEADER: %s", evt->header_key);
+                if (evt->header_key=="Flash")
+                {
+                    if (evt->header_key=="1")
+                    {
+
+                    }
+                }
+
+                break;
+
             case HTTP_EVENT_ON_DATA:
 
 
@@ -48,7 +61,6 @@ inline void IRAM_ATTR stream()
 
     esp_http_client_cleanup(client);
 
-    vTaskDelay(1000 / portTICK_PERIOD_MS);
 }
 
 
@@ -56,7 +68,10 @@ inline void IRAM_ATTR stream()
 
 {
     while (true)
+    {
         stream();
+        vTaskDelay(1000 / portTICK_PERIOD_MS);
+    }
 }
 
 

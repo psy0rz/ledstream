@@ -7,7 +7,9 @@
 #include "qois.hpp"
 #include "ledstreamer_udp.hpp"
 #include "ledstreamer_http.hpp"
-static const char *MAIN_TAG = "main";
+#include "fileserver.hpp"
+
+static const char* MAIN_TAG = "main";
 
 
 OTAUpdater ota_updater = OTAUpdater();
@@ -21,7 +23,7 @@ OTAUpdater ota_updater = OTAUpdater();
 LedstreamerUDP ledstreamer_udp = LedstreamerUDP();
 
 
- [[noreturn]] void ledstreamer_udp_task(void *args)
+[[noreturn]] void ledstreamer_udp_task(void* args)
 
 {
     while (true)
@@ -29,10 +31,8 @@ LedstreamerUDP ledstreamer_udp = LedstreamerUDP();
 }
 
 
-extern "C"  __attribute__((unused)) void app_main(void) {
-
-
-
+extern "C" __attribute__((unused)) void app_main(void)
+{
     ESP_LOGI(MAIN_TAG, "Starting ledstreamer...");
 
 
@@ -43,7 +43,8 @@ extern "C"  __attribute__((unused)) void app_main(void) {
     //Initialize NVS
     ESP_LOGI(MAIN_TAG, "Prepare NVS");
     esp_err_t ret = nvs_flash_init();
-    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
+    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND)
+    {
         ESP_LOGI(MAIN_TAG, "Erasing NVS");
         ESP_ERROR_CHECK(nvs_flash_erase());
         ret = nvs_flash_init();
@@ -63,18 +64,16 @@ extern "C"  __attribute__((unused)) void app_main(void) {
 
      ethernet_init();
 #endif
-    // fileserver_start();
+    fileserver_start();
 
-//    wificheck();
+    //    wificheck();
     ledstreamer_udp.begin(65000);
-//    auto lastTime = millis();
-//    ESP_LOGI(MAIN_TAG, "RAM left %lu", esp_get_free_heap_size());
+    //    auto lastTime = millis();
+    //    ESP_LOGI(MAIN_TAG, "RAM left %lu", esp_get_free_heap_size());
 
     //main task
     ESP_LOGI(MAIN_TAG, "Start mainloop:");
 
-     xTaskCreate(ledstreamer_udp_task, "ledstreamer_udp_task", 4096, nullptr, 1, nullptr);
-     xTaskCreate(ledstreamer_http_task, "ledstreamer_http_task", 4096, nullptr, 1, nullptr);
-
-
+    xTaskCreate(ledstreamer_udp_task, "ledstreamer_udp_task", 4096, nullptr, 1, nullptr);
+    xTaskCreate(ledstreamer_http_task, "ledstreamer_http_task", 4096, nullptr, 1, nullptr);
 }
