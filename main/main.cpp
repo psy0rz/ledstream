@@ -5,7 +5,7 @@
 #include "leds.hpp"
 
 #include "qois.hpp"
-#include "ledstreamer_udp.hpp"
+// #include "ledstreamer_udp.hpp"
 #include "ledstreamer_http.hpp"
 #include "fileserver.hpp"
 
@@ -20,15 +20,15 @@ OTAUpdater ota_updater = OTAUpdater();
 //}
 
 
-LedstreamerUDP ledstreamer_udp = LedstreamerUDP();
+// LedstreamerUDP ledstreamer_udp = LedstreamerUDP();
 
 
-[[noreturn]] void ledstreamer_udp_task(void* args)
-
-{
-    while (true)
-        ledstreamer_udp.process();
-}
+// [[noreturn]] void ledstreamer_udp_task(void* args)
+//
+// {
+//     while (true)
+//         ledstreamer_udp.process();
+// }
 
 
 extern "C" __attribute__((unused)) void app_main(void)
@@ -69,14 +69,14 @@ extern "C" __attribute__((unused)) void app_main(void)
     // fileserver_start();
 
     //    wificheck();
-    ledstreamer_udp.begin(65000);
+    // ledstreamer_udp.begin(65000);
     //    auto lastTime = millis();
     //    ESP_LOGI(MAIN_TAG, "RAM left %lu", esp_get_free_heap_size());
 
     //main task
     ESP_LOGI(MAIN_TAG, "Start mainloop:");
 
-    xTaskCreate(ledstreamer_udp_task, "ledstreamer_udp_task", 4096, nullptr, 1, nullptr);
+    // xTaskCreate(ledstreamer_udp_task, "ledstreamer_udp_task", 4096, nullptr, 1, nullptr);
 
     ledstreamer_http_init();
 }
