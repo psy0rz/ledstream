@@ -1,6 +1,6 @@
 ## IDF Component Manager Manifest File
 dependencies:
-#  joltwallet/littlefs: "==1.5.3"
+  joltwallet/littlefs: "==1.13.1"
   ## Required IDF version
   idf:
 #    version: "5.4"
@@ -24,4 +24,3 @@ dependencies:
   #   # `public` flag doesn't have an effect dependencies of the `main` component.
   #   # All dependencies of `main` are public by default.
   #   public: true
-

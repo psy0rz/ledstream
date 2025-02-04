@@ -5,11 +5,16 @@
 #ifndef LEDSTREA_HTTP_HPP
 #define LEDSTREA_HTTP_HPP
 
+#include <fileserver.hpp>
+
 #include "qois.hpp"
 
 const char* LEDSTREAMER_HTTP_TAG = "ledstreamer_http";
 
 char url[200];
+
+bool stream_flashing=false;
+fileserver_ctx *stream_ctx= nullptr;
 
 
 inline void IRAM_ATTR stream()
@@ -18,6 +23,7 @@ inline void IRAM_ATTR stream()
 
     qois_reset();
 
+    stream_flashing=false;
 
     esp_http_client_config_t config = {
         .url = url,
@@ -30,22 +36,24 @@ inline void IRAM_ATTR stream()
                 break;
 
 
-            // case HTTP_EVENT_ON_HEADER:
-            //     ESP_LOGI(LEDSTREAMER_HTTP_TAG, "HTTP_ON_HEADER: %s", evt->header_key);
-            //     if (evt->header_key=="Flash")
-            //     {
-            //         if (evt->header_key=="1")
-            //         {
-            //
-            //         }
-            //     }
-            //
-            //     break;
+            case HTTP_EVENT_ON_HEADER:
+                if (strcmp(evt->header_key, "Flash")==0)
+                {
+                    if (strcmp(evt->header_value,"1")==0)
+                    {
+                        stream_flashing=true;
+                        stream_ctx=fileserver_open(true);
+                    }
+                }
+
+                break;
 
             case HTTP_EVENT_ON_DATA:
 
+                if (stream_flashing)
+                    fileserver_write(stream_ctx, evt->data, evt->data_len);
 
-                qois_decodeBytes((uint8_t*)evt->data, evt->data_len, 0);
+                qois_decodeBytes(static_cast<uint8_t*>(evt->data), evt->data_len, 0);
 
 
                 break;
@@ -55,6 +63,7 @@ inline void IRAM_ATTR stream()
 
     };
     esp_http_client_handle_t client = esp_http_client_init(&config);
+
     if (esp_http_client_perform(client) == ESP_OK)
         ESP_LOGI(LEDSTREAMER_HTTP_TAG, "Stream ended");
     else
@@ -62,6 +71,7 @@ inline void IRAM_ATTR stream()
 
 
     esp_http_client_cleanup(client);
+    fileserver_close(stream_ctx);
 }
 
 

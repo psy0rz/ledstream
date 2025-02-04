@@ -8,3 +8,4 @@ cmake-build-*
 build
 /managed_components/
 sdkconfig.psy
+build-*

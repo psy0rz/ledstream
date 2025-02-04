@@ -7,7 +7,7 @@
 #include "qois.hpp"
 #include "ledstreamer_udp.hpp"
 #include "ledstreamer_http.hpp"
-// #include "fileserver.hpp"
+#include "fileserver.hpp"
 
 static const char* MAIN_TAG = "main";
 
@@ -55,6 +55,8 @@ extern "C" __attribute__((unused)) void app_main(void)
     ESP_ERROR_CHECK(esp_netif_init());
     // Create default event loop that running in background
     ESP_ERROR_CHECK(esp_event_loop_create_default());
+
+    fileserver_init();
 
     leds_init();
 
