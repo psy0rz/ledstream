@@ -8,6 +8,7 @@
 // #include "ledstreamer_udp.hpp"
 #include "ledstreamer_http.hpp"
 #include "fileserver.hpp"
+#include "ledstreamer_flash.hpp"
 
 static const char* MAIN_TAG = "main";
 

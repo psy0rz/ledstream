@@ -1,11 +1,11 @@
-//
-// Created by psy on 1/18/25.
-//
+//connect to ledder via http and stream led animtion via qois. can also write animation to flash.
+
 
 #ifndef LEDSTREA_HTTP_HPP
 #define LEDSTREA_HTTP_HPP
 
 #include <fileserver.hpp>
+#include <ledstreamer_flash.hpp>
 
 #include "qois.hpp"
 
@@ -20,6 +20,7 @@ fileserver_ctx *stream_ctx= nullptr;
 inline void IRAM_ATTR stream()
 {
     ESP_LOGI(LEDSTREAMER_HTTP_TAG, "Connecting: %s", url);
+
 
     qois_reset();
 
@@ -42,7 +43,6 @@ inline void IRAM_ATTR stream()
                     if (strcmp(evt->header_value,"1")==0)
                     {
                         stream_flashing=true;
-                        stream_ctx=fileserver_open(true);
                     }
                 }
 
@@ -51,7 +51,11 @@ inline void IRAM_ATTR stream()
             case HTTP_EVENT_ON_DATA:
 
                 if (stream_flashing)
+                {
+                    if (stream_ctx==nullptr)
+                        stream_ctx=fileserver_open(true);
                     fileserver_write(stream_ctx, evt->data, evt->data_len);
+                }
 
                 qois_decodeBytes(static_cast<uint8_t*>(evt->data), evt->data_len, 0);
 
@@ -81,6 +85,7 @@ inline void IRAM_ATTR stream()
     while (true)
     {
         stream();
+        ledstreamer_flash_start();
         vTaskDelay(1000 / portTICK_PERIOD_MS);
     }
 }
