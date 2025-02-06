@@ -5,7 +5,7 @@
 #define LEDSTREA_HTTP_HPP
 
 #include <fileserver.hpp>
-#include <ledstreamer_flash.hpp>
+// #include <ledstreamer_flash.hpp>
 
 #include "qois.hpp"
 
@@ -85,7 +85,7 @@ inline void IRAM_ATTR stream()
     while (true)
     {
         stream();
-        ledstreamer_flash_start();
+        // ledstreamer_flash_start();
         vTaskDelay(1000 / portTICK_PERIOD_MS);
     }
 }
@@ -100,7 +100,7 @@ inline void ledstreamer_http_init()
     snprintf(url, sizeof(url), "%s/%02X%02X%02X%02X%02X%02X",
              CONFIG_LEDSTREAM_LEDDER_URL, mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
 
-    xTaskCreate(ledstreamer_http_task, "ledstreamer_http_task", 4096, nullptr, 1, nullptr);
+    xTaskCreate(ledstreamer_http_task, "ledstreamer_http_task", 4096, nullptr, 10, nullptr);
 
 }
 
