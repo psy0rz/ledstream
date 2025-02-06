@@ -121,22 +121,22 @@ inline void IRAM_ATTR qois_show()
     }
 
     //use task delay:
-    // TickType_t xLastWakeTime;
-    // xLastWakeTime = xTaskGetTickCount();
-    //
-    // int32_t wait=(local_show_time-esp_timer_get_time())/1000/portTICK_PERIOD_MS;
-    // if (wait>0)
-    // {
-    //     ESP_LOGI(QOISTAG, "%d tick", wait);
-    //     vTaskDelayUntil( &xLastWakeTime, wait );
-    // }
+    TickType_t xLastWakeTime;
+    xLastWakeTime = xTaskGetTickCount();
+
+    int32_t wait=(local_show_time-esp_timer_get_time())/1000/portTICK_PERIOD_MS;
+    if (wait>0)
+    {
+        // ESP_LOGI(QOISTAG, "%d tick", wait);
+        vTaskDelayUntil( &xLastWakeTime, wait );
+    }
 
     //busyloop delay
     // ESP_LOGI(QOISTAG, "%lld ms", (local_show_time-esp_timer_get_time())/1000);
-    while (esp_timer_get_time()<local_show_time)
-    {
-
-    }
+    // while (esp_timer_get_time()<local_show_time)
+    // {
+    //
+    // }
 
 
     leds_show();

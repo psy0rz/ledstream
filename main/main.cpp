@@ -6,30 +6,53 @@
 
 #include "qois.hpp"
 // #include "ledstreamer_udp.hpp"
+
 #include "ledstreamer_http.hpp"
 #include "fileserver.hpp"
-#include "ledstreamer_flash.hpp"
 
 static const char* MAIN_TAG = "main";
 
 
 OTAUpdater ota_updater = OTAUpdater();
 
+#define MONITOR_TASK_PERIOD_MS 1000
 
-//CRGB &getLed(uint16_t ledNr) {
-//    return (leds[ledNr / CONFIG_LEDSTREAM_LEDS_PER_CHANNEL][ledNr % CONFIG_LEDSTREAM_LEDS_PER_CHANNEL]);
-//}
-
-
-// LedstreamerUDP ledstreamer_udp = LedstreamerUDP();
-
-
-// [[noreturn]] void ledstreamer_udp_task(void* args)
-//
-// {
-//     while (true)
-//         ledstreamer_udp.process();
-// }
+static TaskStatus_t *prevTaskArray = NULL;
+static uint32_t prevTotalRunTime = 0;
+void monitor_task()
+{
+    while (1) {
+        UBaseType_t numTasks = uxTaskGetNumberOfTasks();
+        TaskStatus_t *taskArray = (TaskStatus_t *)pvPortMalloc(numTasks * sizeof(TaskStatus_t));
+        if (taskArray != NULL) {
+            uint32_t totalRunTime;
+            numTasks = uxTaskGetSystemState(taskArray, numTasks, &totalRunTime);
+            ESP_LOGI(MAIN_TAG, "Task Name       | Priority | CPU Usage (%%) | Core ID");
+            ESP_LOGI(MAIN_TAG, "----------------------------------------------------");
+            if (prevTaskArray != NULL && prevTotalRunTime > 0) {
+                for (UBaseType_t i = 0; i < numTasks; i++) {
+                    for (UBaseType_t j = 0; j < numTasks; j++) {
+                        if (strcmp(taskArray[i].pcTaskName, prevTaskArray[j].pcTaskName) == 0) {
+                            uint32_t runTimeDiff = taskArray[i].ulRunTimeCounter - prevTaskArray[j].ulRunTimeCounter;
+                            uint32_t totalRunTimeDiff = totalRunTime - prevTotalRunTime;
+                            float cpuUsage = (totalRunTimeDiff > 0) ? (100.0 * runTimeDiff / totalRunTimeDiff) : 0;
+                            ESP_LOGI(MAIN_TAG, "%-15s | %-8d | %.2f%%        | %d", taskArray[i].pcTaskName, taskArray[i].uxCurrentPriority, cpuUsage, taskArray[i].xCoreID);
+                            break;
+                        }
+                    }
+                }
+            } else {
+                ESP_LOGI(MAIN_TAG, "First sample, CPU usage since boot");
+            }
+            if (prevTaskArray != NULL) {
+                vPortFree(prevTaskArray);
+            }
+            prevTaskArray = taskArray;
+            prevTotalRunTime = totalRunTime;
+        }
+        vTaskDelay(pdMS_TO_TICKS(MONITOR_TASK_PERIOD_MS));
+    }
+}
 
 
 extern "C" __attribute__((unused)) void app_main(void)
@@ -80,4 +103,6 @@ extern "C" __attribute__((unused)) void app_main(void)
     // xTaskCreate(ledstreamer_udp_task, "ledstreamer_udp_task", 4096, nullptr, 1, nullptr);
 
     ledstreamer_http_init();
+
+    monitor_task();
 }
