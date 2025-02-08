@@ -17,6 +17,7 @@
 #include <cstring>
 
 #include <leds.hpp>
+#include <timing.hpp>
 
 #define QOI_ZEROARR(a) memset((a),0,sizeof(a))
 
@@ -100,36 +101,36 @@ inline void IRAM_ATTR qois_show()
     int64_t now = esp_timer_get_time(); //100
     int64_t local_show_time = qois_time_offset_us +qois_show_time_us; //91+10=101
 
-    int64_t diff = local_show_time - now;//101-100=1
-
-
-    if (abs(diff) > QOIS_TIME_MAX_DIFF_US)
-    {
-        //difference too big, step correction
-        ESP_LOGI(QOISTAG, "Resetting local time offset");
-        qois_time_offset_us = now-qois_show_time_us+16000; //start by lagging 1 frame (16ms)
-        local_show_time = now;
-    }
-    else
-    {
-        //we never want to be too late, so keep increasing the offset until this is the case.
-        if (diff < 0)
-        {
-            ESP_LOGI(QOISTAG, "%lld mS late", -diff/1000);
-            qois_time_offset_us = qois_time_offset_us + QOIS_TIME_STEP_US;
-        }
-    }
+    // int64_t diff = local_show_time - now;//101-100=1
+    //
+    //
+    // if (abs(diff) > QOIS_TIME_MAX_DIFF_US)
+    // {
+    //     //difference too big, step correction
+    //     ESP_LOGI(QOISTAG, "Resetting local time offset");
+    //     qois_time_offset_us = now-qois_show_time_us+16000; //start by lagging 1 frame (16ms)
+    //     local_show_time = now;
+    // }
+    // else
+    // {
+    //     //we never want to be too late, so keep increasing the offset until this is the case.
+    //     if (diff < 0)
+    //     {
+    //         ESP_LOGI(QOISTAG, "%lld mS late", -diff/1000);
+    //         qois_time_offset_us = qois_time_offset_us + QOIS_TIME_STEP_US;
+    //     }
+    // }
 
     //use task delay:
-    TickType_t xLastWakeTime;
-    xLastWakeTime = xTaskGetTickCount();
-
-    int32_t wait=(local_show_time-esp_timer_get_time())/1000/portTICK_PERIOD_MS;
-    if (wait>0)
-    {
-        // ESP_LOGI(QOISTAG, "%d tick", wait);
-        vTaskDelayUntil( &xLastWakeTime, wait );
-    }
+    // TickType_t xLastWakeTime;
+    // xLastWakeTime = xTaskGetTickCount();
+    //
+    // int32_t wait=(local_show_time-esp_timer_get_time())/1000/portTICK_PERIOD_MS;
+    // if (wait>0)
+    // {
+    //     // ESP_LOGI(QOISTAG, "%d tick", wait);
+    //     vTaskDelayUntil( &xLastWakeTime, wait );
+    // }
 
     //busyloop delay
     // ESP_LOGI(QOISTAG, "%lld ms", (local_show_time-esp_timer_get_time())/1000);
@@ -138,6 +139,8 @@ inline void IRAM_ATTR qois_show()
     //
     // }
 
+    //esp timer delay
+    timing_wait_until_us(qois_show_time_us);
 
     leds_show();
     qois_reset();
