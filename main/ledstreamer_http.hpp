@@ -13,8 +13,8 @@ const char* LEDSTREAMER_HTTP_TAG = "ledstreamer_http";
 
 char url[200];
 
-bool stream_flashing=false;
-fileserver_ctx *stream_ctx= nullptr;
+bool stream_flashing = false;
+fileserver_ctx* stream_ctx = nullptr;
 
 
 inline void IRAM_ATTR stream()
@@ -24,7 +24,8 @@ inline void IRAM_ATTR stream()
 
     qois_reset();
 
-    stream_flashing=false;
+    stream_flashing = false;
+    timing_reset();
 
     esp_http_client_config_t config = {
         .url = url,
@@ -37,12 +38,19 @@ inline void IRAM_ATTR stream()
                 break;
 
 
+            case HTTP_EVENT_ON_CONNECTED:
+                //buffer
+                ESP_LOGI(LEDSTREAMER_HTTP_TAG, "Connected, buffering...");
+
+                vTaskDelay(1000 / portTICK_PERIOD_MS);
+                break;
+
             case HTTP_EVENT_ON_HEADER:
-                if (strcmp(evt->header_key, "Flash")==0)
+                if (strcmp(evt->header_key, "Flash") == 0)
                 {
-                    if (strcmp(evt->header_value,"1")==0)
+                    if (strcmp(evt->header_value, "1") == 0)
                     {
-                        stream_flashing=true;
+                        stream_flashing = true;
                     }
                 }
 
@@ -52,8 +60,8 @@ inline void IRAM_ATTR stream()
 
                 if (stream_flashing)
                 {
-                    if (stream_ctx==nullptr)
-                        stream_ctx=fileserver_open(true);
+                    if (stream_ctx == nullptr)
+                        stream_ctx = fileserver_open(true);
                     fileserver_write(stream_ctx, evt->data, evt->data_len);
                 }
 
@@ -101,7 +109,6 @@ inline void ledstreamer_http_init()
              CONFIG_LEDSTREAM_LEDDER_URL, mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
 
     xTaskCreate(ledstreamer_http_task, "ledstreamer_http_task", 4096, nullptr, 10, nullptr);
-
 }
 
 

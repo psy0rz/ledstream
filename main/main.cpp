@@ -17,34 +17,45 @@ OTAUpdater ota_updater = OTAUpdater();
 
 #define MONITOR_TASK_PERIOD_MS 1000
 
-static TaskStatus_t *prevTaskArray = NULL;
+static TaskStatus_t* prevTaskArray = NULL;
 static uint32_t prevTotalRunTime = 0;
+
 void monitor_task()
 {
-    while (1) {
+    while (1)
+    {
         UBaseType_t numTasks = uxTaskGetNumberOfTasks();
-        TaskStatus_t *taskArray = (TaskStatus_t *)pvPortMalloc(numTasks * sizeof(TaskStatus_t));
-        if (taskArray != NULL) {
+        TaskStatus_t* taskArray = (TaskStatus_t*)pvPortMalloc(numTasks * sizeof(TaskStatus_t));
+        if (taskArray != NULL)
+        {
             uint32_t totalRunTime;
             numTasks = uxTaskGetSystemState(taskArray, numTasks, &totalRunTime);
             ESP_LOGI(MAIN_TAG, "Task Name       | Priority | CPU Usage (%%) | Core ID");
             ESP_LOGI(MAIN_TAG, "----------------------------------------------------");
-            if (prevTaskArray != NULL && prevTotalRunTime > 0) {
-                for (UBaseType_t i = 0; i < numTasks; i++) {
-                    for (UBaseType_t j = 0; j < numTasks; j++) {
-                        if (strcmp(taskArray[i].pcTaskName, prevTaskArray[j].pcTaskName) == 0) {
+            if (prevTaskArray != NULL && prevTotalRunTime > 0)
+            {
+                for (UBaseType_t i = 0; i < numTasks; i++)
+                {
+                    for (UBaseType_t j = 0; j < numTasks; j++)
+                    {
+                        if (strcmp(taskArray[i].pcTaskName, prevTaskArray[j].pcTaskName) == 0)
+                        {
                             uint32_t runTimeDiff = taskArray[i].ulRunTimeCounter - prevTaskArray[j].ulRunTimeCounter;
                             uint32_t totalRunTimeDiff = totalRunTime - prevTotalRunTime;
                             float cpuUsage = (totalRunTimeDiff > 0) ? (100.0 * runTimeDiff / totalRunTimeDiff) : 0;
-                            ESP_LOGI(MAIN_TAG, "%-15s | %-8d | %.2f%%        | %d", taskArray[i].pcTaskName, taskArray[i].uxCurrentPriority, cpuUsage, taskArray[i].xCoreID);
+                            ESP_LOGI(MAIN_TAG, "%-15s | %-8d | %.2f%%        | %d", taskArray[i].pcTaskName,
+                                     taskArray[i].uxCurrentPriority, cpuUsage, taskArray[i].xCoreID);
                             break;
                         }
                     }
                 }
-            } else {
+            }
+            else
+            {
                 ESP_LOGI(MAIN_TAG, "First sample, CPU usage since boot");
             }
-            if (prevTaskArray != NULL) {
+            if (prevTaskArray != NULL)
+            {
                 vPortFree(prevTaskArray);
             }
             prevTaskArray = taskArray;
@@ -53,6 +64,38 @@ void monitor_task()
         vTaskDelay(pdMS_TO_TICKS(MONITOR_TASK_PERIOD_MS));
     }
 }
+
+void timing_test(void *p)
+{
+    uint32_t c = 0;
+
+    int on = 0;
+
+
+    while (1)
+    {
+        on = (on + 1) % 64;
+
+        for (int y = 0; y < 32; y++)
+        {
+            for (int x = 0; x < 64; x++)
+            {
+                if (on == x )
+                    leds_setNextPixel(255, 255, 255);
+                else
+                    leds_setNextPixel(0, 0, 0);
+            }
+        }
+
+
+        c = c + 1000000/60;         // c = c + 1000000/1;
+        timing_wait_until_us(c);
+        leds_show();
+        leds_reset();
+    }
+
+}
+
 
 
 extern "C" __attribute__((unused)) void app_main(void)
@@ -102,7 +145,11 @@ extern "C" __attribute__((unused)) void app_main(void)
 
     // xTaskCreate(ledstreamer_udp_task, "ledstreamer_udp_task", 4096, nullptr, 1, nullptr);
 
-    ledstreamer_http_init();
+    timing_init();
 
-    monitor_task();
+     ledstreamer_http_init();
+    //xTaskCreatePinnedToCore(timing_test, "test", 4096, nullptr, 25|portPRIVILEGE_BIT, nullptr,0);
+
+
+    // monitor_task();
 }
