@@ -5,10 +5,9 @@
 #include "leds.hpp"
 
 #include "qois.hpp"
-// #include "ledstreamer_udp.hpp"
 
 #include "ledstreamer_http.hpp"
-#include "fileserver.hpp"
+#include "ledstreamer_flash.hpp"
 
 static const char* MAIN_TAG = "main";
 
@@ -65,7 +64,7 @@ void monitor_task()
     }
 }
 
-void timing_test(void *p)
+void timing_test(void* p)
 {
     uint32_t c = 0;
 
@@ -80,7 +79,7 @@ void timing_test(void *p)
         {
             for (int x = 0; x < 64; x++)
             {
-                if (on == x )
+                if (on == x)
                     leds_setNextPixel(255, 255, 255);
                 else
                     leds_setNextPixel(0, 0, 0);
@@ -88,14 +87,12 @@ void timing_test(void *p)
         }
 
 
-        c = c + 1000000/60;         // c = c + 1000000/1;
+        c = c + 1000000 / 60; // c = c + 1000000/1;
         timing_wait_until_us(c);
         leds_show();
         leds_reset();
     }
-
 }
-
 
 
 extern "C" __attribute__((unused)) void app_main(void)
@@ -147,7 +144,8 @@ extern "C" __attribute__((unused)) void app_main(void)
 
     timing_init();
 
-     ledstreamer_http_init();
+    ledstreamer_http_init();
+    ledstreamer_flash_init();
     //xTaskCreatePinnedToCore(timing_test, "test", 4096, nullptr, 25|portPRIVILEGE_BIT, nullptr,0);
 
 
