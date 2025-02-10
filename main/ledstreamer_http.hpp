@@ -7,6 +7,8 @@
 #include <fileserver.hpp>
 // #include <ledstreamer_flash.hpp>
 
+#include <ledstreamer_flash.hpp>
+
 #include "qois.hpp"
 
 const char* LEDSTREAMER_HTTP_TAG = "ledstreamer_http";
@@ -14,7 +16,7 @@ const char* LEDSTREAMER_HTTP_TAG = "ledstreamer_http";
 char url[200];
 
 bool stream_flashing = false;
-fileserver_ctx* stream_ctx = nullptr;
+fileserver_ctx* ledstreamer_http_file_ctx = nullptr;
 
 
 inline void IRAM_ATTR stream()
@@ -22,7 +24,6 @@ inline void IRAM_ATTR stream()
     ESP_LOGI(LEDSTREAMER_HTTP_TAG, "Connecting: %s", url);
 
 
-    qois_reset();
 
     stream_flashing = false;
     timing_reset();
@@ -39,10 +40,9 @@ inline void IRAM_ATTR stream()
 
 
             case HTTP_EVENT_ON_CONNECTED:
-                //buffer
-                ESP_LOGI(LEDSTREAMER_HTTP_TAG, "Connected, buffering...");
-
-                vTaskDelay(1000 / portTICK_PERIOD_MS);
+                ESP_LOGI(LEDSTREAMER_HTTP_TAG, "Connected");
+                ledstreamer_flash_stop();
+                qois_reset();
                 break;
 
             case HTTP_EVENT_ON_HEADER:
@@ -51,6 +51,13 @@ inline void IRAM_ATTR stream()
                     if (strcmp(evt->header_value, "1") == 0)
                     {
                         stream_flashing = true;
+                        ESP_LOGI(LEDSTREAMER_HTTP_TAG, "Flashing");
+                    }
+                    else
+                    {
+                        ESP_LOGI(LEDSTREAMER_HTTP_TAG, "Buffering...");
+                        vTaskDelay(1000 / portTICK_PERIOD_MS);
+                        ESP_LOGI(LEDSTREAMER_HTTP_TAG, "Streaming");
                     }
                 }
 
@@ -58,11 +65,12 @@ inline void IRAM_ATTR stream()
 
             case HTTP_EVENT_ON_DATA:
 
+                //TODO: writing in seperate thread?
                 if (stream_flashing)
                 {
-                    if (stream_ctx == nullptr)
-                        stream_ctx = fileserver_open(true);
-                    fileserver_write(stream_ctx, evt->data, evt->data_len);
+                    if (ledstreamer_http_file_ctx == nullptr)
+                        ledstreamer_http_file_ctx = fileserver_open(true);
+                    fileserver_write(ledstreamer_http_file_ctx, evt->data, evt->data_len);
                 }
 
                 qois_decodeBytes(static_cast<uint8_t*>(evt->data), evt->data_len, 0);
@@ -83,18 +91,25 @@ inline void IRAM_ATTR stream()
 
 
     esp_http_client_cleanup(client);
-    fileserver_close(stream_ctx);
+    fileserver_close(ledstreamer_http_file_ctx);
+
+    ledstreamer_flash_start();
+
 }
 
 
 [[noreturn]] inline void ledstreamer_http_task(void* args)
 
 {
+    int64_t lastAttempt = 0;
     while (true)
     {
+        lastAttempt = esp_timer_get_time();
         stream();
-        // ledstreamer_flash_start();
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
+        if (abs(esp_timer_get_time() - lastAttempt) < 1000000)
+        {
+            vTaskDelay(1000 / portTICK_PERIOD_MS);
+        }
     }
 }
 

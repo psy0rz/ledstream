@@ -10,103 +10,79 @@
 #include "freertos/semphr.h"
 #include "esp_log.h"
 
-static const char* LEDSTREAMER_FLASH_TAG = "LEDSTREAMER_FLASH";
+static const char* LEDSTREAMER_FLASH_TAG = "flash";
 
-// Task handle and mutex for synchronization
-static TaskHandle_t s_task_handle = NULL;
-static TaskHandle_t s_caller_handle = NULL;
-static SemaphoreHandle_t s_task_mutex = NULL;
+bool ledstreamer_flash_run = false;
+bool ledstreamer_flash_running = false;
+
 
 // Task function
 inline void ledstreamer_flash_task(void* arg)
 {
-    ESP_LOGI(LEDSTREAMER_FLASH_TAG, "Started");
+    fileserver_ctx* ctx = nullptr;
 
-    // Notify that the task has started
-    xSemaphoreGive(s_task_mutex);
-
-    uint32_t notification_value;
-    while (!xTaskNotifyWait(0, 0, &notification_value, 0))
+    while (true)
     {
-        // Simulate task work
-        ESP_LOGI(LEDSTREAMER_FLASH_TAG, "Task is running...");
-        vTaskDelay(pdMS_TO_TICKS(1000)); // Delay for 1 second
-
-    }
-
-    // Notify the stop function that the task is about to exit
-    ESP_LOGI(LEDSTREAMER_FLASH_TAG, "Task stopping");
-    xTaskNotifyGive(s_caller_handle);
-
-    // Task cleanup
-    vTaskDelete(NULL); // Delete itself
-}
-
-// Start the task
-inline void ledstreamer_flash_start()
-{
-    // Create the mutex if it doesn't exist
-    if (s_task_mutex == NULL)
-    {
-        s_task_mutex = xSemaphoreCreateMutex();
-        if (s_task_mutex == NULL)
+        //stopped
+        ledstreamer_flash_running = false;
+        while (!ledstreamer_flash_run)
         {
-            ESP_LOGE(LEDSTREAMER_FLASH_TAG, "Failed to create mutex");
-            return;
+            vTaskDelay(1000 / portTICK_PERIOD_MS);
+        }
+        ledstreamer_flash_running = true;
+
+        ESP_LOGI(LEDSTREAMER_FLASH_TAG, "running from flash");
+        ctx = fileserver_open(false);
+        if (ctx == nullptr)
+        {
+            vTaskDelay(10000 / portTICK_PERIOD_MS);
+        }
+        else
+        {
+            //running
+            qois_reset();
+            while (ledstreamer_flash_run && fileserver_read(ctx))
+            {
+                qois_decodeBytes(static_cast<const uint8_t*>(ctx->buffer), ctx->buffered, 0);
+            }
+            fileserver_close(ctx);
         }
     }
-
-    // Lock the mutex to protect s_task_handle
-    xSemaphoreTake(s_task_mutex, portMAX_DELAY);
-
-    if (s_task_handle != NULL)
-    {
-        ESP_LOGE(LEDSTREAMER_FLASH_TAG, "Task is already running");
-        xSemaphoreGive(s_task_mutex);
-        return;
-    }
-
-    // Create the task
-    xTaskCreate(ledstreamer_flash_task, "ledstreamer_flash", 4096, NULL, 5, &s_task_handle);
-
-    // Wait for the task to initialize
-    xSemaphoreTake(s_task_mutex, portMAX_DELAY);
-
-    // Unlock the mutex
-    xSemaphoreGive(s_task_mutex);
 }
 
-// Stop the task and wait for it to exit
+//start looping from flash
+inline void ledstreamer_flash_start()
+{
+    if (!ledstreamer_flash_running)
+    {
+        ESP_LOGI(LEDSTREAMER_FLASH_TAG, "start playing from flash memory");
+        while (!ledstreamer_flash_running)
+        {
+            ledstreamer_flash_run = true;
+            vTaskDelay(100 / portTICK_PERIOD_MS);
+        }
+    }
+}
+
+// stop looping from flash
 inline void ledstreamer_flash_stop()
 {
-    // Lock the mutex to protect s_task_handle
-    xSemaphoreTake(s_task_mutex, portMAX_DELAY);
-
-
-    if (s_task_handle == NULL)
+    if (ledstreamer_flash_running)
     {
-        ESP_LOGE(LEDSTREAMER_FLASH_TAG, "Task is not running");
-        xSemaphoreGive(s_task_mutex);
-        return;
+        ESP_LOGI(LEDSTREAMER_FLASH_TAG, "stopping");
+        while (ledstreamer_flash_running)
+        {
+            ledstreamer_flash_run = false;
+            vTaskDelay(100 / portTICK_PERIOD_MS);
+        }
     }
-
-    s_caller_handle = xTaskGetCurrentTaskHandle();
-
-    // Send a notification to the task to stop
-    xTaskNotify(s_task_handle, 0, eNoAction);
-
-    // Wait for the task to acknowledge that it has stopped
-    ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
-
-    ESP_LOGI(LEDSTREAMER_FLASH_TAG, "Task has stopped");
-
-    // Reset the task handle
-    s_task_handle = NULL;
-
-    // Unlock the mutex
-    xSemaphoreGive(s_task_mutex);
 }
 
+inline void ledstreamer_flash_init()
+{
+    xTaskCreate(ledstreamer_flash_task, "ledstreamer_flash_task", 4096, nullptr, 10, nullptr);
+    ledstreamer_flash_run = true;
+}
 
 
 #endif //LEDSTREAMER_FLASH_HPP

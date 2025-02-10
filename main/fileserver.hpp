@@ -10,7 +10,7 @@
 #define STREAM_FILE "/littlefs/stream.bin"
 
 
- const char* FILESERVER_TAG = "fileserver";
+const char* FILESERVER_TAG = "fileserver";
 
 typedef struct
 {
@@ -31,7 +31,6 @@ static void* alloc_aligned_buffer()
 // Open stream in specified mode
 inline fileserver_ctx* fileserver_open(bool write)
 {
-
     ESP_LOGI(FILESERVER_TAG, "opening %d", write);
 
     fileserver_ctx* ctx = static_cast<fileserver_ctx*>(calloc(1, sizeof(fileserver_ctx)));
@@ -67,7 +66,7 @@ inline fileserver_ctx* fileserver_open(bool write)
 // High-performance write with block alignment
 inline void fileserver_write(fileserver_ctx* ctx, const void* data, size_t size)
 {
-    if (ctx==nullptr)
+    if (ctx == nullptr)
         return;
 
     while (size > 0)
@@ -85,7 +84,6 @@ inline void fileserver_write(fileserver_ctx* ctx, const void* data, size_t size)
         {
             ESP_LOGI(FILESERVER_TAG, "writing");
             fwrite(ctx->buffer, 1, FLASH_BLOCK_SIZE, ctx->file);
-            ESP_LOGI(FILESERVER_TAG, "done");
             ctx->buffered = 0;
         }
     }
@@ -94,24 +92,24 @@ inline void fileserver_write(fileserver_ctx* ctx, const void* data, size_t size)
 // read and fill buffer in ctx, ret false when done
 inline bool fileserver_read(fileserver_ctx* ctx)
 {
-    if (ctx==nullptr)
+    if (ctx == nullptr)
         return false;
 
-    ESP_LOGI(FILESERVER_TAG, "reading");
+    // ESP_LOGI(FILESERVER_TAG, "reading");
 
     ctx->buffered = fread(ctx->buffer, 1, FLASH_BLOCK_SIZE, ctx->file);
-    ESP_LOGI(FILESERVER_TAG, "done");
+    // ESP_LOGI(FILESERVER_TAG, "done");
     ctx->buffer_pos = 0;
 
     return (ctx->buffered == FLASH_BLOCK_SIZE);
 }
 
 // Close stream and free resources
-inline void fileserver_close(fileserver_ctx* &ctx)
+inline void fileserver_close(fileserver_ctx* & ctx)
 {
-    ESP_LOGI(FILESERVER_TAG, "closing");
     if (ctx)
     {
+        ESP_LOGI(FILESERVER_TAG, "closing");
         if (ctx->write_mode && ctx->buffered > 0)
         {
             fwrite(ctx->buffer, 1, ctx->buffered, ctx->file);
@@ -119,8 +117,7 @@ inline void fileserver_close(fileserver_ctx* &ctx)
         fclose(ctx->file);
         free(ctx->buffer);
         free(ctx);
-        ctx=nullptr;
-
+        ctx = nullptr;
     }
 }
 
@@ -133,7 +130,7 @@ inline void fileserver_init()
         .partition_label = "ledstream",
         .partition = NULL,
         .format_if_mount_failed = true,
-        .read_only =false,
+        .read_only = false,
         .dont_mount = false,
         .grow_on_mount = false,
     };

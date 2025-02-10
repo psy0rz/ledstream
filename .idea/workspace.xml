@@ -7,7 +7,7 @@
     <option name="/Default/RiderDebugger/RiderRestoreDecompile/RestoreDecompileSetting/@EntryValue" value="false" type="bool" />
     <option name="/Default/Housekeeping/GlobalSettingsUpgraded/IsUpgraded/@EntryValue" value="true" type="bool" />
     <option name="/Default/Housekeeping/FeatureSuggestion/FeatureSuggestionManager/DisabledSuggesters/=SwitchToGoToActionSuggester/@EntryIndexedValue" value="true" type="bool" />
-    <option name="/Default/Environment/Hierarchy/GeneratedFilesCacheKey/Timestamp/@EntryValue" value="4" type="long" />
+    <option name="/Default/Environment/Hierarchy/GeneratedFilesCacheKey/Timestamp/@EntryValue" value="5" type="long" />
     <option name="/Default/Housekeeping/OptionsDialog/SelectedPageId/@EntryValue" value="CppFormatterOtherPage" type="string" />
     <option name="/Default/Housekeeping/FeatureSuggestion/FeatureSuggestionManager/DisabledSuggesters/=SwitchToGoToActionSuggester/@EntryIndexRemoved" />
   </component>
@@ -45,6 +45,7 @@
       <config projectName="ledstream" targetName="confserver" />
       <config projectName="ledstream" targetName="read-otadata" />
       <config projectName="ledstream" targetName="menuconfig" />
+      <config projectName="ledstream" targetName="__idf_sdmmc" />
       <config projectName="ledstream" targetName="efuse_common_table" />
       <config projectName="ledstream" targetName="__idf_esp_rom" />
       <config projectName="ledstream" targetName="__idf_espcoredump" />
@@ -80,6 +81,7 @@
       <config projectName="ledstream" targetName="dfu" />
       <config projectName="ledstream" targetName="flash" />
       <config projectName="ledstream" targetName="__idf_esp_pm" />
+      <config projectName="ledstream" targetName="__idf_joltwallet__littlefs" />
       <config projectName="ledstream" targetName="__idf_driver" />
       <config projectName="ledstream" targetName="__idf_spi_flash" />
       <config projectName="ledstream" targetName="__idf_console" />
@@ -131,12 +133,8 @@
     <configurations />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="http stream wip">
-      <change afterPath="$PROJECT_DIR$/.idea/ledstream.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dependencies.lock" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies.lock" afterDir="false" />
+    <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="better timing">
       <change beforePath="$PROJECT_DIR$/main/ledstreamer_http.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/ledstreamer_http.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/main.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -168,16 +166,32 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/../.cache/JetBrains/CLion2024.1/.docker/2024_1/Docker/espressif_idf_v4_4_8/opt/esp/idf/components/esp_http_client/include/esp_http_client.h" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../.cache/JetBrains/CLion2024.1/.docker/2024_1/Docker/espressif_idf_v4_4_8/opt/esp/idf/components/esp_https_ota/include/esp_https_ota.h" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../.cache/JetBrains/CLion2024.1/.docker/2024_1/Docker/espressif_idf_v4_4_8/opt/esp/idf/components/esp_wifi/include/esp_wifi.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/main/ethernet.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///home/psy/ledstream/main/fileserver.hpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///home/psy/ledstream/main/leds.hpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///home/psy/ledstream/main/leds.hpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///home/psy/ledstream/main/leds_hub75.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///home/psy/ledstream/main/leds_hub75.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/main/leds_hub75.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///home/psy/ledstream/main/leds_hub75.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/main/ledstreamer_http.hpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///home/psy/ledstream/main/ledstreamer_http.hpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///home/psy/ledstream/main/ledstreamer_http.hpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///home/psy/ledstream/main/ledstreamer_http.hpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///home/psy/ledstream/main/ledstreamer_udp.hpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///home/psy/ledstream/main/main.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///home/psy/ledstream/main/main.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///home/psy/ledstream/main/main.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///home/psy/ledstream/main/main.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/main/main.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///home/psy/ledstream/main/ota.hpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///home/psy/ledstream/main/qois.hpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///home/psy/ledstream/main/qois.hpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///home/psy/ledstream/main/qois.hpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///home/psy/ledstream/main/qois.hpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///home/psy/ledstream/main/wifi.hpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///home/psy/ledstream/main/wifi.hpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///home/psy/ledstream/main/wifi.hpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///home/psy/ledstream/main/wifi.hpp" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -378,6 +392,11 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
+    <configuration name="__idf_joltwallet__littlefs" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="__idf_joltwallet__littlefs" CONFIG_NAME="esp32s3-hub75">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="__idf_log" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="__idf_log" CONFIG_NAME="esp32s3-hub75">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -414,6 +433,11 @@
       </method>
     </configuration>
     <configuration name="__idf_pthread" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="__idf_pthread" CONFIG_NAME="esp32s3-hub75">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="__idf_sdmmc" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="__idf_sdmmc" CONFIG_NAME="esp32s3-hub75">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -770,6 +794,7 @@
       <item itemvalue="CMake Application.__idf_freertos" />
       <item itemvalue="CMake Application.__idf_hal" />
       <item itemvalue="CMake Application.__idf_heap" />
+      <item itemvalue="CMake Application.__idf_joltwallet__littlefs" />
       <item itemvalue="CMake Application.__idf_log" />
       <item itemvalue="CMake Application.__idf_lwip" />
       <item itemvalue="CMake Application.__idf_main" />
@@ -778,6 +803,7 @@
       <item itemvalue="CMake Application.__idf_nghttp" />
       <item itemvalue="CMake Application.__idf_nvs_flash" />
       <item itemvalue="CMake Application.__idf_pthread" />
+      <item itemvalue="CMake Application.__idf_sdmmc" />
       <item itemvalue="CMake Application.__idf_soc" />
       <item itemvalue="CMake Application.__idf_spi_flash" />
       <item itemvalue="CMake Application.__idf_tcp_transport" />
@@ -1233,7 +1259,7 @@
       <option name="project" value="LOCAL" />
       <updated>1686338058682</updated>
     </task>
-    <option name="localTasksCounter" value="61" />
+    <option name="localTasksCounter" value="62" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1260,9 +1286,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="\o/" />
-    <MESSAGE value="moving to esp-idf" />
-    <MESSAGE value="format" />
     <MESSAGE value="compiles" />
     <MESSAGE value="runs" />
     <MESSAGE value="connects" />
@@ -1275,7 +1298,6 @@
     <MESSAGE value="wifi notifier" />
     <MESSAGE value="be more flexible with number of leds per channel. (incompatible protocol change!)" />
     <MESSAGE value="fixed timesync issues" />
-    <MESSAGE value="fixes" />
     <MESSAGE value="cleanup up qois decoder and fixed a bug" />
     <MESSAGE value="cleanup" />
     <MESSAGE value="static animation downloader wip" />
@@ -1285,7 +1307,11 @@
     <MESSAGE value="seperate udpstreamer" />
     <MESSAGE value="task" />
     <MESSAGE value="http stream wip" />
-    <option name="LAST_COMMIT_MESSAGE" value="http stream wip" />
+    <MESSAGE value="timeing to qois" />
+    <MESSAGE value="fixes" />
+    <MESSAGE value="fileserver wip" />
+    <MESSAGE value="better timing" />
+    <option name="LAST_COMMIT_MESSAGE" value="better timing" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
