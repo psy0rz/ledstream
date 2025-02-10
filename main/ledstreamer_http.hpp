@@ -23,10 +23,7 @@ inline void IRAM_ATTR stream()
 {
     ESP_LOGI(LEDSTREAMER_HTTP_TAG, "Connecting: %s", url);
 
-
-
     stream_flashing = false;
-    timing_reset();
 
     esp_http_client_config_t config = {
         .url = url,
@@ -41,25 +38,42 @@ inline void IRAM_ATTR stream()
 
             case HTTP_EVENT_ON_CONNECTED:
                 ESP_LOGI(LEDSTREAMER_HTTP_TAG, "Connected");
-                ledstreamer_flash_stop();
-                qois_reset();
                 break;
 
             case HTTP_EVENT_ON_HEADER:
-                if (strcmp(evt->header_key, "Flash") == 0)
+                if (strcmp(evt->header_key, "Mode") == 0)
                 {
-                    if (strcmp(evt->header_value, "1") == 0)
+                    //live streaming
+                    if (strcmp(evt->header_value, "0") == 0)
+                    {
+                        ESP_LOGI(LEDSTREAMER_HTTP_TAG, "Live streaming");
+                        vTaskDelay(1000 / portTICK_PERIOD_MS);
+                        ledstreamer_flash_stop();
+                        qois_reset();
+                        timing_reset();
+
+                    }
+                    //record
+                    else if (strcmp(evt->header_value, "1") == 0)
                     {
                         stream_flashing = true;
-                        ESP_LOGI(LEDSTREAMER_HTTP_TAG, "Flashing");
+                        ESP_LOGI(LEDSTREAMER_HTTP_TAG, "Recording");
+                        ledstreamer_flash_stop();
+                        qois_reset();
+                        timing_reset();
+                    }
+                    //play
+                    else if (strcmp(evt->header_value, "2") == 0)
+                    {
+                        ESP_LOGI(LEDSTREAMER_HTTP_TAG, "Replaying");
+                        ledstreamer_flash_start();
                     }
                     else
                     {
-                        ESP_LOGI(LEDSTREAMER_HTTP_TAG, "Buffering...");
-                        vTaskDelay(1000 / portTICK_PERIOD_MS);
-                        ESP_LOGI(LEDSTREAMER_HTTP_TAG, "Streaming");
+                            ESP_LOGE(LEDSTREAMER_HTTP_TAG, "Unknown mode");
                     }
                 }
+
 
                 break;
 

@@ -31,7 +31,7 @@ inline void ledstreamer_flash_task(void* arg)
         }
         ledstreamer_flash_running = true;
 
-        ESP_LOGI(LEDSTREAMER_FLASH_TAG, "running from flash");
+        // ESP_LOGI(LEDSTREAMER_FLASH_TAG, "running from flash");
         ctx = fileserver_open(false);
         if (ctx == nullptr)
         {
@@ -40,6 +40,7 @@ inline void ledstreamer_flash_task(void* arg)
         else
         {
             //running
+            timing_reset();
             qois_reset();
             while (ledstreamer_flash_run && fileserver_read(ctx))
             {
@@ -55,7 +56,7 @@ inline void ledstreamer_flash_start()
 {
     if (!ledstreamer_flash_running)
     {
-        ESP_LOGI(LEDSTREAMER_FLASH_TAG, "start playing from flash memory");
+        ESP_LOGI(LEDSTREAMER_FLASH_TAG, "starting replay");
         while (!ledstreamer_flash_running)
         {
             ledstreamer_flash_run = true;
@@ -69,7 +70,7 @@ inline void ledstreamer_flash_stop()
 {
     if (ledstreamer_flash_running)
     {
-        ESP_LOGI(LEDSTREAMER_FLASH_TAG, "stopping");
+        ESP_LOGI(LEDSTREAMER_FLASH_TAG, "stopping replay");
         while (ledstreamer_flash_running)
         {
             ledstreamer_flash_run = false;
