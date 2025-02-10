@@ -31,7 +31,7 @@ static void* alloc_aligned_buffer()
 // Open stream in specified mode
 inline fileserver_ctx* fileserver_open(bool write)
 {
-    ESP_LOGI(FILESERVER_TAG, "opening %d", write);
+    // ESP_LOGI(FILESERVER_TAG, "opening %d", write);
 
     fileserver_ctx* ctx = static_cast<fileserver_ctx*>(calloc(1, sizeof(fileserver_ctx)));
 
@@ -109,7 +109,7 @@ inline void fileserver_close(fileserver_ctx* & ctx)
 {
     if (ctx)
     {
-        ESP_LOGI(FILESERVER_TAG, "closing");
+        // ESP_LOGI(FILESERVER_TAG, "closing");
         if (ctx->write_mode && ctx->buffered > 0)
         {
             fwrite(ctx->buffer, 1, ctx->buffered, ctx->file);
