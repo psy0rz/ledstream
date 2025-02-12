@@ -15,15 +15,17 @@ const char* LEDSTREAMER_HTTP_TAG = "ledstreamer_http";
 
 char url[200];
 
-bool stream_flashing = false;
 fileserver_ctx* ledstreamer_http_file_ctx = nullptr;
 
+bool stream_flashing = false;
+bool stream_live=false;
 
 inline void IRAM_ATTR stream()
 {
     ESP_LOGI(LEDSTREAMER_HTTP_TAG, "Connecting: %s", url);
 
     stream_flashing = false;
+    stream_live = false;
 
     esp_http_client_config_t config = {
         .url = url,
@@ -46,17 +48,19 @@ inline void IRAM_ATTR stream()
                     //live streaming
                     if (strcmp(evt->header_value, "0") == 0)
                     {
-                        ESP_LOGI(LEDSTREAMER_HTTP_TAG, "Live streaming");   
+                        ESP_LOGI(LEDSTREAMER_HTTP_TAG, "Live streaming");
                         vTaskDelay(1000 / portTICK_PERIOD_MS);
                         ledstreamer_flash_stop();
                         qois_reset();
                         timing_reset();
+                        stream_live=true;
 
                     }
                     //record
                     else if (strcmp(evt->header_value, "1") == 0)
                     {
                         stream_flashing = true;
+                        stream_live=true;
                         ESP_LOGI(LEDSTREAMER_HTTP_TAG, "Recording");
                         ledstreamer_flash_stop();
                         qois_reset();
@@ -87,7 +91,8 @@ inline void IRAM_ATTR stream()
                     fileserver_write(ledstreamer_http_file_ctx, evt->data, evt->data_len);
                 }
 
-                qois_decodeBytes(static_cast<uint8_t*>(evt->data), evt->data_len, 0);
+                if (stream_live)
+                    qois_decodeBytes(static_cast<uint8_t*>(evt->data), evt->data_len, 0);
 
 
                 break;
