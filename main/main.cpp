@@ -100,8 +100,8 @@ extern "C" __attribute__((unused)) void app_main(void)
     ESP_LOGI(MAIN_TAG, "Starting ledstreamer...");
 
 
-    //settle
-    vTaskDelay(250 / portTICK_PERIOD_MS);
+    //settle power
+    vTaskDelay(1000 / portTICK_PERIOD_MS);
 
 
     //Initialize NVS
@@ -124,7 +124,11 @@ extern "C" __attribute__((unused)) void app_main(void)
 
     leds_init();
 
+    vTaskDelay(1000 / portTICK_PERIOD_MS);
+
+
     wifi_init_sta();
+
 
 #if CONFIG_LEDSTREAM_USE_INTERNAL_ETHERNET
 
