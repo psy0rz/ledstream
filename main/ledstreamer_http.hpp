@@ -46,7 +46,7 @@ inline void IRAM_ATTR stream()
                     //live streaming
                     if (strcmp(evt->header_value, "0") == 0)
                     {
-                        ESP_LOGI(LEDSTREAMER_HTTP_TAG, "Live streaming");
+                        ESP_LOGI(LEDSTREAMER_HTTP_TAG, "Live streaming");   
                         vTaskDelay(1000 / portTICK_PERIOD_MS);
                         ledstreamer_flash_stop();
                         qois_reset();
