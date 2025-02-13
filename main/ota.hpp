@@ -18,25 +18,24 @@
 class OTAUpdater {
 public:
     OTAUpdater()  {
-        updating = false;
+        task_started = false;
     }
 
 
-    void check_update() {
-        if (updating) {
-            ESP_LOGI(TAG, "Update already in progress");
+    void init() {
+        if (task_started) {
             return;
         }
 
-        updating = true;
+        task_started = true;
 //        xTaskCreate(ota_update_task, "ota_update_task", 8192, this, 5, &ota_task_handle);
-        xTaskCreate(&ota_task, "ota_task", 8192, this, 5, NULL);
+        xTaskCreate(&ota_task, "ota_task", 8192, this, 0, nullptr);
     }
 
 private:
     static const char *TAG;
 
-    bool updating;
+    bool task_started;
 
 
     int total_length = 0;
@@ -45,9 +44,17 @@ private:
 
     static void ota_task(void *pvParameter) {
         OTAUpdater *instance = static_cast<OTAUpdater *>(pvParameter);
-        instance->update_firmware();
-        instance->updating = false;
-        vTaskDelete(NULL);
+
+        vTaskDelay(5000 / portTICK_PERIOD_MS);
+        while (true)
+        {
+            instance->update_firmware();
+            instance->task_started = false;
+            vTaskDelay(60000 / portTICK_PERIOD_MS);
+
+
+        }
+
     }
 
     bool is_update_needed(const esp_app_desc_t *new_app_info) {
@@ -89,6 +96,7 @@ private:
 
         if (!is_update_needed(&new_app_info)) {
             ESP_LOGI(TAG, "No update available");
+
             esp_https_ota_abort(ota_handle);
             return;
         }
@@ -123,4 +131,9 @@ const char *OTAUpdater::TAG = "ota";
 
 extern OTAUpdater ota_updater;
 
+
+
+
+
 #endif
+
