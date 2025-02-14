@@ -29,7 +29,10 @@ inline void IRAM_ATTR stream()
 
     esp_http_client_config_t config = {
         .url = url,
+        .timeout_ms=60000,
         .event_handler = [](esp_http_client_event_t* evt)
+
+
 
         {
             switch (evt->event_id)
@@ -102,6 +105,7 @@ inline void IRAM_ATTR stream()
 
     };
     esp_http_client_handle_t client = esp_http_client_init(&config);
+
 
     if (esp_http_client_perform(client) == ESP_OK)
         ESP_LOGI(LEDSTREAMER_HTTP_TAG, "Stream ended");
