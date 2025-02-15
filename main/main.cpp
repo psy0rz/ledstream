@@ -1,3 +1,4 @@
+
 #include "wifi.hpp"
 #include "ethernet.h"
 #include "ota.hpp"
@@ -101,7 +102,7 @@ extern "C" __attribute__((unused)) void app_main(void)
 
 
     //settle power
-    vTaskDelay(1000 / portTICK_PERIOD_MS);
+    // vTaskDelay(1000 / portTICK_PERIOD_MS);
 
 
     //Initialize NVS
@@ -124,13 +125,13 @@ extern "C" __attribute__((unused)) void app_main(void)
 
     leds_init();
 
-    vTaskDelay(1000 / portTICK_PERIOD_MS);
+    // vTaskDelay(1000 / portTICK_PERIOD_MS);
 
 
     wifi_init_sta();
 
 
-    vTaskDelay(1000 / portTICK_PERIOD_MS);
+    // vTaskDelay(1000 / portTICK_PERIOD_MS);
 #if CONFIG_LEDSTREAM_USE_INTERNAL_ETHERNET
 
      ethernet_init();
@@ -150,7 +151,7 @@ extern "C" __attribute__((unused)) void app_main(void)
     timing_init();
 
     ledstreamer_http_init();
-    vTaskDelay(1000 / portTICK_PERIOD_MS);
+    // vTaskDelay(1000 / portTICK_PERIOD_MS);
     ledstreamer_flash_init();
     //xTaskCreatePinnedToCore(timing_test, "test", 4096, nullptr, 25|portPRIVILEGE_BIT, nullptr,0);
 
