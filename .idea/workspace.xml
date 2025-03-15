@@ -7,9 +7,9 @@
     <option name="/Default/RiderDebugger/RiderRestoreDecompile/RestoreDecompileSetting/@EntryValue" value="false" type="bool" />
     <option name="/Default/Housekeeping/GlobalSettingsUpgraded/IsUpgraded/@EntryValue" value="true" type="bool" />
     <option name="/Default/Housekeeping/FeatureSuggestion/FeatureSuggestionManager/DisabledSuggesters/=SwitchToGoToActionSuggester/@EntryIndexedValue" value="true" type="bool" />
-    <option name="/Default/Environment/Hierarchy/GeneratedFilesCacheKey/Timestamp/@EntryValue" value="5" type="long" />
-    <option name="/Default/Housekeeping/OptionsDialog/SelectedPageId/@EntryValue" value="CppFormatterOtherPage" type="string" />
     <option name="/Default/Housekeeping/FeatureSuggestion/FeatureSuggestionManager/DisabledSuggesters/=SwitchToGoToActionSuggester/@EntryIndexRemoved" />
+    <option name="/Default/Environment/Hierarchy/GeneratedFilesCacheKey/Timestamp/@EntryValue" value="3" type="long" />
+    <option name="/Default/Housekeeping/OptionsDialog/SelectedPageId/@EntryValue" value="CppFormatterOtherPage" type="string" />
   </component>
   <component name="CMakePresetLoader">{
   &quot;useNewFormat&quot;: true
@@ -134,7 +134,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="better timing">
-      <change beforePath="$PROJECT_DIR$/main/ledstreamer_http.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/ledstreamer_http.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/cmake.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/cmake.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/main/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/wifi.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/wifi.hpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -164,6 +169,9 @@
   <component name="Git.Settings">
     <option name="PREVIEW_PUSH_PROTECTED_ONLY" value="true" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GithubDefaultAccount">
+    <option name="defaultAccountId" value="31cc2c55-20d7-44d1-91da-16e1635ec50a" />
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/main/ethernet.cpp" root0="SKIP_HIGHLIGHTING" />
@@ -210,6 +218,9 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;CMake Application.flash.executor&quot;: &quot;Run&quot;,
+    &quot;CMake Application.ledstream.elf.executor&quot;: &quot;Run&quot;,
+    &quot;CMake Application.monitor.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.RadMigrateCodeStyle&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
@@ -241,7 +252,7 @@
       <recent name="$PROJECT_DIR$/main" />
     </key>
   </component>
-  <component name="RunManager" selected="CMake Application.Unnamed">
+  <component name="RunManager" selected="CMake Application.ledstream.elf">
     <configuration name="Unnamed" type="CMakeRunConfiguration" factoryName="Application" nameIsGenerated="true" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="app" CONFIG_NAME="esp32s3-hub75">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -487,11 +498,6 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="apidoc" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="apidoc" CONFIG_NAME="esp32s3-hub75">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -612,7 +618,7 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="flash" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="flash" CONFIG_NAME="esp32s3-hub75">
+    <configuration name="flash" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="__idf_app_trace" CONFIG_NAME="esp32s3-hub75">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -739,32 +745,7 @@
     </configuration>
     <list>
       <item itemvalue="CMake Application.Unnamed" />
-      <item itemvalue="CMake Application.blank_ota_data" />
-      <item itemvalue="CMake Application.erase-otadata" />
-      <item itemvalue="CMake Application.read-otadata" />
-      <item itemvalue="CMake Application.bootloader" />
-      <item itemvalue="CMake Application.efuse-common-table" />
-      <item itemvalue="CMake Application.efuse-custom-table" />
-      <item itemvalue="CMake Application.efuse_test_table" />
-      <item itemvalue="CMake Application.show-efuse-table" />
-      <item itemvalue="CMake Application.memory_ld" />
-      <item itemvalue="CMake Application.app-flash" />
-      <item itemvalue="CMake Application.bootloader-flash" />
-      <item itemvalue="CMake Application.erase_flash" />
-      <item itemvalue="CMake Application.flash" />
-      <item itemvalue="CMake Application.gen_project_binary" />
-      <item itemvalue="CMake Application.monitor" />
-      <item itemvalue="CMake Application.otadata-flash" />
-      <item itemvalue="CMake Application.partition-table-flash" />
-      <item itemvalue="CMake Application.custom_bundle" />
-      <item itemvalue="CMake Application.apidoc" />
-      <item itemvalue="CMake Application.lib" />
-      <item itemvalue="CMake Application.mbedcrypto" />
-      <item itemvalue="CMake Application.mbedtls" />
-      <item itemvalue="CMake Application.mbedx509" />
-      <item itemvalue="CMake Application.partition-table" />
-      <item itemvalue="CMake Application.partition_table_bin" />
-      <item itemvalue="CMake Application.app_check_size" />
+      <item itemvalue="CMake Application.__idf_ESP32-HUB75-MatrixPanel-DMA" />
       <item itemvalue="CMake Application.__idf_app_trace" />
       <item itemvalue="CMake Application.__idf_app_update" />
       <item itemvalue="CMake Application.__idf_bootloader_support" />
@@ -773,7 +754,6 @@
       <item itemvalue="CMake Application.__idf_driver" />
       <item itemvalue="CMake Application.__idf_efuse" />
       <item itemvalue="CMake Application.__idf_esp-tls" />
-      <item itemvalue="CMake Application.__idf_ESP32-HUB75-MatrixPanel-DMA" />
       <item itemvalue="CMake Application.__idf_esp_common" />
       <item itemvalue="CMake Application.__idf_esp_event" />
       <item itemvalue="CMake Application.__idf_esp_gdbstub" />
@@ -811,31 +791,57 @@
       <item itemvalue="CMake Application.__idf_vfs" />
       <item itemvalue="CMake Application.__idf_wpa_supplicant" />
       <item itemvalue="CMake Application.__idf_xtensa" />
-      <item itemvalue="CMake Application.dfu" />
-      <item itemvalue="CMake Application.dfu-flash" />
-      <item itemvalue="CMake Application.dfu-list" />
-      <item itemvalue="CMake Application.confserver" />
-      <item itemvalue="CMake Application.menuconfig" />
       <item itemvalue="CMake Application.__ldgen_output_sections.ld" />
       <item itemvalue="CMake Application._project_elf_src" />
-      <item itemvalue="CMake Application.ledstream.elf" />
-      <item itemvalue="CMake Application.size" />
-      <item itemvalue="CMake Application.size-components" />
-      <item itemvalue="CMake Application.size-files" />
-      <item itemvalue="CMake Application.uf2" />
-      <item itemvalue="CMake Application.uf2-app" />
+      <item itemvalue="CMake Application.apidoc" />
+      <item itemvalue="CMake Application.app-flash" />
+      <item itemvalue="CMake Application.app_check_size" />
+      <item itemvalue="CMake Application.blank_ota_data" />
+      <item itemvalue="CMake Application.bootloader-flash" />
+      <item itemvalue="CMake Application.bootloader" />
+      <item itemvalue="CMake Application.confserver" />
+      <item itemvalue="CMake Application.custom_bundle" />
+      <item itemvalue="CMake Application.dfu-flash" />
+      <item itemvalue="CMake Application.dfu-list" />
+      <item itemvalue="CMake Application.dfu" />
+      <item itemvalue="CMake Application.efuse-common-table" />
+      <item itemvalue="CMake Application.efuse-custom-table" />
       <item itemvalue="CMake Application.efuse_common_table" />
       <item itemvalue="CMake Application.efuse_custom_table" />
+      <item itemvalue="CMake Application.efuse_test_table" />
       <item itemvalue="CMake Application.encrypted-app-flash" />
       <item itemvalue="CMake Application.encrypted-bootloader-flash" />
       <item itemvalue="CMake Application.encrypted-flash" />
       <item itemvalue="CMake Application.encrypted-otadata-flash" />
       <item itemvalue="CMake Application.encrypted-partition-table-flash" />
+      <item itemvalue="CMake Application.erase-otadata" />
+      <item itemvalue="CMake Application.erase_flash" />
       <item itemvalue="CMake Application.erase_otadata" />
-      <item itemvalue="CMake Application.partition_table" />
+      <item itemvalue="CMake Application.flash" />
+      <item itemvalue="CMake Application.gen_project_binary" />
+      <item itemvalue="CMake Application.ledstream.elf" />
+      <item itemvalue="CMake Application.lib" />
+      <item itemvalue="CMake Application.mbedcrypto" />
+      <item itemvalue="CMake Application.mbedtls" />
+      <item itemvalue="CMake Application.mbedx509" />
+      <item itemvalue="CMake Application.memory_ld" />
+      <item itemvalue="CMake Application.menuconfig" />
+      <item itemvalue="CMake Application.monitor" />
+      <item itemvalue="CMake Application.otadata-flash" />
+      <item itemvalue="CMake Application.partition-table-flash" />
+      <item itemvalue="CMake Application.partition-table" />
       <item itemvalue="CMake Application.partition_table-flash" />
+      <item itemvalue="CMake Application.partition_table" />
+      <item itemvalue="CMake Application.partition_table_bin" />
+      <item itemvalue="CMake Application.read-otadata" />
       <item itemvalue="CMake Application.read_otadata" />
+      <item itemvalue="CMake Application.show-efuse-table" />
       <item itemvalue="CMake Application.show_efuse_table" />
+      <item itemvalue="CMake Application.size-components" />
+      <item itemvalue="CMake Application.size-files" />
+      <item itemvalue="CMake Application.size" />
+      <item itemvalue="CMake Application.uf2-app" />
+      <item itemvalue="CMake Application.uf2" />
     </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -915,6 +921,14 @@
       <workItem from="1738234363711" duration="1201000" />
       <workItem from="1738245174281" duration="12229000" />
       <workItem from="1738337619187" duration="1452000" />
+      <workItem from="1741389400961" duration="428000" />
+      <workItem from="1741389837377" duration="44000" />
+      <workItem from="1741389914956" duration="2880000" />
+      <workItem from="1741682697965" duration="1000" />
+      <workItem from="1741809093240" duration="1418000" />
+      <workItem from="1741890813540" duration="497000" />
+      <workItem from="1741891325828" duration="5253000" />
+      <workItem from="1741980158780" duration="1346000" />
     </task>
     <task id="LOCAL-00007" summary="stuff">
       <created>1657485084555</created>
