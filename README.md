@@ -1,3 +1,5 @@
+Look at the HUB75 branch for hub75 led dispays (also that one support http qois streaming)
+
 # Stream led animations to an ESP. 
 
 * Control up to 8 x 512 leds @ ~50fps (higher framerate if you use less leds per chan)
