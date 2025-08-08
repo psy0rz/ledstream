@@ -133,11 +133,8 @@
     <configurations />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="better timing">
-      <change beforePath="$PROJECT_DIR$/.idea/cmake.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/cmake.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="bla">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/main/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/main.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/wifi.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/wifi.hpp" afterDir="false" />
     </list>
@@ -175,31 +172,11 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/main/ethernet.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/psy/ledstream/main/fileserver.hpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/psy/ledstream/main/leds.hpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/psy/ledstream/main/leds.hpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/psy/ledstream/main/leds_hub75.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/psy/ledstream/main/leds_hub75.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/main/leds_hub75.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///home/psy/ledstream/main/leds_hub75.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/main/ledstreamer_http.hpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///home/psy/ledstream/main/ledstreamer_http.hpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/psy/ledstream/main/ledstreamer_http.hpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/psy/ledstream/main/ledstreamer_http.hpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/psy/ledstream/main/ledstreamer_udp.hpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/psy/ledstream/main/main.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/psy/ledstream/main/main.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/psy/ledstream/main/main.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/psy/ledstream/main/main.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/edwineefting/ledstream/main/main.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/main/main.cpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///home/psy/ledstream/main/qois.hpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/psy/ledstream/main/qois.hpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/psy/ledstream/main/qois.hpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/psy/ledstream/main/qois.hpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/psy/ledstream/main/wifi.hpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/psy/ledstream/main/wifi.hpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/psy/ledstream/main/wifi.hpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/psy/ledstream/main/wifi.hpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/edwineefting/ledstream/main/wifi.hpp" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -253,6 +230,11 @@
     </key>
   </component>
   <component name="RunManager" selected="CMake Application.ledstream.elf">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Unnamed" type="CMakeRunConfiguration" factoryName="Application" nameIsGenerated="true" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="app" CONFIG_NAME="esp32s3-hub75">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -928,7 +910,7 @@
       <workItem from="1741809093240" duration="1418000" />
       <workItem from="1741890813540" duration="497000" />
       <workItem from="1741891325828" duration="5253000" />
-      <workItem from="1741980158780" duration="1346000" />
+      <workItem from="1741980158780" duration="2696000" />
     </task>
     <task id="LOCAL-00007" summary="stuff">
       <created>1657485084555</created>
@@ -1273,7 +1255,7 @@
       <option name="project" value="LOCAL" />
       <updated>1686338058682</updated>
     </task>
-    <option name="localTasksCounter" value="62" />
+    <option name="localTasksCounter" value="63" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1300,7 +1282,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="compiles" />
     <MESSAGE value="runs" />
     <MESSAGE value="connects" />
     <MESSAGE value="no more glitches" />
@@ -1325,7 +1306,8 @@
     <MESSAGE value="fixes" />
     <MESSAGE value="fileserver wip" />
     <MESSAGE value="better timing" />
-    <option name="LAST_COMMIT_MESSAGE" value="better timing" />
+    <MESSAGE value="bla" />
+    <option name="LAST_COMMIT_MESSAGE" value="bla" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
