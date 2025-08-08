@@ -81,7 +81,7 @@ static void wifi_event_handler(void *arg,
 }
 
 
-void wifi_init_sta() {
+inline void wifi_init_sta() {
 
 
 #ifndef CONFIG_LEDSTREAM_WIFI_SSID

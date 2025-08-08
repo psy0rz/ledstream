@@ -100,11 +100,6 @@ extern "C" __attribute__((unused)) void app_main(void)
 {
     ESP_LOGI(MAIN_TAG, "Starting ledstreamer...");
 
-
-    //settle power
-    // vTaskDelay(1000 / portTICK_PERIOD_MS);
-
-
     //Initialize NVS
     ESP_LOGI(MAIN_TAG, "Prepare NVS");
     esp_err_t ret = nvs_flash_init();
@@ -116,45 +111,29 @@ extern "C" __attribute__((unused)) void app_main(void)
     }
     ESP_ERROR_CHECK(ret);
 
-    // Initialize TCP/IP network interface (should be called only once in application)
-    ESP_ERROR_CHECK(esp_netif_init());
-    // Create default event loop that running in background
-    ESP_ERROR_CHECK(esp_event_loop_create_default());
-
-    fileserver_init();
-
-    leds_init();
-
-    // vTaskDelay(1000 / portTICK_PERIOD_MS);
-
-
-    wifi_init_sta();
-
-
-    // vTaskDelay(1000 / portTICK_PERIOD_MS);
-#if CONFIG_LEDSTREAM_USE_INTERNAL_ETHERNET
-
-     ethernet_init();
-#endif
-    // fileserver_start();
-
-    //    wificheck();
-    // ledstreamer_udp.begin(65000);
-    //    auto lastTime = millis();
-    //    ESP_LOGI(MAIN_TAG, "RAM left %lu", esp_get_free_heap_size());
-
-    //main task
-    ESP_LOGI(MAIN_TAG, "Start mainloop:");
-
-    // xTaskCreate(ledstreamer_udp_task, "ledstreamer_udp_task", 4096, nullptr, 1, nullptr);
-
-    timing_init();
-
-    ledstreamer_http_init();
-    // vTaskDelay(1000 / portTICK_PERIOD_MS);
-    ledstreamer_flash_init();
-    //xTaskCreatePinnedToCore(timing_test, "test", 4096, nullptr, 25|portPRIVILEGE_BIT, nullptr,0);
+//     // Initialize TCP/IP network interface (should be called only once in application)
+//     ESP_ERROR_CHECK(esp_netif_init());
+//     // Create default event loop that running in background
+//     ESP_ERROR_CHECK(esp_event_loop_create_default());
+//
+//     fileserver_init();
+//     leds_init();
+     wifi_init_sta();
+//
+// #if CONFIG_LEDSTREAM_USE_INTERNAL_ETHERNET
+//
+//      ethernet_init();
+// #endif
+//
+//     //main task
+//     ESP_LOGI(MAIN_TAG, "Start mainloop:");
+//
+//     // xTaskCreate(ledstreamer_udp_task, "ledstreamer_udp_task", 4096, nullptr, 1, nullptr);
+//
+//     timing_init();
+//
+//     ledstreamer_http_init();
+//     ledstreamer_flash_init();
 
 
-    // monitor_task();
 }
