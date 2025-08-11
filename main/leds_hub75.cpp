@@ -2,7 +2,6 @@
 
 #include "sdkconfig.h"
 
-
 #ifdef CONFIG_LEDSTREAM_MODE_HUB75
 
 #include "ESP32-HUB75-MatrixPanel-I2S-DMA.h"
@@ -18,7 +17,6 @@ uint8_t leds_y = 0;
 
 //unused in this library for now
 uint16_t leds_pixels_per_channel = 0;
-
 
 void leds_init()
 {

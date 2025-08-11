@@ -92,6 +92,7 @@
       <config projectName="ledstream" targetName="__idf_app_trace" />
       <config projectName="ledstream" targetName="efuse-custom-table" />
       <config projectName="ledstream" targetName="erase-otadata" />
+      <config projectName="ledstream" targetName="__idf_FastLED-idf" />
       <config projectName="ledstream" targetName="show_efuse_table" />
       <config projectName="ledstream" targetName="read_otadata" />
       <config projectName="ledstream" targetName="mbedcrypto" />
@@ -132,12 +133,21 @@
     <configurations />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="bla">
+    <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="doc">
       <change beforePath="$PROJECT_DIR$/../esp/esp-idf/components/mbedtls/mbedtls" beforeDir="false" afterPath="$PROJECT_DIR$/../esp/esp-idf/components/mbedtls/mbedtls" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../esp/esp-idf/components/mbedtls/mbedtls/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../esp/esp-idf/components/mbedtls/mbedtls/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dependencies.lock" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/main/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/leds_hub75.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/leds_hub75.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/leds_ws2812.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/leds_ws2812.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/wifi.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/wifi.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/partitions.csv" beforeDir="false" afterPath="$PROJECT_DIR$/partitions.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sdkconfig.defaults" beforeDir="false" afterPath="$PROJECT_DIR$/sdkconfig.defaults" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sdkconfig.esp32s3" beforeDir="false" afterPath="$PROJECT_DIR$/sdkconfig.esp32s3" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -172,11 +182,15 @@
     <option name="defaultAccountId" value="31cc2c55-20d7-44d1-91da-16e1635ec50a" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/main/ethernet.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/main/ethernet.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/main/leds_hub75.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/main/ledstreamer_http.hpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/main/ledstreamer_udp.hpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///Users/edwineefting/ledstream/main/main.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/edwineefting/ledstream/main/main.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/edwineefting/ledstream/main/main.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/main/main.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///Users/edwineefting/ledstream/main/main.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/main/qois.hpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/main/wifi.hpp" root0="FORCE_HIGHLIGHTING" />
   </component>
@@ -222,7 +236,7 @@
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "CPPToolchains",
+    "settings.editor.selected.configurable": "preferences.keymap",
     "structure.view.defaults.are.configured": "true",
     "vue.rearranger.settings.migration": "true"
   }
@@ -233,17 +247,17 @@
     </key>
   </component>
   <component name="RunManager" selected="CMake Application.ledstream.elf">
-    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="Unnamed" type="CMakeRunConfiguration" factoryName="Application" nameIsGenerated="true" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="app" CONFIG_NAME="esp32s3-hub75">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
     <configuration name="__idf_ESP32-HUB75-MatrixPanel-DMA" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="__idf_ESP32-HUB75-MatrixPanel-DMA" CONFIG_NAME="esp32s3-hub75">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="__idf_FastLED-idf" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="__idf_FastLED-idf" CONFIG_NAME="esp32s3-hub75">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -479,6 +493,11 @@
       </method>
     </configuration>
     <configuration name="_project_elf_src" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ledstream" TARGET_NAME="_project_elf_src" CONFIG_NAME="esp32s3-hub75">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -756,6 +775,7 @@
       <item itemvalue="CMake Application.__idf_esp_timer" />
       <item itemvalue="CMake Application.__idf_esp_wifi" />
       <item itemvalue="CMake Application.__idf_espcoredump" />
+      <item itemvalue="CMake Application.__idf_FastLED-idf" />
       <item itemvalue="CMake Application.__idf_freertos" />
       <item itemvalue="CMake Application.__idf_hal" />
       <item itemvalue="CMake Application.__idf_heap" />
@@ -781,8 +801,10 @@
       <item itemvalue="CMake Application.apidoc" />
       <item itemvalue="CMake Application.app-flash" />
       <item itemvalue="CMake Application.app_check_size" />
-      <item itemvalue="CMake Application.blank_ota_data" />
       <item itemvalue="CMake Application.bootloader-flash" />
+      <item itemvalue="CMake Application.blank_ota_data" />
+      <item itemvalue="CMake Application.erase-otadata" />
+      <item itemvalue="CMake Application.read-otadata" />
       <item itemvalue="CMake Application.bootloader" />
       <item itemvalue="CMake Application.confserver" />
       <item itemvalue="CMake Application.custom_bundle" />
@@ -799,9 +821,8 @@
       <item itemvalue="CMake Application.encrypted-flash" />
       <item itemvalue="CMake Application.encrypted-otadata-flash" />
       <item itemvalue="CMake Application.encrypted-partition-table-flash" />
-      <item itemvalue="CMake Application.erase-otadata" />
-      <item itemvalue="CMake Application.erase_flash" />
       <item itemvalue="CMake Application.erase_otadata" />
+      <item itemvalue="CMake Application.erase_flash" />
       <item itemvalue="CMake Application.flash" />
       <item itemvalue="CMake Application.gen_project_binary" />
       <item itemvalue="CMake Application.ledstream.elf" />
@@ -816,10 +837,9 @@
       <item itemvalue="CMake Application.partition-table-flash" />
       <item itemvalue="CMake Application.partition-table" />
       <item itemvalue="CMake Application.partition_table-flash" />
+      <item itemvalue="CMake Application.read_otadata" />
       <item itemvalue="CMake Application.partition_table" />
       <item itemvalue="CMake Application.partition_table_bin" />
-      <item itemvalue="CMake Application.read-otadata" />
-      <item itemvalue="CMake Application.read_otadata" />
       <item itemvalue="CMake Application.show-efuse-table" />
       <item itemvalue="CMake Application.show_efuse_table" />
       <item itemvalue="CMake Application.size-components" />
@@ -915,7 +935,8 @@
       <workItem from="1741891325828" duration="5253000" />
       <workItem from="1741980158780" duration="2696000" />
       <workItem from="1754691869394" duration="1704000" />
-      <workItem from="1754844380841" duration="12592000" />
+      <workItem from="1754844380841" duration="15053000" />
+      <workItem from="1754922282988" duration="5193000" />
     </task>
     <task id="LOCAL-00007" summary="stuff">
       <created>1657485084555</created>
@@ -1260,7 +1281,7 @@
       <option name="project" value="LOCAL" />
       <updated>1686338058682</updated>
     </task>
-    <option name="localTasksCounter" value="63" />
+    <option name="localTasksCounter" value="64" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1302,7 +1323,6 @@
     <MESSAGE value="cleanup" />
     <MESSAGE value="static animation downloader wip" />
     <MESSAGE value="offline static animations work now \o/" />
-    <MESSAGE value="doc" />
     <MESSAGE value="seperate qois from ledstreamer" />
     <MESSAGE value="seperate udpstreamer" />
     <MESSAGE value="task" />
@@ -1312,7 +1332,8 @@
     <MESSAGE value="fileserver wip" />
     <MESSAGE value="better timing" />
     <MESSAGE value="bla" />
-    <option name="LAST_COMMIT_MESSAGE" value="bla" />
+    <MESSAGE value="doc" />
+    <option name="LAST_COMMIT_MESSAGE" value="doc" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
