@@ -7,11 +7,33 @@
 * Only runs on vanilla ESP32
 * Use with <https://github.com/psy0rz/ledder>
 
-## Instructions
+# Build instructions
 
-## Get and build esp-idf toolkit
+To all the commands below, you can add `-D SDKCONFIG=sdkconfig.somename` so you can have multiple configs.
 
-(if you're experienced with docker you can use the ./dockeridf instead of idf.py and skip this)
+## method 1: Build via docker
+
+This is usually the easiest way, if you already have docker.
+
+### Configure/build/flash:
+```
+./dockerrun idf.py menuconfig
+./dockerrun idf.py build
+./dockerrun idf.py flashmon
+```
+
+### Esp32s3
+
+I usually use this for my HUB75 displays, so there is a script for it.
+
+```
+./dockerrun ./esps3idf menuconfig
+./dockerrun ./esps3idf build
+./dockerrun ./esps3idf flashmon
+```
+
+
+## method 2: Build with esp-idf toolkit
 
 **Important: You need version esp-idf toolkit version 4.4. Version 5 will not work!**
 
@@ -27,7 +49,7 @@ cd esp-idf
 ./install.sh all
 ```
 
-## Activate esp-idf toolkit
+### Activate esp-idf toolkit
 
 Every time you want to use it you have to activate it one time:
 
@@ -35,9 +57,19 @@ Every time you want to use it you have to activate it one time:
  source ~/esp/esp-idf/export.sh
 ```
 
-### In Jetbrains Clion
+### Configure build and flash
 
-(this section is optional, only if you want to use Clion)
+```
+idf.py menuconfig
+idf.py build
+idf.py flashmon
+```
+
+
+## method 3: In Jetbrains Clion
+
+
+Install the esp-idf toolkit like in the previous example.
 
 In clion you can go to Build,Exectution,Deployment -> Toolchains and add a toolchain named esp.
 
@@ -45,25 +77,13 @@ Choose to let it load the environment from the file ~/esp/esp-idf/export.sh
 
 Now clion understands and autocompletes all the ESP-idf stuff! 
 
-## Run menuconfig and look at pins that are used.
-
-Run the following commands from the ledstream github directory.
-
-```
-idf.py menuconfig
-```
-
-The default config is probably OK for now, just keep in mind which pin is channel 0.
-
-## Connect hardware
+# Connect hardware
 
 The easiest way to start it one of those 8x32 WS2812 matrixes:
 
 ![img.png](img.png)
 
 Just configure 1 channel and 256 leds in that case.
-
-(Or specify an existing config file by adding  -D SDKCONFIG=sdkconfig.somename)
 
 Once you get the hang of it you can configure up to 8 channels, with each 2 of those displays in series for a total of 16 displays!
 
@@ -79,33 +99,9 @@ If you use that many leds keep this in mind:
 
 ![img_1.png](img_1.png)
 
-## Create wifi config file:
-
-main/wifi-config.h:
-```
-#define WIFI_SSID "yourssid"
-#define WIFI_PASS "yourpassword"
-```
-
-## Build and flash:
 
 
-The first time you're using a new ESPchip you might need to do this:
+# Configure ledder
 
-```
-idf.py build
-idf.py partition-table-flash
-idf.py bootloader-flash
-```
-
-After that you can use this to flash and monitor the program:
-
-```
- idf.py -D SDKCONFIG=sdkconfig.rein1 app-flash monitor
-```
-Press `ctrl + ]` to exit monitoring. Keyboard shortcuts of IDF monitor: <https://github.com/espressif/esp-idf/blob/master/docs/en/api-guides/tools/idf-monitor.rst#keyboard-shortcuts>
-
-Now configure ledder to stream to your display. The number of leds and number of channels should exactly match!
-
-In ledder you will find displayconf-example.js, the examples that use DisplayQOISudp() are used with ledstream.
-
+Follow the wiki at the ledder project for this: 
+https://github.com/psy0rz/ledder/wiki/Ledstream-via-ESP32
