@@ -5,7 +5,10 @@ cmake_minimum_required(VERSION 3.12)
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 
 
-list(APPEND COMPONENTS "esp_lcd" "main" "esp_http_client" "esp_https_ota")
+list(APPEND COMPONENTS "esp_lcd" "main" "esp_http_client" "esp_https_ota"
+        "FastLED-idf"
+        "ESP32-HUB75-MatrixPanel-DMA"
+)
 
 project(ledstream)
 

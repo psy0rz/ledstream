@@ -1109,6 +1109,12 @@ CONFIG_WPA_MBEDTLS_CRYPTO=y
 # end of Supplicant
 
 #
+# Fast LED
+#
+# CONFIG_FAST_LED_TEST is not set
+# end of Fast LED
+
+#
 # LittleFS
 #
 # CONFIG_LITTLEFS_SDMMC_SUPPORT is not set

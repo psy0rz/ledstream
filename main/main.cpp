@@ -20,51 +20,6 @@ OTAUpdater ota_updater = OTAUpdater();
 static TaskStatus_t* prevTaskArray = NULL;
 static uint32_t prevTotalRunTime = 0;
 
-void monitor_task()
-{
-    while (1)
-    {
-        UBaseType_t numTasks = uxTaskGetNumberOfTasks();
-        TaskStatus_t* taskArray = (TaskStatus_t*)pvPortMalloc(numTasks * sizeof(TaskStatus_t));
-        if (taskArray != NULL)
-        {
-            uint32_t totalRunTime;
-            numTasks = uxTaskGetSystemState(taskArray, numTasks, &totalRunTime);
-            ESP_LOGI(MAIN_TAG, "Task Name       | Priority | CPU Usage (%%) | Core ID");
-            ESP_LOGI(MAIN_TAG, "----------------------------------------------------");
-            if (prevTaskArray != NULL && prevTotalRunTime > 0)
-            {
-                for (UBaseType_t i = 0; i < numTasks; i++)
-                {
-                    for (UBaseType_t j = 0; j < numTasks; j++)
-                    {
-                        if (strcmp(taskArray[i].pcTaskName, prevTaskArray[j].pcTaskName) == 0)
-                        {
-                            uint32_t runTimeDiff = taskArray[i].ulRunTimeCounter - prevTaskArray[j].ulRunTimeCounter;
-                            uint32_t totalRunTimeDiff = totalRunTime - prevTotalRunTime;
-                            float cpuUsage = (totalRunTimeDiff > 0) ? (100.0 * runTimeDiff / totalRunTimeDiff) : 0;
-                            ESP_LOGI(MAIN_TAG, "%-15s | %-8d | %.2f%%        | %d", taskArray[i].pcTaskName,
-                                     taskArray[i].uxCurrentPriority, cpuUsage, taskArray[i].xCoreID);
-                            break;
-                        }
-                    }
-                }
-            }
-            else
-            {
-                ESP_LOGI(MAIN_TAG, "First sample, CPU usage since boot");
-            }
-            if (prevTaskArray != NULL)
-            {
-                vPortFree(prevTaskArray);
-            }
-            prevTaskArray = taskArray;
-            prevTotalRunTime = totalRunTime;
-        }
-        vTaskDelay(pdMS_TO_TICKS(MONITOR_TASK_PERIOD_MS));
-    }
-}
-
 void timing_test(void* p)
 {
     uint32_t c = 0;
@@ -118,8 +73,8 @@ extern "C" __attribute__((unused)) void app_main(void)
 //
 //     fileserver_init();
 //     leds_init();
-     wifi_init_sta();
-//
+
+        wifi_init_sta();
 // #if CONFIG_LEDSTREAM_USE_INTERNAL_ETHERNET
 //
 //      ethernet_init();

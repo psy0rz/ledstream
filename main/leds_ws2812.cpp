@@ -16,7 +16,7 @@ uint16_t leds_pixel_nr;
 
 void leds_init()
 {
-    ESP_LOGI("leds", "Initializing FastLED-idf library...")
+    ESP_LOGI("leds", "Initializing FastLED-idf library...");
 
 
 #if CONFIG_LEDSTREAM_CHANNELS > 0

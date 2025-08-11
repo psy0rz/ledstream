@@ -9,7 +9,7 @@
 
 # Build instructions
 
-To all the commands below, you can add `-D SDKCONFIG=sdkconfig.somename` so you can have multiple configs.
+To all the commands below, you can add `-D SDKCONFIG=somename` so you can have multiple configs.
 
 ## method 1: Build via docker
 
@@ -17,9 +17,9 @@ This is usually the easiest way, if you already have docker.
 
 ### Configure/build/flash:
 ```
-./dockerrun idf.py menuconfig
-./dockerrun idf.py build
-./dockerrun idf.py flashmon
+./dockerrun idf.py -D SDKCONFIG=somename menuconfig
+./dockerrun idf.py -D SDKCONFIG=somename build
+./dockerrun idf.py -D SDKCONFIG=somename flash monitor
 ```
 
 ### Esp32s3
@@ -27,9 +27,9 @@ This is usually the easiest way, if you already have docker.
 I usually use this for my HUB75 displays, so there is a script for it.
 
 ```
-./dockerrun ./esps3idf menuconfig
-./dockerrun ./esps3idf build
-./dockerrun ./esps3idf flashmon
+./dockerrun ./esps3idf -D SDKCONFIG=somename menuconfig
+./dockerrun ./esps3idf -D SDKCONFIG=somename build
+./dockerrun ./esps3idf -D SDKCONFIG=somename flash monitor
 ```
 
 
@@ -60,9 +60,9 @@ Every time you want to use it you have to activate it one time:
 ### Configure build and flash
 
 ```
-idf.py menuconfig
-idf.py build
-idf.py flashmon
+idf.py -D SDKCONFIG=somename menuconfig
+idf.py -D SDKCONFIG=somename build
+idf.py -D SDKCONFIG=somename flash monitor
 ```
 
 
