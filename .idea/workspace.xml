@@ -136,11 +136,6 @@
     <list default="true" id="777d0b29-681d-492e-bdd4-49c11e9a7a98" name="Changes" comment="doc">
       <change beforePath="$PROJECT_DIR$/../esp/esp-idf/components/mbedtls/mbedtls" beforeDir="false" afterPath="$PROJECT_DIR$/../esp/esp-idf/components/mbedtls/mbedtls" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../esp/esp-idf/components/mbedtls/mbedtls/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../esp/esp-idf/components/mbedtls/mbedtls/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/leds_ws2812.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/leds_ws2812.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/ledstreamer_http.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/ledstreamer_http.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/wifi.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/wifi.hpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -929,7 +924,7 @@
       <workItem from="1741980158780" duration="2696000" />
       <workItem from="1754691869394" duration="1704000" />
       <workItem from="1754844380841" duration="15053000" />
-      <workItem from="1754922282988" duration="14558000" />
+      <workItem from="1754922282988" duration="14651000" />
     </task>
     <task id="LOCAL-00007" summary="stuff">
       <created>1657485084555</created>
