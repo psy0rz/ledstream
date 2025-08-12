@@ -11,5 +11,5 @@ dependencies:
       type: service
     version: 1.13.1
 manifest_hash: 416e82393b2894253433d47f16e83c7cc9f005fbf5af230ada0cfd672a2585be
-target: esp32
+target: esp32s3
 version: 1.0.0
