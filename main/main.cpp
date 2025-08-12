@@ -20,7 +20,7 @@ OTAUpdater ota_updater = OTAUpdater();
 static TaskStatus_t* prevTaskArray = NULL;
 static uint32_t prevTotalRunTime = 0;
 
-void timing_test(void* p)
+void timing_test()
 {
     uint32_t c = 0;
 
@@ -50,6 +50,36 @@ void timing_test(void* p)
     }
 }
 
+//show leds one by one to test
+void led_test()
+{
+    uint32_t c = 0;
+
+    int led_count=16*16*4;
+    int lednr=0;
+    while (1)
+    {
+        lednr++;
+        for (int i=0; i<led_count; i++)
+        {
+            if (lednr==i)
+                leds_setNextPixel(255,0,0);
+            else
+                leds_setNextPixel(0,0,0);
+        }
+        if (lednr==led_count)
+        {
+            lednr=0;
+        }
+
+        c = c + 1000000 / 60; // c = c + 1000000/1;
+        timing_wait_until_us(c);
+        leds_show();
+        leds_reset();
+
+    }
+
+}
 
 extern "C" __attribute__((unused)) void app_main(void)
 {
@@ -66,29 +96,31 @@ extern "C" __attribute__((unused)) void app_main(void)
     }
     ESP_ERROR_CHECK(ret);
 
-//     // Initialize TCP/IP network interface (should be called only once in application)
-//     ESP_ERROR_CHECK(esp_netif_init());
-//     // Create default event loop that running in background
-//     ESP_ERROR_CHECK(esp_event_loop_create_default());
-//
-//     fileserver_init();
-//     leds_init();
+     // Initialize TCP/IP network interface (should be called only once in application)
+     ESP_ERROR_CHECK(esp_netif_init());
+     // Create default event loop that running in background
+     ESP_ERROR_CHECK(esp_event_loop_create_default());
 
-        wifi_init_sta();
-// #if CONFIG_LEDSTREAM_USE_INTERNAL_ETHERNET
-//
-//      ethernet_init();
-// #endif
-//
-//     //main task
-//     ESP_LOGI(MAIN_TAG, "Start mainloop:");
-//
-//     // xTaskCreate(ledstreamer_udp_task, "ledstreamer_udp_task", 4096, nullptr, 1, nullptr);
-//
-//     timing_init();
-//
-//     ledstreamer_http_init();
-//     ledstreamer_flash_init();
+     fileserver_init();
+     leds_init();
+
+     wifi_init_sta();
+#if CONFIG_LEDSTREAM_USE_INTERNAL_ETHERNET
+
+     ethernet_init();
+#endif
+
+    //main task
+    ESP_LOGI(MAIN_TAG, "Start mainloop:");
+
+    // xTaskCreate(ledstreamer_udp_task, "ledstreamer_udp_task", 4096, nullptr, 1, nullptr);
+
+    timing_init();
+
+    // led_test();
+    // timing_test();
+    ledstreamer_http_init();
+    ledstreamer_flash_init();
 
 
 }

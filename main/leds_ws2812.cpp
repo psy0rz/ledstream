@@ -1,4 +1,5 @@
 
+#include "esp_log.h"
 #include "sdkconfig.h"
 #ifdef CONFIG_LEDSTREAM_MODE_WS2812
 #include "leds.hpp"
