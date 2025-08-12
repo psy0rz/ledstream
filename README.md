@@ -80,6 +80,8 @@ Now clion understands and autocompletes all the ESP-idf stuff!
 
 # Connect hardware
 
+## WS2812 leds
+
 The easiest way to start it one of those 8x32 WS2812 matrixes:
 
 ![img.png](img.png)
@@ -88,7 +90,19 @@ Just configure 1 channel and 256 leds in that case.
 
 Once you get the hang of it you can configure up to 8 channels, with each 2 of those displays in series for a total of 16 displays!
 
-Ledder will handle the correct layout and orientation.
+You can configure ledder to handle the correct layout and orientation.
+
+## HUB75 leds 64x32
+
+Currently only 64x32 HUB75 leds have been tested.
+
+A nice table for pinouts:
+
+![](https://github.com/psy0rz/ledstream/blob/main/doc/hub75%20pins.png)
+
+Will add more info here later.
+
+## Hardware tips
 
 If you use that many leds keep this in mind:
 
