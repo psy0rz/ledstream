@@ -86,6 +86,8 @@ inline void IRAM_ATTR stream()
 
             case HTTP_EVENT_ON_DATA:
 
+                // ESP_LOGI(LEDSTREAMER_HTTP_TAG, "Received bytes %d", evt->data_len);
+
                 //TODO: writing in seperate thread?
                 if (stream_flashing)
                 {

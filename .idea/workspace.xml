@@ -137,17 +137,10 @@
       <change beforePath="$PROJECT_DIR$/../esp/esp-idf/components/mbedtls/mbedtls" beforeDir="false" afterPath="$PROJECT_DIR$/../esp/esp-idf/components/mbedtls/mbedtls" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../esp/esp-idf/components/mbedtls/mbedtls/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../esp/esp-idf/components/mbedtls/mbedtls/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dependencies.lock" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/main/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/leds_hub75.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/leds_hub75.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/leds_ws2812.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/leds_ws2812.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/ledstreamer_http.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/ledstreamer_http.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/main.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/wifi.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/wifi.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/partitions.csv" beforeDir="false" afterPath="$PROJECT_DIR$/partitions.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sdkconfig.defaults" beforeDir="false" afterPath="$PROJECT_DIR$/sdkconfig.defaults" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sdkconfig.esp32s3" beforeDir="false" afterPath="$PROJECT_DIR$/sdkconfig.esp32s3" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -936,7 +929,7 @@
       <workItem from="1741980158780" duration="2696000" />
       <workItem from="1754691869394" duration="1704000" />
       <workItem from="1754844380841" duration="15053000" />
-      <workItem from="1754922282988" duration="5193000" />
+      <workItem from="1754922282988" duration="14558000" />
     </task>
     <task id="LOCAL-00007" summary="stuff">
       <created>1657485084555</created>
