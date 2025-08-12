@@ -19,6 +19,7 @@ This is usually the easiest way, if you already have docker.
 ```
 ./dockerrun idf.py -D SDKCONFIG=somename menuconfig
 ./dockerrun idf.py -D SDKCONFIG=somename build
+./dockerrun idf.py -D SDKCONFIG=somename partition-table-flash
 ./dockerrun idf.py -D SDKCONFIG=somename flash monitor
 ```
 
@@ -29,6 +30,7 @@ I usually use this for my HUB75 displays, so there is a script for it.
 ```
 ./dockerrun ./esps3idf -D SDKCONFIG=somename menuconfig
 ./dockerrun ./esps3idf -D SDKCONFIG=somename build
+./dockerrun ./esps3idf -D SDKCONFIG=somename partition-table-flash
 ./dockerrun ./esps3idf -D SDKCONFIG=somename flash monitor
 ```
 
@@ -62,6 +64,7 @@ Every time you want to use it you have to activate it one time:
 ```
 idf.py -D SDKCONFIG=somename menuconfig
 idf.py -D SDKCONFIG=somename build
+idf.py -D SDKCONFIG=somename partition-table-flash
 idf.py -D SDKCONFIG=somename flash monitor
 ```
 
