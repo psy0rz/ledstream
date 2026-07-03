@@ -15,7 +15,21 @@
 #define QOI_OP_LUMA   0x80 /* 10xxxxxx */
 #define QOI_OP_RUN    0xc0 /* 11xxxxxx */
 #define QOI_OP_RGB    0xfe /* 11111110 */
-#define QOI_OP_RGBA   0xff /* 11111111 */
+#define QOI_OP_RGBA   0xff /* 11111111 */ /* never sent, ledder streams are opaque RGB */
+
+/* QOIS extension (see DisplayQOIS.ts in ledder): reuses the unused QOI_OP_RGBA byte.
+ * "keep the next N pixels from the previous frame", followed by 2 bytes little-endian N.
+ * The led buffer already contains those pixels, so we just skip ahead; px continues
+ * from the last kept pixel and the color index is not updated.
+ *
+ * DECODER CONTRACT (differs from stock QOI, must match the ledder encoder):
+ *  - the led buffer and the 64-color index persist across frames within a stream;
+ *    both start zeroed at the start of a stream (resetStream()).
+ *  - px resets to black at the start of every frame.
+ *  - the color index is only updated by DIFF/LUMA/RGB (and harmlessly by INDEX) ops,
+ *    never by RUN or PREVFRAME ops.
+ */
+#define QOIS_OP_PREVFRAME 0xff
 
 #define QOI_MASK_2    0xc0 /* 11000000 */
 #define QOI_COLOR_HASH(C) (C.rgba.r*3 + C.rgba.g*5 + C.rgba.b*7 + C.rgba.a*11)
@@ -57,6 +71,13 @@ public:
 
 
     Qois() {
+        resetStream();
+    }
+
+    //full decoder reset: call this at the start of a stream (new connection or
+    //replay-loop restart), NOT per frame. The color index and led buffer persist
+    //across frames; ledder resets its encoder state at the same point.
+    void resetStream() {
         QOI_ZEROARR(index);
         nextFrame();
     }
@@ -77,9 +98,6 @@ public:
         bytes_needed = 6; //frame length + pixels per channel + display time
         bytes_received = 0;
         frame_bytes_left = 6;
-
-//todo: keep
-        QOI_ZEROARR(index);
 
     }
 
@@ -157,6 +175,8 @@ public:
 
             if (op == QOI_OP_RGB)
                 bytes_needed =  3;
+            else if (op == QOIS_OP_PREVFRAME)
+                bytes_needed = 2;
             else if ((op & QOI_MASK_2) == QOI_OP_LUMA)
                 bytes_needed = 1;
             else
@@ -177,9 +197,30 @@ public:
             px.rgba.r = bytes[0];
             px.rgba.g = bytes[1];
             px.rgba.b = bytes[2];
-        } else if (op == QOI_OP_RGBA) {
-//            ESP_LOGD(UDPBUFFER_TAG, "RGBA ??");
-            //FIXME: flip
+        } else if (op == QOIS_OP_PREVFRAME) {
+//            ESP_LOGD(UDPBUFFER_TAG, "prevframe");
+            const uint16_t keep = *(uint16_t *) &bytes[0];
+
+            //the led buffer still contains the previous frame here: skip ahead
+            const uint32_t pos = (uint32_t) channel_nr * pixels_per_channel + pixel_nr + keep;
+            channel_nr = pos / pixels_per_channel;
+            pixel_nr = pos % pixels_per_channel;
+
+            //px continues from the last kept pixel; the color index is not updated
+            if (keep) {
+                const uint16_t last_channel = (pos - 1) / pixels_per_channel;
+                const uint16_t last_pixel = (pos - 1) % pixels_per_channel;
+                if (last_channel < CONFIG_LEDSTREAM_CHANNELS && last_pixel < CONFIG_LEDSTREAM_LEDS_PER_CHANNEL) {
+                    px.rgba.r = leds[last_channel][last_pixel].r;
+                    px.rgba.g = leds[last_channel][last_pixel].g;
+                    px.rgba.b = leds[last_channel][last_pixel].b;
+                    px.rgba.a = 255;
+                }
+            }
+
+            wait_for_op = true;
+            return (frame_bytes_left > 0);
+
         } else if ((op & QOI_MASK_2) == QOI_OP_INDEX) {
 //            ESP_LOGD(UDPBUFFER_TAG, "index");
             px = index[op];

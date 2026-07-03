@@ -77,6 +77,9 @@ public:
             // can we sync to this currentPacket?
             if (udpBuffer.currentPacket->syncOffset < UDP_DATA_LEN) {
                 // reset everything and start from this currentPacket and syncoffset.
+                //NOTE: UDP mode is deprecated and incompatible with the persistent
+                //encoder state ledder uses since QOIS_OP_PREVFRAME: after a lost packet
+                //the color index desyncs and colors will be wrong until it converges.
                 ESP_LOGW(LEDSTREAMER_TAG, "synced");
                 currentByteNr = udpBuffer.currentPacket->syncOffset;
                 lastPacketNr = udpBuffer.currentPacket->packetNr;
@@ -152,8 +155,10 @@ public:
             else {
                 //are we at the start of the file?
                 if (fileserver_read_offset == 0) {
-                    //restart qois decoder and timing
-                    qois.nextFrame();
+                    //restart qois decoder and timing.
+                    //full stream reset: the recording started from a fresh encoder state,
+                    //so the persistent color index must start empty here as well.
+                    qois.resetStream();
                     timeSync.reset();
                     FastLED.clear();
                 }
