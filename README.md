@@ -106,6 +106,7 @@ Will add more info here later.
 
 If you use that many leds keep this in mind:
 
+ * Connect a capacitor of 100uF of more directly between GND and 3v3 on the ESP itself,  to prevent bad wifi performance issues.
  * Use a power supply that can handle the load  (up to 15A per display!)
  * If you use a power supply, connect the power supply to the middle 2 leads. 
  * Or just use USB poewr and set max current via menu config. (USB power can handle at least 1000mA)
