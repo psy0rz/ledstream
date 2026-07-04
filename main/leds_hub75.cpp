@@ -48,7 +48,16 @@ void leds_init()
     };
     HUB75_I2S_CFG mxconfig(CONFIG_LEDSTREAM_WIDTH, CONFIG_LEDSTREAM_HEIGHT, CONFIG_LEDSTREAM_CHAIN, _pins);
 
+
     mxconfig.clkphase=false;
+
+    //panel updates are written into the live DMA buffer unsynchronized to the panel
+    //scan, so a new frame becomes visible at the next scan pass: a quantization of up
+    //to one scan period. At the default ~110Hz that is 9mS, beating against 60fps
+    //content as very visible 10Hz judder. A higher scan rate shrinks the window and
+    //pushes the beat above the visible range, at the cost of some color depth.
+    mxconfig.min_refresh_rate = 240;
+    mxconfig.i2sspeed = HUB75_I2S_CFG::HZ_16M;
 
 #ifdef DOUBLE_BUFFERING
     mxconfig.double_buff = true;
@@ -59,6 +68,10 @@ void leds_init()
     dma_display->begin();
 
     dma_display->setBrightness8(255);
+
+    //DEBUG: a scan rate close to the 60fps stream rate causes beat-frequency judder,
+    //since we write into the live DMA buffer unsynchronized to the panel scan
+    ESP_LOGI("leds", "HUB75 panel scan rate: %d Hz", dma_display->calculated_refresh_rate);
 }
 
 
