@@ -6,9 +6,12 @@ include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 
 
 list(APPEND COMPONENTS "esp_lcd" "main" "esp_http_client" "esp_https_ota"
-        "FastLED-idf"
         "ESP32-HUB75-MatrixPanel-DMA"
 )
+
+if(NOT "$ENV{IDF_TARGET}" STREQUAL "esp32s3")
+    list(APPEND COMPONENTS "FastLED-idf")
+endif()
 
 project(ledstream)
 
