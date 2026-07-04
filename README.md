@@ -7,9 +7,15 @@
 
 # Build instructions
 
+**NOTE: make sure to use git clone --recursive**
+
 To all the commands below, you can add `-D SDKCONFIG=somename` so you can have multiple configs.
 
+In the menuconfig below, go to LEDSTREAM CONFIG and configure your WIFI settings and ledder url. Should be http://ledderserver:3000/stream
+
 ## method 1: Build via docker
+
+NOTE: if you're using MacOS you cant flash the image from docker, its easier to use method 2 below.
 
 This is usually the easiest way, if you already have docker.
 
@@ -59,12 +65,16 @@ Every time you want to use it you have to activate it one time:
 
 ### Configure build and flash
 
+NOTE: Use ./esps3idf instead of idf.py as a shortcut for building for ESP32 S3
+
 ```
 idf.py -D SDKCONFIG=somename menuconfig
 idf.py -D SDKCONFIG=somename build
 idf.py -D SDKCONFIG=somename partition-table-flash
 idf.py -D SDKCONFIG=somename flash monitor
 ```
+
+
 
 
 ## method 3: In Jetbrains Clion
