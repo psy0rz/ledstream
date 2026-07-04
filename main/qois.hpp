@@ -9,6 +9,20 @@
 //-Its up to the caller to call leds_show() at precisely the show_time.
 //-Call reset to get it ready for the next frame. (this will also call leds_reset())
 
+/* DECODER CONTRACT (differs from stock QOI, must match ledder's DisplayQOIS encoder):
+ *  - the led framebuffer and the 64-color index persist across frames within a stream;
+ *    both start zeroed/black at the start of a stream (qois_resetStream()). The ledder
+ *    encoder resets its mirror of this state per connection, so call qois_resetStream()
+ *    whenever a stream starts from its beginning (new http connection, flash replay loop).
+ *  - the previous-pixel state resets to black at the start of every frame.
+ *  - the color-index is updated ONLY by DIFF/LUMA/RGB ops. RUN, INDEX and PREVFRAME ops
+ *    must NOT touch the index -- stock QOI updates it after every op, which desyncs from
+ *    the encoder now that the index persists across frames.
+ *  - QOIS_OP_PREVFRAME (reuses the never-emitted QOI_OP_RGBA byte 0xff): keep the next N
+ *    pixels from the previous frame (2 bytes little-endian N follow); the previous-pixel
+ *    state becomes the last kept pixel.
+ */
+
 //NOTE: no longer a class, so we can optimize for speed with IRAM_ATTR
 
 
@@ -26,7 +40,7 @@
 #define QOI_OP_LUMA   0x80 /* 10xxxxxx */
 #define QOI_OP_RUN    0xc0 /* 11xxxxxx */
 #define QOI_OP_RGB    0xfe /* 11111110 */
-#define QOI_OP_RGBA   0xff /* 11111111 */
+#define QOIS_OP_PREVFRAME 0xff /* 11111111, was QOI_OP_RGBA which is never emitted */
 
 #define QOI_MASK_2    0xc0 /* 11000000 */
 #define QOI_COLOR_HASH(C) (C.rgba.r*3 + C.rgba.g*5 + C.rgba.b*7 + C.rgba.a*11)
@@ -85,10 +99,20 @@ inline void IRAM_ATTR qois_reset()
     qois_bytes_index = 0;
     qois_frame_bytes_left = 6;
 
-    //todo: keep
-    QOI_ZEROARR(qois_index);
+    //NOTE: the color index is NOT cleared here: it persists across frames
+    //(see decoder contract above)
 
     leds_reset();
+}
+
+//get ready for a new stream: clears the state that persists across frames.
+//Call at the start of every stream (new http connection, flash replay restart),
+//so decoder and encoder start from the same empty state.
+inline void qois_resetStream()
+{
+    QOI_ZEROARR(qois_index);
+    leds_clear();
+    qois_reset();
 }
 
 
@@ -190,6 +214,10 @@ inline IRAM_ATTR void qois_decodeBytes(const uint8_t buffer[], uint16_t buffer_l
             //pixels per channel
             leds_pixels_per_channel = *(uint16_t*)&qois_bytes[2];
 
+            //re-reset the leds now that pixels_per_channel is known: leds_reset()
+            //replaces a 0 value with the compiled-in default, and the cursor math in
+            //leds_keepPixels() needs a valid pixels_per_channel from the very first frame
+            leds_reset();
 
             //bytes 4-5:
             qois_show_time_us = (*(uint16_t*)&qois_bytes[4]) * 1000;
@@ -208,6 +236,8 @@ inline IRAM_ATTR void qois_decodeBytes(const uint8_t buffer[], uint16_t buffer_l
 
             if (qois_op == QOI_OP_RGB)
                 bytes_needed = 3;
+            else if (qois_op == QOIS_OP_PREVFRAME)
+                bytes_needed = 2;
             else if ((qois_op & QOI_MASK_2) == QOI_OP_LUMA)
                 bytes_needed = 1;
             else
@@ -229,15 +259,24 @@ inline IRAM_ATTR void qois_decodeBytes(const uint8_t buffer[], uint16_t buffer_l
             qois_px.rgba.g = qois_bytes[1];
             qois_px.rgba.b = qois_bytes[2];
         }
-        else if (qois_op == QOI_OP_RGBA)
+        else if (qois_op == QOIS_OP_PREVFRAME)
         {
-            //            ESP_LOGD(UDPBUFFER_TAG, "RGBA ??");
-            //FIXME: flip
+            //keep the next N pixels from the previous frame; the previous-pixel state
+            //becomes the last kept pixel. Does NOT update the color index.
+            uint16_t keep = *(uint16_t*)&qois_bytes[0];
+            leds_keepPixels(keep, &qois_px.rgba.r, &qois_px.rgba.g, &qois_px.rgba.b);
+            qois_wait_for_op = true;
+            continue;
         }
         else if ((qois_op & QOI_MASK_2) == QOI_OP_INDEX)
         {
             //            ESP_LOGD(UDPBUFFER_TAG, "index");
             qois_px = qois_index[qois_op];
+
+            //INDEX must not update the color index (see decoder contract)
+            leds_setNextPixel(qois_px.rgba.r, qois_px.rgba.g, qois_px.rgba.b);
+            qois_wait_for_op = true;
+            continue;
         }
         else if ((qois_op & QOI_MASK_2) == QOI_OP_DIFF)
         {

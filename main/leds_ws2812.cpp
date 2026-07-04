@@ -86,6 +86,33 @@ void IRAM_ATTR leds_setNextPixel(const uint8_t r, const uint8_t g, const uint8_t
 }
 
 
+void IRAM_ATTR leds_keepPixels(const uint16_t count, uint8_t* r, uint8_t* g, uint8_t* b)
+{
+    if (count == 0)
+        return;
+
+    //flat position of the last kept pixel, then advance the cursor past it
+    const uint32_t last = (uint32_t)leds_channel_nr * leds_pixels_per_channel + leds_pixel_nr + count - 1;
+    leds_channel_nr = (last + 1) / leds_pixels_per_channel;
+    leds_pixel_nr = (last + 1) % leds_pixels_per_channel;
+
+    const uint16_t channel = last / leds_pixels_per_channel;
+    const uint16_t pixel = last % leds_pixels_per_channel;
+    if (channel < CONFIG_LEDSTREAM_CHANNELS && pixel < CONFIG_LEDSTREAM_LEDS_PER_CHANNEL)
+    {
+        *r = leds[channel][pixel].r;
+        *g = leds[channel][pixel].g;
+        *b = leds[channel][pixel].b;
+    }
+}
+
+
+void leds_clear()
+{
+    FastLED.clear();
+}
+
+
 // notify user via led 0 of channel 0 (async, return immeadatly)
 //void async_notify(CRGB rgb, int on, int total) {
 //    static bool lastState = false;

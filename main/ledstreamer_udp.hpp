@@ -4,6 +4,11 @@
 //Receives and buffers packages that are sent to it via udp, and sends them to the QOIS decoder.
 //UDP mode is for local networks and realtime requirements: It tries to display the frames at exactly the time that the server dictates, making it possible to sync multiple displays.
 //In other cases its better to use the TCP streamer.
+//
+//WARNING: DEPRECATED and currently incompatible with the QOIS stream dialect: the decoder
+//state (color index, framebuffer via QOIS_OP_PREVFRAME) now persists across frames, so a
+//lossy transport that re-syncs mid-stream will desync from the encoder. Don't use this
+//unless the ledder side resets its encoder state for every frame.
 
 
 #ifndef LEDSTREAM_LEDSTREAMER_UDP_HPP

@@ -41,7 +41,9 @@ inline void ledstreamer_flash_task(void* arg)
         {
             //running
             timing_reset();
-            qois_reset();
+            //recorded streams start at the beginning of a connection, so every
+            //replay loop must restart the decoder from the same fresh state
+            qois_resetStream();
             while (ledstreamer_flash_run && fileserver_read(ctx))
             {
                 qois_decodeBytes(static_cast<const uint8_t*>(ctx->buffer), ctx->buffered, 0);

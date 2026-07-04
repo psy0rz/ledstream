@@ -54,7 +54,8 @@ inline void IRAM_ATTR stream()
                         ESP_LOGI(LEDSTREAMER_HTTP_TAG, "Live streaming");
                         vTaskDelay(1000 / portTICK_PERIOD_MS);
                         ledstreamer_flash_stop();
-                        qois_reset();
+                        //the ledder encoder starts from a fresh state per connection
+                        qois_resetStream();
                         timing_reset();
                         stream_live=true;
 
@@ -66,7 +67,8 @@ inline void IRAM_ATTR stream()
                         stream_live=true;
                         ESP_LOGI(LEDSTREAMER_HTTP_TAG, "Recording");
                         ledstreamer_flash_stop();
-                        qois_reset();
+                        //the ledder encoder starts from a fresh state per connection
+                        qois_resetStream();
                         timing_reset();
                     }
                     //play
