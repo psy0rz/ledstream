@@ -3,7 +3,7 @@
 * Control up to 8 x 512 leds @ ~50fps (higher framerate if you use less leds per chan)
 * Only supports WS2812 leds (for now)
 * Only runs on vanilla ESP32
-* Use with <https://github.com/psy0rz/ledder>
+* Use with <https://github.com/psy0rz/ledder>. (wiki: https://github.com/psy0rz/ledder/wiki/Ledstream-via-ESP32 )
 
 # Build instructions
 
