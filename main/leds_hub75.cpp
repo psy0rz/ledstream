@@ -1,5 +1,7 @@
 #include <utils.hpp>
 
+#include <cstring>
+
 #include "sdkconfig.h"
 
 #ifdef CONFIG_LEDSTREAM_MODE_HUB75
@@ -8,12 +10,17 @@
 
 //prevents tearing, but TOO slow. (animations like HSNL will skip frames)
 //also jittery
+//NOTE: incompatible with QOIS_OP_PREVFRAME: the back buffer holds frame N-2, not N-1.
 // #define DOUBLE_BUFFERING 1
 
 MatrixPanel_I2S_DMA* dma_display = nullptr;
 
 uint8_t leds_x = 0;
 uint8_t leds_y = 0;
+
+//the DMA library can't read pixels back, but QOIS_OP_PREVFRAME needs the color of the
+//last kept pixel, so keep a shadow copy of what was drawn
+static uint8_t leds_shadow[CONFIG_LEDSTREAM_HEIGHT][CONFIG_LEDSTREAM_WIDTH][3];
 
 //unused in this library for now
 uint16_t leds_pixels_per_channel = 0;
@@ -72,6 +79,9 @@ void IRAM_ATTR leds_show()
 void IRAM_ATTR leds_setNextPixel(const uint8_t r, const uint8_t g, const uint8_t b)
 {
     dma_display->drawPixelRGB888(leds_x, leds_y, r, g, b);
+    leds_shadow[leds_y][leds_x][0] = r;
+    leds_shadow[leds_y][leds_x][1] = g;
+    leds_shadow[leds_y][leds_x][2] = b;
 
     leds_x++;
     if (leds_x >= CONFIG_LEDSTREAM_WIDTH)
@@ -81,6 +91,34 @@ void IRAM_ATTR leds_setNextPixel(const uint8_t r, const uint8_t g, const uint8_t
         if (leds_y >= CONFIG_LEDSTREAM_HEIGHT)
             leds_y = 0;
     }
+}
+
+
+void IRAM_ATTR leds_keepPixels(const uint16_t count, uint8_t* r, uint8_t* g, uint8_t* b)
+{
+    if (count == 0)
+        return;
+
+    //skip over the kept pixels: the display (single-buffered) still shows them
+    const uint32_t total = CONFIG_LEDSTREAM_WIDTH * CONFIG_LEDSTREAM_HEIGHT;
+    const uint32_t last = ((uint32_t)leds_y * CONFIG_LEDSTREAM_WIDTH + leds_x + count - 1) % total;
+    const uint32_t next = (last + 1) % total;
+    leds_x = next % CONFIG_LEDSTREAM_WIDTH;
+    leds_y = next / CONFIG_LEDSTREAM_WIDTH;
+
+    const uint32_t last_x = last % CONFIG_LEDSTREAM_WIDTH;
+    const uint32_t last_y = last / CONFIG_LEDSTREAM_WIDTH;
+    *r = leds_shadow[last_y][last_x][0];
+    *g = leds_shadow[last_y][last_x][1];
+    *b = leds_shadow[last_y][last_x][2];
+}
+
+
+void leds_clear()
+{
+    if (dma_display)
+        dma_display->clearScreen();
+    memset(leds_shadow, 0, sizeof(leds_shadow));
 }
 
 
