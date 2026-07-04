@@ -85,6 +85,9 @@ extern "C" __attribute__((unused)) void app_main(void)
 {
     ESP_LOGI(MAIN_TAG, "Starting ledstreamer...");
 
+    //let the power rail settle 
+     vTaskDelay(pdMS_TO_TICKS(1000));
+
     //Initialize NVS
     ESP_LOGI(MAIN_TAG, "Prepare NVS");
     esp_err_t ret = nvs_flash_init();
@@ -104,7 +107,9 @@ extern "C" __attribute__((unused)) void app_main(void)
      fileserver_init();
      leds_init();
 
-     wifi_init_sta();
+     
+
+
 #if CONFIG_LEDSTREAM_USE_INTERNAL_ETHERNET
 
      ethernet_init();
@@ -121,6 +126,11 @@ extern "C" __attribute__((unused)) void app_main(void)
     // timing_test();
     ledstreamer_http_init();
     ledstreamer_flash_init();
+
+       //let the power rail settle before the wifi PHY calibrates
+     vTaskDelay(pdMS_TO_TICKS(1000));
+     //NOTE: we start wifi stuff AFTER starting the led-stuff, so that it negotiates the connection under these circumstances. (seems to work better)
+     wifi_init_sta();
 
 
 }

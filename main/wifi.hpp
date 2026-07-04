@@ -81,6 +81,15 @@ static void wifi_event_handler(void *arg,
 }
 
 
+//wait until we have an IP, or give up after timeout_ms (offline/flash-replay boot)
+inline bool wifi_wait_connected(uint32_t timeout_ms) {
+    if (s_wifi_event_group == NULL)  //wifi disabled (no SSID)
+        return false;
+    EventBits_t bits = xEventGroupWaitBits(s_wifi_event_group, WIFI_CONNECTED_BIT,
+                                           pdFALSE, pdFALSE, pdMS_TO_TICKS(timeout_ms));
+    return (bits & WIFI_CONNECTED_BIT) != 0;
+}
+
 inline void wifi_init_sta() {
 
 
@@ -132,31 +141,20 @@ inline void wifi_init_sta() {
     ESP_ERROR_CHECK(esp_wifi_start());
     esp_wifi_set_ps(WIFI_PS_NONE);
 
+    //NOTE: 80 (20db, ~100mw) seems to make behave things badly. )
+    //72 is 18db ~63mW
+    //60 is 15db ~32mw
+    esp_wifi_set_max_tx_power(60);
 
-    esp_wifi_set_max_tx_power(84);
+    //make per-boot RF conditions visible: REDUCE_TX_POWER silently lowers tx power after a brownout reset
+    int8_t txp = 0;
+    esp_wifi_get_max_tx_power(&txp);
+    ESP_LOGI(WIFI_TAG, "max tx power: %d (0.25dBm units), reset reason: %d", txp, esp_reset_reason());
 
 
 
     ESP_LOGI(WIFI_TAG, "wifi_init_sta finished.");
 
-    /* Waiting until either the connection is established (WIFI_CONNECTED_BIT) or
-     * connection failed for the maximum number of re-tries (WIFI_FAIL_BIT). The
-     * bits are set by wifi_event_handler() (see above) */
-//    EventBits_t bits = xEventGroupWaitBits(s_wifi_event_group,
-//                                           WIFI_CONNECTED_BIT | WIFI_FAIL_BIT,
-//                                           pdFALSE, pdFALSE, portMAX_DELAY);
-//
-//    /* xEventGroupWaitBits() returns the bits before the call returned, hence we
-//     * can test which event actually happened. */
-//    if (bits & WIFI_CONNECTED_BIT) {
-//        ESP_LOGI(WIFI_TAG, "connected to ap SSID:%s password:%s", WIFI_SSID,
-//                 WIFI_PASS);
-//    } else if (bits & WIFI_FAIL_BIT) {
-//        ESP_LOGI(WIFI_TAG, "Failed to connect to SSID:%s, password:%s",
-//                 WIFI_SSID, WIFI_PASS);
-//    } else {
-//        ESP_LOGE(WIFI_TAG, "UNEXPECTED EVENT");
-//    }
 
 #endif
 }
