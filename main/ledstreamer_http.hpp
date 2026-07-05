@@ -20,6 +20,8 @@ fileserver_ctx* ledstreamer_http_file_ctx = nullptr;
 bool stream_flashing = false;
 bool stream_live=false;
 
+bool http_connected=false;
+
 inline void IRAM_ATTR stream()
 {
     if (wifi_disconnected)
@@ -29,6 +31,7 @@ inline void IRAM_ATTR stream()
 
     stream_flashing = false;
     stream_live = false;
+    http_connected=false;
 
     esp_http_client_config_t config = {
         .url = url,
@@ -46,6 +49,7 @@ inline void IRAM_ATTR stream()
 
             case HTTP_EVENT_ON_CONNECTED:
                 ESP_LOGI(LEDSTREAMER_HTTP_TAG, "Connected");
+                http_connected=true;
                 break;
 
             case HTTP_EVENT_ON_HEADER:
@@ -112,6 +116,7 @@ inline void IRAM_ATTR stream()
 
     };
     esp_http_client_handle_t client = esp_http_client_init(&config);
+    http_connected=false;
 
 
     if (esp_http_client_perform(client) == ESP_OK)
@@ -123,6 +128,7 @@ inline void IRAM_ATTR stream()
     esp_http_client_cleanup(client);
     fileserver_close(ledstreamer_http_file_ctx);
 
+    //on disconnect, start replaying from flash
     ledstreamer_flash_start();
 
 }

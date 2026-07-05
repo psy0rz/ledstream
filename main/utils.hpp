@@ -18,23 +18,6 @@ inline int diff16(uint16_t first, uint16_t second) {
     return (first > second) ? (int16_t) abs_diff : -(int16_t) abs_diff;
 }
 
-inline void wificheck() {
-//    if (WiFi.status() == WL_CONNECTED)
-//      return;
-//
-//    //    Serial.printf("Attempting to connect to WPA SSID: %s\n", ssid);
-//    ESP_LOGI(UDPBUFFER_TAG, "Connecting to wifi...");
-//    while (WiFi.status() != WL_CONNECTED) {
-//      yield();
-//      notify(CRGB::Red, 125, 250);
-//    }
-//    ESP_LOGI(UDPBUFFER_TAG, "Wifi connected.");
-
-    //    Serial.printf("MDNS mdns name is %s\n",
-    //    ArduinoOTA.getHostname().c_str()); Serial.println(WiFi.localIP());
-
-    //    timeSync.begin();
-}
 
 
 inline void get_mac_address(char *mac_str) {

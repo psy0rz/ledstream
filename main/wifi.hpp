@@ -44,37 +44,6 @@ static const char *WIFI_TAG = "wifistuff";
 
 volatile bool wifi_disconnected = true;
 
-#if CONFIG_LEDSTREAM_STATUS_LED_PIN >= 0
-#include "driver/gpio.h"
-
-//blink while disconnected, solid on once we have an IP
-static void wifi_status_led_task(void *pvParameter) {
-    const gpio_num_t pin = (gpio_num_t) CONFIG_LEDSTREAM_STATUS_LED_PIN;
-    gpio_reset_pin(pin);
-    gpio_set_direction(pin, GPIO_MODE_OUTPUT);
-
-    bool on = false;
-    int ticks = 0;
-    while (1) {
-        if (wifi_disconnected)
-            on = !on;
-        else
-            on = true;
-        gpio_set_level(pin, !on);
-
-        //print rssi every second (rssi is only valid while associated)
-        if (++ticks >= 4) {
-            ticks = 0;
-            wifi_ap_record_t ap;
-            if (!wifi_disconnected && esp_wifi_sta_get_ap_info(&ap) == ESP_OK)
-                ESP_LOGI(WIFI_TAG, "rssi: %d", ap.rssi);
-        }
-
-        vTaskDelay(pdMS_TO_TICKS(250));
-    }
-}
-#endif
-
 
 //scan all channels ourselves with a longer per-channel dwell than the driver's
 //internal connect-scan (~120ms, not tunable), so we don't miss beacons from the
@@ -174,9 +143,6 @@ inline void wifi_init_sta() {
 #else
     ESP_LOGI(WIFI_TAG,"Initialize wifi...");
 
-#if CONFIG_LEDSTREAM_STATUS_LED_PIN >= 0
-    xTaskCreate(&wifi_status_led_task, "wifi_status_led", 4096, NULL, 1, NULL);
-#endif
 
     s_wifi_event_group = xEventGroupCreate();
 

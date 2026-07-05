@@ -6,6 +6,7 @@
 // #include "leds.hpp"
 
 #include "qois.hpp"
+#include "status_led.hpp"
 
 #include "ledstreamer_http.hpp"
 #include "ledstreamer_flash.hpp"
@@ -84,6 +85,7 @@ extern "C" __attribute__((unused)) void app_main(void)
 {
     ESP_LOGI(MAIN_TAG, "Starting ledstreamer...");
 
+    status_led_init();
 
      //let the power rail settle 
      vTaskDelay(pdMS_TO_TICKS(1000));
