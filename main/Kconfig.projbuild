@@ -12,6 +12,16 @@ menu "LEDSTREAM CONFIG"
         string "Wifi Password"
         default ""
 
+    config LEDSTREAM_STATUS_LED_PIN
+        int "Wifi status LED pin"
+        range -1 LEDSTREAM_GPIO_RANGE_MAX
+        default 44
+        help
+            GPIO of a plain status LED: blinks while wifi is disconnected,
+            solid on once an IP is obtained. 
+            On esp32s3 this try 43 or 44 for onboard led. 
+            Use -1 to disable.
+
     config LEDSTREAM_GPIO_RANGE_MIN
         int
         default 0

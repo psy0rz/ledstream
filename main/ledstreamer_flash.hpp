@@ -39,6 +39,7 @@ inline void ledstreamer_flash_task(void* arg)
         }
         else
         {
+            ESP_LOGI(LEDSTREAMER_FLASH_TAG, "replaying from flash");
             //running
             timing_reset();
             //recorded streams start at the beginning of a connection, so every
