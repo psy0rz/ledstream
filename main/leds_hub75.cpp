@@ -7,6 +7,7 @@
 #ifdef CONFIG_LEDSTREAM_MODE_HUB75
 
 #include "ESP32-HUB75-MatrixPanel-I2S-DMA.h"
+#include "driver/gpio.h"
 
 //prevents tearing, but TOO slow. (animations like HSNL will skip frames)
 //also jittery
@@ -57,7 +58,7 @@ void leds_init()
     //content as very visible 10Hz judder. A higher scan rate shrinks the window and
     //pushes the beat above the visible range, at the cost of some color depth.
     mxconfig.min_refresh_rate = 240;
-    mxconfig.i2sspeed = HUB75_I2S_CFG::HZ_20M;
+    mxconfig.i2sspeed = HUB75_I2S_CFG::HZ_16M;
 
 #ifdef DOUBLE_BUFFERING
     mxconfig.double_buff = true;
@@ -66,6 +67,20 @@ void leds_init()
 
     dma_display = new MatrixPanel_I2S_DMA(mxconfig);
     dma_display->begin();
+
+    //weaken the output drivers (default is CAP_2): slower edges radiate far fewer
+    //2.4GHz harmonics into the pcb antenna. Electrically similar to series resistors.
+    //Must be done after begin(), which (re)configures the pins.
+    const int hub75_pins[] = {
+        CONFIG_LEDSTREAM_R1, CONFIG_LEDSTREAM_G1, CONFIG_LEDSTREAM_B1,
+        CONFIG_LEDSTREAM_R2, CONFIG_LEDSTREAM_G2, CONFIG_LEDSTREAM_B2,
+        CONFIG_LEDSTREAM_A, CONFIG_LEDSTREAM_B, CONFIG_LEDSTREAM_C,
+        CONFIG_LEDSTREAM_D, CONFIG_LEDSTREAM_E,
+        CONFIG_LEDSTREAM_LAT, CONFIG_LEDSTREAM_OE, CONFIG_LEDSTREAM_CLK,
+    };
+    for (const int pin : hub75_pins)
+        if (pin >= 0)
+            gpio_set_drive_capability((gpio_num_t)pin, GPIO_DRIVE_CAP_0);
 
     dma_display->setBrightness8(255);
 
