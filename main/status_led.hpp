@@ -12,7 +12,6 @@ static void status_led_task(void *pvParameter) {
     gpio_reset_pin(pin);
     gpio_set_direction(pin, GPIO_MODE_OUTPUT);
 
-    int ticks = 0;
     while(1) {
         //all ok heartbeat
         int on_time=100;
@@ -37,13 +36,6 @@ static void status_led_task(void *pvParameter) {
         gpio_set_level(pin, true);
         vTaskDelay(pdMS_TO_TICKS(off_time));
 
-        //print rssi every second (rssi is only valid while associated)
-        if (++ticks >= 4) {
-            ticks = 0;
-            wifi_ap_record_t ap;
-            if (!wifi_disconnected && esp_wifi_sta_get_ap_info(&ap) == ESP_OK)
-                ESP_LOGI(WIFI_TAG, "rssi: %d", ap.rssi);
-        }
 
     }
 }
