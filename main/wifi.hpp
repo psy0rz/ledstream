@@ -82,7 +82,7 @@ static void wifi_event_handler(void *arg,
         esp_wifi_scan_get_ap_num(&num);
         //always call get_ap_records (even with num 0): it frees the driver's scan buffer
         wifi_ap_record_t *recs = (wifi_ap_record_t *) malloc(sizeof(wifi_ap_record_t) * (num ? num : 1));
-        if (esp_wifi_scan_get_ap_records(&num, recs) == ESP_OK && num > 0) {
+        if (recs && esp_wifi_scan_get_ap_records(&num, recs) == ESP_OK && num > 0) {
             int best = 0;
             for (int i = 0; i < num; i++) {
                 ESP_LOGI(WIFI_TAG, "candidate %02x:%02x:%02x:%02x:%02x:%02x channel %d rssi %d",

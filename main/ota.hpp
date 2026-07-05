@@ -31,7 +31,6 @@ public:
         }
 
         task_started = true;
-//        xTaskCreate(ota_update_task, "ota_update_task", 8192, this, 5, &ota_task_handle);
         xTaskCreate(&ota_task, "ota_task", 8192, this, 0, nullptr);
     }
 
@@ -40,11 +39,6 @@ private:
 
     bool task_started;
 
-
-    int total_length = 0;
-    int downloaded_length = 0;
-    int percentage = 0;
-
     static void ota_task(void *pvParameter) {
         OTAUpdater *instance = static_cast<OTAUpdater *>(pvParameter);
 
@@ -52,11 +46,7 @@ private:
         {
             vTaskDelay(60000 / portTICK_PERIOD_MS);
             if (!wifi_disconnected)
-            {
                 instance->update_firmware();
-                instance->task_started = false;
-            }
-
         }
 
     }
@@ -78,7 +68,6 @@ private:
         esp_err_t err;
         esp_http_client_config_t config = {};
         config.url = settings_get("ota_url");
-//        config.cert_pem = server_cert_pem;
 
         esp_https_ota_config_t ota_config = {};
         ota_config.http_config = &config;
@@ -132,11 +121,6 @@ private:
 };
 
 const char *OTAUpdater::TAG = "ota";
-
-extern OTAUpdater ota_updater;
-
-
-
 
 
 #endif

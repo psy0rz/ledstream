@@ -4,9 +4,6 @@
 #include "ota.hpp"
 #include "settings.hpp"
 #include "console.hpp"
-#include "settings.hpp"
-
-// #include "leds.hpp"
 
 #include "qois.hpp"
 #include "status_led.hpp"
@@ -15,13 +12,6 @@
 #include "ledstreamer_flash.hpp"
 
 static const char* MAIN_TAG = "main";
-
-
-
-#define MONITOR_TASK_PERIOD_MS 1000
-
-static TaskStatus_t* prevTaskArray = NULL;
-static uint32_t prevTotalRunTime = 0;
 
 void timing_test()
 {
@@ -136,8 +126,6 @@ extern "C" __attribute__((unused)) void app_main(void)
 
     //main task
     ESP_LOGI(MAIN_TAG, "Start mainloop:");
-
-    // xTaskCreate(ledstreamer_udp_task, "ledstreamer_udp_task", 4096, nullptr, 1, nullptr);
 
     timing_init();
 
