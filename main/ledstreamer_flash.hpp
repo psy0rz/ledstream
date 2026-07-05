@@ -84,7 +84,7 @@ inline void ledstreamer_flash_stop()
 
 inline void ledstreamer_flash_init()
 {
-    xTaskCreate(ledstreamer_flash_task, "ledstreamer_flash_task", 4096, nullptr, 10, nullptr);
+    xTaskCreatePinnedToCore(ledstreamer_flash_task, "ledstreamer_flash_task", 4096, nullptr, 10, nullptr, 0);
     ledstreamer_flash_run = true;
 }
 

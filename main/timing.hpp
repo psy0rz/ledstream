@@ -24,6 +24,15 @@ inline void timer_callback(void* arg)
 
 //Use esp timer to wait until specified time in ms.
 //Note that this time is the remote time and comes from ledstreamer, so we try to sync up with it.
+
+//one-shot playout delay: how far behind "instant" we start the very first frame of a
+//stream. Since the wait below is purely differential (each frame is scheduled relative
+//to the previous one, not to an absolute clock), this initial offset just shifts the
+//whole stream's display schedule later by a fixed amount -- it doesn't accumulate -- and
+//gives that much slack to absorb network jitter/stalls before a frame's wait goes
+//negative (late).
+#define TIMING_PLAYOUT_DELAY_US (150*1000)
+
 int64_t timing_last_until_us = 0;
 int64_t timing_last_time_us=0;
 int64_t lag=0;
@@ -72,6 +81,11 @@ inline void timing_wait_until_us(int64_t until_us)
     if (timing_should_reset)
     {
         timing_should_reset=false;
+
+        //build up the initial playout cushion before showing the first frame
+        timing_source_task_handle = xTaskGetCurrentTaskHandle();
+        ESP_ERROR_CHECK(esp_timer_start_once(oneshot_timer, TIMING_PLAYOUT_DELAY_US));
+        ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
     }
     else
     {

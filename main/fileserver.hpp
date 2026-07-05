@@ -93,7 +93,11 @@ inline bool fileserver_read(fileserver_ctx* ctx)
     if (ctx == nullptr)
         return false;
 
+    // int64_t s=esp_timer_get_time();
+
+
     ctx->buffered = fread(ctx->buffer, 1, FLASH_BLOCK_SIZE, ctx->file);
+    // ESP_LOGE(FILESERVER_TAG, "read lag uS: %lld", (long long)(esp_timer_get_time()-s));
 
     //a recording usually ends on a partial block: still return it, the caller
     //gets false on the next call when fread returns 0
