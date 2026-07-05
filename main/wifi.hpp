@@ -26,6 +26,8 @@
 #include "lwip/err.h"
 #include "lwip/sys.h"
 
+#include "settings.hpp"
+
 
 
 
@@ -51,7 +53,7 @@ volatile bool wifi_disconnected = true;
 static void wifi_scan_for_best_ap() {
     wifi_scan_config_t scan;
     memset(&scan, 0, sizeof(scan));
-    scan.ssid = (uint8_t *) CONFIG_LEDSTREAM_WIFI_SSID;  //only report our own SSID
+    scan.ssid = (uint8_t *) settings_get("wifi_ssid");  //only report our own SSID
     scan.scan_type = WIFI_SCAN_TYPE_ACTIVE;
     scan.scan_time.active.min = 200;
     scan.scan_time.active.max = 400;
@@ -102,7 +104,7 @@ static void wifi_event_handler(void *arg,
                      recs[best].bssid[3], recs[best].bssid[4], recs[best].bssid[5], recs[best].rssi);
             esp_wifi_connect();
         } else {
-            ESP_LOGW(WIFI_TAG, "SSID %s not found, rescanning", CONFIG_LEDSTREAM_WIFI_SSID);
+            ESP_LOGW(WIFI_TAG, "SSID %s not found, rescanning", settings_get("wifi_ssid"));
             wifi_scan_for_best_ap();
         }
         free(recs);
@@ -136,11 +138,11 @@ inline bool wifi_wait_connected(uint32_t timeout_ms) {
 
 inline void wifi_init_sta() {
 
+    if (strlen(settings_get("wifi_ssid")) == 0) {
+        ESP_LOGW(WIFI_TAG, "No SSID configured, wifi disabled ('set wifi_ssid ...' on the console)");
+        return;
+    }
 
-#ifndef CONFIG_LEDSTREAM_WIFI_SSID
-    ESP_LOGW(WIFI_TAG,"No SSID specified, wifi disabled");
-    return ;
-#else
     ESP_LOGI(WIFI_TAG,"Initialize wifi...");
 
 
@@ -166,12 +168,12 @@ inline void wifi_init_sta() {
     wifi_config_t wifi_config;
     memset(&wifi_config, 0, sizeof(wifi_config_t));
 
-    strlcpy(reinterpret_cast<char *>(wifi_config.sta.ssid), CONFIG_LEDSTREAM_WIFI_SSID,
+    strlcpy(reinterpret_cast<char *>(wifi_config.sta.ssid), settings_get("wifi_ssid"),
             sizeof(wifi_config.sta.ssid));
-    strlcpy(reinterpret_cast<char *>(wifi_config.sta.password), CONFIG_LEDSTREAM_WIFI_PASS,
+    strlcpy(reinterpret_cast<char *>(wifi_config.sta.password), settings_get("wifi_pass"),
             sizeof(wifi_config.sta.password));
 
-    if (strlen(CONFIG_LEDSTREAM_WIFI_PASS) == 0)
+    if (strlen(settings_get("wifi_pass")) == 0)
         wifi_config.sta.threshold.authmode = WIFI_AUTH_OPEN;
     else
         wifi_config.sta.threshold.authmode = WIFI_AUTH_WPA2_PSK;
@@ -207,8 +209,6 @@ inline void wifi_init_sta() {
 
     ESP_LOGI(WIFI_TAG, "wifi_init_sta finished.");
 
-
-#endif
 }
 
 #endif

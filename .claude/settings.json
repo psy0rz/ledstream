@@ -1,7 +1,25 @@
 {
   "permissions": {
     "allow": [
-      "WebSearch"
+      "WebSearch",
+      "Bash(/Users/edwineefting/.espressif/python_env/idf4.4_py3.14_env/bin/pip list *)",
+      "Bash(/Users/edwineefting/.espressif/python_env/idf4.4_py3.14_env/bin/python -c \"import kconfiglib; print\\(kconfiglib.__file__\\); print\\(hasattr\\(kconfiglib,'BOOL'\\), getattr\\(kconfiglib,'VERSION',None\\)\\)\")",
+      "Bash(/Users/edwineefting/.espressif/python_env/idf4.4_py3.14_env/bin/pip show *)",
+      "Bash(./dockerrun ./esps3idf build)",
+      "Bash(docker run *)",
+      "Bash(docker info *)",
+      "Bash(./dockerrun idf.py -D SDKCONFIG=sdkconfig.datux build)",
+      "Bash(cat /Users/edwineefting/ledstream/autocom 2>/dev/null; echo ---; cat /Users/edwineefting/ledstream/mon 2>/dev/null; echo ---; ls /dev/cu.* 2>/dev/null)",
+      "Read(//dev/**)",
+      "Bash(grep -rn \"usb_console\" /Users/edwineefting/esp/esp-idf/components/esp_system/CMakeLists.txt; ls /Users/edwineefting/ledstream/build-esp32s3/ 2>/dev/null | head; grep -n \"ESP_CONSOLE\" /Users/edwineefting/ledstream/sdkconfig 2>/dev/null | head)",
+      "Read(//Users/edwineefting/esp/esp-idf/components/esp_system/**)",
+      "Bash(grep -rn \"usb_console.c\" /Users/edwineefting/esp/esp-idf/components/esp_system/ | grep -i cmake; grep -n \"SDKCONFIG:\\\\|IDF_TARGET:\" /Users/edwineefting/ledstream/build-esp32s3/CMakeCache.txt; grep -n \"ESP_CONSOLE_USB_CDC\\\\|ESP_CONSOLE_USB_SERIAL_JTAG\\\\|FREERTOS_UNICORE\" /Users/edwineefting/ledstream/sdkconfig.esp32s3)",
+      "Bash(sed -n '10,25p' /Users/edwineefting/esp/esp-idf/components/esp_system/port/soc/esp32s3/CMakeLists.txt; grep -n \"ESP_CONSOLE\" /Users/edwineefting/ledstream/sdkconfig.datux | head)",
+      "Read(//Users/edwineefting/esp/esp-idf/components/esp_system/port/soc/esp32s3/**)",
+      "Bash(python3 -)",
+      "Bash(grep -n \"fileno\\\\|uart\\\\|usb_serial\\\\|static .*=\\\\|dumbmode\\\\|allocated\" /Users/edwineefting/esp/esp-idf/components/console/linenoise/linenoise.c | head -40)",
+      "Read(//Users/edwineefting/esp/esp-idf/components/console/linenoise/**)",
+      "Bash(grep -n \"ENTER\\\\|case 13\\\\|case 10\\\\|'\\\\\\\\\\\\\\\\r'\\\\|'\\\\\\\\\\\\\\\\n'\" /Users/edwineefting/esp/esp-idf/components/console/linenoise/linenoise.c | head -20)"
     ]
   }
 }

@@ -13,6 +13,7 @@
 #include "esp_http_client.h"
 #include "esp_https_ota.h"
 #include "wifi.hpp"
+#include "settings.hpp"
 
 
 
@@ -72,11 +73,11 @@ private:
 
     void update_firmware() {
 
-        ESP_LOGI(TAG, "Checking for updates at %s ...", CONFIG_LEDSTREAM_FIRMWARE_UPGRADE_URL);
+        ESP_LOGI(TAG, "Checking for updates at %s ...", settings_get("ota_url"));
 
         esp_err_t err;
         esp_http_client_config_t config = {};
-        config.url = CONFIG_LEDSTREAM_FIRMWARE_UPGRADE_URL;
+        config.url = settings_get("ota_url");
 //        config.cert_pem = server_cert_pem;
 
         esp_https_ota_config_t ota_config = {};
