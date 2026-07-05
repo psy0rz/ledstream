@@ -104,6 +104,7 @@ extern "C" __attribute__((unused)) void app_main(void)
 
      console_init();
 
+     esp_log_level_set("wifi", ESP_LOG_WARN);
      wifi_init_sta();
      fileserver_init();
      leds_init();
