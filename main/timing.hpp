@@ -36,6 +36,34 @@ timing_should_reset=true;
 
 }
 
+//stats for the console 'stats' command: min/max/avg of wait_time_left, accumulated
+//since the last read and reset by timing_stats_get()
+static int64_t timing_stat_min_us = INT64_MAX;
+static int64_t timing_stat_max_us = INT64_MIN;
+static int64_t timing_stat_sum_us = 0;
+static int64_t timing_stat_count = 0;
+
+inline void timing_stats_reset()
+{
+    timing_stat_min_us = INT64_MAX;
+    timing_stat_max_us = INT64_MIN;
+    timing_stat_sum_us = 0;
+    timing_stat_count = 0;
+}
+
+//returns false if no frames were timed since the last call
+inline bool timing_stats_get(int64_t *min_us, int64_t *max_us, int64_t *avg_us, int64_t *count)
+{
+    if (timing_stat_count == 0)
+        return false;
+    *min_us = timing_stat_min_us;
+    *max_us = timing_stat_max_us;
+    *avg_us = timing_stat_sum_us / timing_stat_count;
+    *count = timing_stat_count;
+    timing_stats_reset();
+    return true;
+}
+
 inline void timing_wait_until_us(int64_t until_us)
 {
     if (timing_should_reset)
@@ -55,6 +83,11 @@ inline void timing_wait_until_us(int64_t until_us)
         int64_t wait_time_left=wait_time_us-time_used;
 
         // ESP_LOGI("timing", "waittime %lld uS, used %lld uS, left %lld uS", wait_time_us,time_used, wait_time_left);
+
+        if (wait_time_left < timing_stat_min_us) timing_stat_min_us = wait_time_left;
+        if (wait_time_left > timing_stat_max_us) timing_stat_max_us = wait_time_left;
+        timing_stat_sum_us += wait_time_left;
+        timing_stat_count++;
 
 
         if (wait_time_left>0 && wait_time_left<2000000)

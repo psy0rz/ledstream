@@ -18,6 +18,7 @@
 #include <sys/stat.h>
 
 #include "settings.hpp"
+#include "timing.hpp"
 
 // Configuration console. One esp_console command table, reachable two ways:
 //  - serial REPL on the normal console uart/usb (with line editing and history)
@@ -119,7 +120,7 @@ static int cmd_info(int argc, char **argv) {
 
     wifi_ap_record_t ap;
     if (esp_wifi_sta_get_ap_info(&ap) == ESP_OK)
-        printf("wifi     : %s channel %d rssi %d\n", (const char *) ap.ssid, ap.primary, ap.rssi);
+        printf("wifi     : %s channel %d\n", (const char *) ap.ssid, ap.primary);
 
     printf("free heap: %lu\n", (unsigned long) esp_get_free_heap_size());
     printf("uptime   : %llds\n", esp_timer_get_time() / 1000000);
@@ -211,6 +212,63 @@ static struct {
     int state;    //0=data 1=after IAC 2=after IAC+verb 3=in subneg 4=subneg after IAC
     bool last_cr; //to swallow the LF/NUL a client sends after CR
 } telnet_client;
+
+//set once a client's stdio is wired up, cleared on disconnect; lets background
+//tasks (e.g. 'stats') mirror output to whichever telnet client is currently attached,
+//independent of per-task stdio redirection (see console_broadcast_line below)
+static volatile bool telnet_client_connected = false;
+
+//writes a line to the serial/usb console (this task's own stdio, which for a freshly
+//created task defaults to it) and, if a telnet client is attached, also to that
+//client's socket directly - bypassing per-task stdio redirection so this works
+//regardless of which task/session is/isn't currently connected.
+static void console_broadcast_line(const char *msg) {
+    fputs(msg, stdout);
+    fflush(stdout);
+
+    if (telnet_client_connected) {
+        char buf[256];
+        int n = 0;
+        for (const char *p = msg; *p && n < (int) sizeof(buf) - 1; p++) {
+            if (*p == '\n' && n < (int) sizeof(buf) - 1)
+                buf[n++] = '\r';
+            buf[n++] = *p;
+        }
+        send(telnet_client.sock, buf, n, 0);
+    }
+}
+
+static TaskHandle_t stats_task_handle = NULL;
+
+[[noreturn]] static void stats_task(void *arg) {
+    while (true) {
+        vTaskDelay(pdMS_TO_TICKS(1000));
+
+        wifi_ap_record_t ap;
+        int rssi = (esp_wifi_sta_get_ap_info(&ap) == ESP_OK) ? ap.rssi : 0;
+
+        int64_t min_us, max_us, avg_us, count;
+        char line[160];
+        if (timing_stats_get(&min_us, &max_us, &avg_us, &count))
+            snprintf(line, sizeof(line),
+                     "stats: rssi=%d  wait left min/avg/max = %lld/%lld/%lld us (n=%lld)\n",
+                     rssi, (long long) min_us, (long long) avg_us, (long long) max_us, (long long) count);
+        else
+            snprintf(line, sizeof(line), "stats: rssi=%d  no frames\n", rssi);
+
+        console_broadcast_line(line);
+    }
+}
+
+static int cmd_stats(int argc, char **argv) {
+    if (stats_task_handle) {
+        printf("stats already running\n");
+        return 0;
+    }
+    xTaskCreate(stats_task, "stats", 4096, nullptr, 1, &stats_task_handle);
+    printf("stats: reporting every 1s to serial + telnet, stays on until reboot\n");
+    return 0;
+}
 
 static ssize_t telnet_vfs_read(int fd, void *dst, size_t size) {
     char *buf = (char *) dst;
@@ -438,8 +496,11 @@ static void console_session(bool use_linenoise) {
         setvbuf(io, NULL, _IONBF, 0);
         stdin = stdout = stderr = io;
 
-        if (console_login())
+        if (console_login()) {
+            telnet_client_connected = true;
             console_session(telnet_mode);
+            telnet_client_connected = false;
+        }
         printf("bye\n");
 
         fclose(io);
@@ -477,6 +538,7 @@ inline void console_init() {
     console_register("defaults", "revert all settings to compile-time defaults", &cmd_defaults);
     console_register("info", "show firmware/network/system info", &cmd_info);
     console_register("reboot", "restart the device", &cmd_reboot);
+    console_register("stats", "print wifi + timing_wait_until stats every second (until reboot)", &cmd_stats);
 
     ESP_ERROR_CHECK(esp_console_start_repl(repl));
 
