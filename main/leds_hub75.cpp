@@ -57,7 +57,7 @@ void leds_init()
     //content as very visible 10Hz judder. A higher scan rate shrinks the window and
     //pushes the beat above the visible range, at the cost of some color depth.
     mxconfig.min_refresh_rate = 240;
-    mxconfig.i2sspeed = HUB75_I2S_CFG::HZ_16M;
+    mxconfig.i2sspeed = HUB75_I2S_CFG::HZ_20M;
 
 #ifdef DOUBLE_BUFFERING
     mxconfig.double_buff = true;

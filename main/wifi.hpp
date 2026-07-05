@@ -39,22 +39,28 @@ static EventGroupHandle_t s_wifi_event_group;
 static const char *WIFI_TAG = "wifistuff";
 
 
-bool wifi_disconnected = true;
+volatile bool wifi_disconnected = true;
 
-// static void wifi_blinker(void *pvParameter) {
-//     while (1) {
-//
-//         //XXX
-//         // while (wifi_disconnected)
-//         //     blink_led(CRGB(50, 0, 0), 250, 500);
-//         //
-//         // status_led(CRGB(0, 50, 0));
-//         // while (!wifi_disconnected)
-//             vTaskDelay(1000 / portTICK_PERIOD_MS);
-//
-//     }
-//
-// }
+#if CONFIG_LEDSTREAM_STATUS_LED_PIN >= 0
+#include "driver/gpio.h"
+
+//blink while disconnected, solid on once we have an IP
+static void wifi_status_led_task(void *pvParameter) {
+    const gpio_num_t pin = (gpio_num_t) CONFIG_LEDSTREAM_STATUS_LED_PIN;
+    gpio_reset_pin(pin);
+    gpio_set_direction(pin, GPIO_MODE_OUTPUT);
+
+    bool on = false;
+    while (1) {
+        if (wifi_disconnected)
+            on = !on;
+        else
+            on = true;
+        gpio_set_level(pin, !on);
+        vTaskDelay(pdMS_TO_TICKS(250));
+    }
+}
+#endif
 
 
 static void wifi_event_handler(void *arg,
@@ -62,19 +68,29 @@ static void wifi_event_handler(void *arg,
                                int32_t event_id,
                                void *event_data) {
     if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_START) {
-        esp_wifi_connect();
+        //connect is done from wifi_init_sta(), after tx power is set
         wifi_disconnected = true;
     } else if (event_base == WIFI_EVENT &&
                event_id == WIFI_EVENT_STA_DISCONNECTED) {
         wifi_disconnected = true;
+        xEventGroupClearBits(s_wifi_event_group, WIFI_CONNECTED_BIT);
+        wifi_event_sta_disconnected_t *event = (wifi_event_sta_disconnected_t *) event_data;
+        ESP_LOGI(WIFI_TAG, "disconnected (reason %d), retry to connect to the AP", event->reason);
         esp_wifi_connect();
-        ESP_LOGI(WIFI_TAG, "retry to connect to the AP");
     } else if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP) {
         wifi_disconnected = false;
         ip_event_got_ip_t *event = (ip_event_got_ip_t *) event_data;
         ESP_LOGI(WIFI_TAG, "got ip:" IPSTR, IP2STR(&event->ip_info.ip));
+
+        //log which AP/channel/signal we ended up on, to compare good vs bad boots
+        wifi_ap_record_t ap;
+        if (esp_wifi_sta_get_ap_info(&ap) == ESP_OK)
+            ESP_LOGI(WIFI_TAG, "connected to bssid %02x:%02x:%02x:%02x:%02x:%02x channel %d rssi %d",
+                     ap.bssid[0], ap.bssid[1], ap.bssid[2], ap.bssid[3], ap.bssid[4], ap.bssid[5],
+                     ap.primary, ap.rssi);
+
         xEventGroupSetBits(s_wifi_event_group, WIFI_CONNECTED_BIT);
-         ota_updater.init();
+        //  ota_updater.init();
 
 
     }
@@ -99,8 +115,9 @@ inline void wifi_init_sta() {
 #else
     ESP_LOGI(WIFI_TAG,"Initialize wifi...");
 
-//    xTaskCreate(&wifi_blinker, "wifi_blinker", 1024, NULL, 5, NULL);
-
+#if CONFIG_LEDSTREAM_STATUS_LED_PIN >= 0
+    xTaskCreate(&wifi_status_led_task, "wifi_status_led", 2048, NULL, 1, NULL);
+#endif
 
     s_wifi_event_group = xEventGroupCreate();
 
@@ -111,6 +128,7 @@ inline void wifi_init_sta() {
 
     wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
     ESP_ERROR_CHECK(esp_wifi_init(&cfg));
+    ESP_ERROR_CHECK(esp_wifi_set_ps(WIFI_PS_NONE));
 
     esp_event_handler_instance_t instance_any_id;
     esp_event_handler_instance_t instance_got_ip;
@@ -123,8 +141,10 @@ inline void wifi_init_sta() {
     wifi_config_t wifi_config;
     memset(&wifi_config, 0, sizeof(wifi_config_t));
 
-    strcpy(reinterpret_cast<char *>(wifi_config.sta.ssid), CONFIG_LEDSTREAM_WIFI_SSID);
-    strcpy(reinterpret_cast<char *>(wifi_config.sta.password), CONFIG_LEDSTREAM_WIFI_PASS);
+    strlcpy(reinterpret_cast<char *>(wifi_config.sta.ssid), CONFIG_LEDSTREAM_WIFI_SSID,
+            sizeof(wifi_config.sta.ssid));
+    strlcpy(reinterpret_cast<char *>(wifi_config.sta.password), CONFIG_LEDSTREAM_WIFI_PASS,
+            sizeof(wifi_config.sta.password));
 
     if (strlen(CONFIG_LEDSTREAM_WIFI_PASS) == 0)
         wifi_config.sta.threshold.authmode = WIFI_AUTH_OPEN;
@@ -133,18 +153,25 @@ inline void wifi_init_sta() {
 
     wifi_config.sta.sae_pwe_h2e = WPA3_SAE_PWE_BOTH;
 
-    ESP_LOGI(WIFI_TAG, "connecting to SSID:%s password:%s", wifi_config.sta.ssid, wifi_config.sta.password);
+    //scan all channels and pick the strongest AP, instead of the first one heard
+    //(default fast-scan makes multi-AP networks a per-boot lottery)
+    wifi_config.sta.scan_method = WIFI_ALL_CHANNEL_SCAN;
+    wifi_config.sta.sort_method = WIFI_CONNECT_AP_BY_SIGNAL;
+
+    ESP_LOGI(WIFI_TAG, "connecting to SSID:%s", wifi_config.sta.ssid);
 
 
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
     ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &wifi_config));
     ESP_ERROR_CHECK(esp_wifi_start());
-    esp_wifi_set_ps(WIFI_PS_NONE);
 
     //NOTE: 80 (20db, ~100mw) seems to make behave things badly. )
     //72 is 18db ~63mW
     //60 is 15db ~32mw
-    esp_wifi_set_max_tx_power(60);
+    ESP_ERROR_CHECK(esp_wifi_set_max_tx_power(60));
+
+    //connect only after tx power is set, so scan/auth/assoc never runs at the default 20dBm
+    ESP_ERROR_CHECK(esp_wifi_connect());
 
     //make per-boot RF conditions visible: REDUCE_TX_POWER silently lowers tx power after a brownout reset
     int8_t txp = 0;
