@@ -266,7 +266,7 @@ static int cmd_stats(int argc, char **argv) {
         printf("stats already running\n");
         return 0;
     }
-    xTaskCreate(stats_task, "stats", 4096, nullptr, 1, &stats_task_handle);
+    xTaskCreatePinnedToCore(stats_task, "stats", 4096, nullptr, 1, &stats_task_handle, 0);
     printf("stats: reporting every 1s to serial + telnet, stays on until reboot\n");
     return 0;
 }
@@ -548,7 +548,7 @@ inline void console_init() {
     linenoiseSetHintsCallback((linenoiseHintsCallback *) &esp_console_get_hint);
 
     telnet_vfs_register();
-    xTaskCreate(console_tcp_task, "console_tcp", 8192, nullptr, 1, nullptr);
+    xTaskCreatePinnedToCore(console_tcp_task, "console_tcp", 8192, nullptr, 1, nullptr, 0);
 }
 
 #endif //LEDSTREAM_CONSOLE_HPP

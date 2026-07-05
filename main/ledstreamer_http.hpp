@@ -154,7 +154,7 @@ inline void ledstreamer_http_init()
     snprintf(url, sizeof(url), "%s/%02X%02X%02X%02X%02X%02X",
              settings_get("ledder_url"), mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
 
-    xTaskCreate(ledstreamer_http_task, "ledstreamer_http_task", 4096, nullptr, 10, nullptr);
+    xTaskCreatePinnedToCore(ledstreamer_http_task, "ledstreamer_http_task", 4096, nullptr, 10, nullptr, 0);
 }
 
 
