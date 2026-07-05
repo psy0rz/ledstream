@@ -6,6 +6,11 @@
    software is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
    CONDITIONS OF ANY KIND, either express or implied.
 */
+
+
+#ifndef LEDSTREAM_WIFI_HPP
+#define LEDSTREAM_WIFI_HPP
+
 #include <string.h>
 #include "esp_event.h"
 #include "esp_log.h"
@@ -22,8 +27,6 @@
 #include "lwip/sys.h"
 
 
-#include "ota.hpp"
-#include "leds.hpp"
 
 
 /* FreeRTOS event group to signal when we are connected*/
@@ -73,6 +76,22 @@ static void wifi_status_led_task(void *pvParameter) {
 #endif
 
 
+//scan all channels ourselves with a longer per-channel dwell than the driver's
+//internal connect-scan (~120ms, not tunable), so we don't miss beacons from the
+//strongest AP and end up on a weak one. SCAN_DONE picks the best BSSID and connects.
+static void wifi_scan_for_best_ap() {
+    wifi_scan_config_t scan;
+    memset(&scan, 0, sizeof(scan));
+    scan.ssid = (uint8_t *) CONFIG_LEDSTREAM_WIFI_SSID;  //only report our own SSID
+    scan.scan_type = WIFI_SCAN_TYPE_ACTIVE;
+    scan.scan_time.active.min = 200;
+    scan.scan_time.active.max = 400;
+
+    esp_err_t err = esp_wifi_scan_start(&scan, false);
+    if (err != ESP_OK)
+        ESP_LOGW(WIFI_TAG, "scan start failed: %s", esp_err_to_name(err));
+}
+
 static void wifi_event_handler(void *arg,
                                esp_event_base_t event_base,
                                int32_t event_id,
@@ -85,8 +104,39 @@ static void wifi_event_handler(void *arg,
         wifi_disconnected = true;
         xEventGroupClearBits(s_wifi_event_group, WIFI_CONNECTED_BIT);
         wifi_event_sta_disconnected_t *event = (wifi_event_sta_disconnected_t *) event_data;
-        ESP_LOGI(WIFI_TAG, "disconnected (reason %d), retry to connect to the AP", event->reason);
-        esp_wifi_connect();
+        ESP_LOGI(WIFI_TAG, "disconnected (reason %d), rescanning for best AP", event->reason);
+        wifi_scan_for_best_ap();
+    } else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_SCAN_DONE) {
+        uint16_t num = 0;
+        esp_wifi_scan_get_ap_num(&num);
+        //always call get_ap_records (even with num 0): it frees the driver's scan buffer
+        wifi_ap_record_t *recs = (wifi_ap_record_t *) malloc(sizeof(wifi_ap_record_t) * (num ? num : 1));
+        if (esp_wifi_scan_get_ap_records(&num, recs) == ESP_OK && num > 0) {
+            int best = 0;
+            for (int i = 0; i < num; i++) {
+                ESP_LOGI(WIFI_TAG, "candidate %02x:%02x:%02x:%02x:%02x:%02x channel %d rssi %d",
+                         recs[i].bssid[0], recs[i].bssid[1], recs[i].bssid[2],
+                         recs[i].bssid[3], recs[i].bssid[4], recs[i].bssid[5],
+                         recs[i].primary, recs[i].rssi);
+                if (recs[i].rssi > recs[best].rssi)
+                    best = i;
+            }
+            //lock onto the strongest BSSID; a disconnect triggers a fresh scan, so
+            //we still fail over if this AP goes away later
+            wifi_config_t cfg;
+            esp_wifi_get_config(WIFI_IF_STA, &cfg);
+            memcpy(cfg.sta.bssid, recs[best].bssid, sizeof(cfg.sta.bssid));
+            cfg.sta.bssid_set = true;
+            esp_wifi_set_config(WIFI_IF_STA, &cfg);
+            ESP_LOGI(WIFI_TAG, "connecting to strongest AP %02x:%02x:%02x:%02x:%02x:%02x (rssi %d)",
+                     recs[best].bssid[0], recs[best].bssid[1], recs[best].bssid[2],
+                     recs[best].bssid[3], recs[best].bssid[4], recs[best].bssid[5], recs[best].rssi);
+            esp_wifi_connect();
+        } else {
+            ESP_LOGW(WIFI_TAG, "SSID %s not found, rescanning", CONFIG_LEDSTREAM_WIFI_SSID);
+            wifi_scan_for_best_ap();
+        }
+        free(recs);
     } else if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP) {
         wifi_disconnected = false;
         ip_event_got_ip_t *event = (ip_event_got_ip_t *) event_data;
@@ -100,7 +150,6 @@ static void wifi_event_handler(void *arg,
                      ap.primary, ap.rssi);
 
         xEventGroupSetBits(s_wifi_event_group, WIFI_CONNECTED_BIT);
-        //  ota_updater.init();
 
 
     }
@@ -163,8 +212,8 @@ inline void wifi_init_sta() {
 
     wifi_config.sta.sae_pwe_h2e = WPA3_SAE_PWE_BOTH;
 
-    //scan all channels and pick the strongest AP, instead of the first one heard
-    //(default fast-scan makes multi-AP networks a per-boot lottery)
+    //fallback only: AP selection is normally done by wifi_scan_for_best_ap(),
+    //which scans with a longer dwell time and locks the config to the best bssid
     wifi_config.sta.scan_method = WIFI_ALL_CHANNEL_SCAN;
     wifi_config.sta.sort_method = WIFI_CONNECT_AP_BY_SIGNAL;
 
@@ -178,10 +227,10 @@ inline void wifi_init_sta() {
     //NOTE: 80 (20db, ~100mw) seems to make behave things badly. )
     //72 is 18db ~63mW
     //60 is 15db ~32mw
-    ESP_ERROR_CHECK(esp_wifi_set_max_tx_power(60));
+    ESP_ERROR_CHECK(esp_wifi_set_max_tx_power(80));
 
-    //connect only after tx power is set, so scan/auth/assoc never runs at the default 20dBm
-    ESP_ERROR_CHECK(esp_wifi_connect());
+    //scan only after tx power is set, so scan/auth/assoc never runs at the default 20dBm
+    wifi_scan_for_best_ap();
 
     //make per-boot RF conditions visible: REDUCE_TX_POWER silently lowers tx power after a brownout reset
     int8_t txp = 0;
@@ -195,3 +244,5 @@ inline void wifi_init_sta() {
 
 #endif
 }
+
+#endif

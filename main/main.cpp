@@ -3,7 +3,7 @@
 #include "ethernet.h"
 #include "ota.hpp"
 
-#include "leds.hpp"
+// #include "leds.hpp"
 
 #include "qois.hpp"
 
@@ -13,7 +13,6 @@
 static const char* MAIN_TAG = "main";
 
 
-OTAUpdater ota_updater = OTAUpdater();
 
 #define MONITOR_TASK_PERIOD_MS 1000
 
@@ -85,7 +84,8 @@ extern "C" __attribute__((unused)) void app_main(void)
 {
     ESP_LOGI(MAIN_TAG, "Starting ledstreamer...");
 
-    //let the power rail settle 
+
+     //let the power rail settle 
      vTaskDelay(pdMS_TO_TICKS(1000));
 
     //Initialize NVS
@@ -104,6 +104,8 @@ extern "C" __attribute__((unused)) void app_main(void)
      // Create default event loop that running in background
      ESP_ERROR_CHECK(esp_event_loop_create_default());
 
+
+     wifi_init_sta();
      fileserver_init();
      leds_init();
 
@@ -112,8 +114,12 @@ extern "C" __attribute__((unused)) void app_main(void)
 
 #if CONFIG_LEDSTREAM_USE_INTERNAL_ETHERNET
 
-     ethernet_init();
+     ethernet_init();   
 #endif
+
+    OTAUpdater ota_updater = OTAUpdater();
+    ota_updater.init();
+
 
     //main task
     ESP_LOGI(MAIN_TAG, "Start mainloop:");
@@ -127,10 +133,6 @@ extern "C" __attribute__((unused)) void app_main(void)
     ledstreamer_http_init();
     ledstreamer_flash_init();
 
-       //let the power rail settle before the wifi PHY calibrates
-     vTaskDelay(pdMS_TO_TICKS(1000));
-     //NOTE: we start wifi stuff AFTER starting the led-stuff, so that it negotiates the connection under these circumstances. (seems to work better)
-     wifi_init_sta();
 
 
 }

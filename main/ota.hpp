@@ -1,3 +1,6 @@
+
+#ifndef OTA_UPDATER_HEADER
+#define OTA_UPDATER_HEADER
 #include <string.h>
 #include <utils.hpp>
 
@@ -9,11 +12,10 @@
 #include "esp_ota_ops.h"
 #include "esp_http_client.h"
 #include "esp_https_ota.h"
+#include "wifi.hpp"
 
-#include  "leds.hpp"
 
-#ifndef OTA_UPDATER_HEADER
-#define OTA_UPDATER_HEADER
+
 
 class OTAUpdater {
 public:
@@ -45,13 +47,14 @@ private:
     static void ota_task(void *pvParameter) {
         OTAUpdater *instance = static_cast<OTAUpdater *>(pvParameter);
 
-        vTaskDelay(5000 / portTICK_PERIOD_MS);
         while (true)
         {
-            instance->update_firmware();
-            instance->task_started = false;
             vTaskDelay(60000 / portTICK_PERIOD_MS);
-
+            if (!wifi_disconnected)
+            {
+                instance->update_firmware();
+                instance->task_started = false;
+            }
 
         }
 

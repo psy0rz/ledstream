@@ -22,6 +22,9 @@ bool stream_live=false;
 
 inline void IRAM_ATTR stream()
 {
+    if (wifi_disconnected)
+        return;
+
     ESP_LOGI(LEDSTREAMER_HTTP_TAG, "Connecting: %s", url);
 
     stream_flashing = false;
