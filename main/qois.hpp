@@ -71,6 +71,12 @@ static bool qois_wait_for_header __attribute__((aligned(4)));
 
 static int64_t qois_show_time_us __attribute__((aligned(4))) = 0;
 
+//the wire timestamp is only 16 bits of milliseconds, so it wraps every 65.536s.
+//we reconstruct an ever-increasing virtual time from it by accumulating wrapped
+//deltas (see qois_resetStream() / the header-parsing code in qois_decodeBytes()).
+static uint16_t qois_last_raw_time_ms __attribute__((aligned(4))) = 0;
+static bool qois_time_initialized __attribute__((aligned(4))) = false;
+
 static uint16_t qois_frame_bytes_left __attribute__((aligned(4)));
 
 
@@ -105,6 +111,7 @@ inline void qois_resetStream()
     QOI_ZEROARR(qois_index);
     leds_clear();
     qois_reset();
+    qois_time_initialized = false;
 }
 
 
@@ -166,9 +173,23 @@ inline IRAM_ATTR void qois_decodeBytes(const uint8_t buffer[], uint16_t buffer_l
             //leds_keepPixels() needs a valid pixels_per_channel from the very first frame
             leds_reset();
 
-            //bytes 4-5:
-            qois_show_time_us = (*(uint16_t*)&qois_bytes[4]) * 1000;
-
+            //bytes 4-5: display time, wire value is 16-bit ms and wraps every 65.536s.
+            //reconstruct a monotonically increasing virtual time by accumulating the
+            //wrapped delta (relies on frame spacing being well under 32.768s).
+            {
+                uint16_t raw_time_ms = *(uint16_t*)&qois_bytes[4];
+                if (!qois_time_initialized)
+                {
+                    qois_time_initialized = true;
+                    qois_show_time_us = (int64_t)raw_time_ms * 1000;
+                }
+                else
+                {
+                    int16_t delta_ms = (int16_t)(raw_time_ms - qois_last_raw_time_ms);
+                    qois_show_time_us += (int64_t)delta_ms * 1000;
+                }
+                qois_last_raw_time_ms = raw_time_ms;
+            }
 
             continue;
         }

@@ -42,6 +42,7 @@ static int64_t timing_stat_min_us = INT64_MAX;
 static int64_t timing_stat_max_us = INT64_MIN;
 static int64_t timing_stat_sum_us = 0;
 static int64_t timing_stat_count = 0;
+static int64_t timing_stat_late_count = 0; //frames where wait_time_left < 0 (we were already behind)
 
 inline void timing_stats_reset()
 {
@@ -49,10 +50,11 @@ inline void timing_stats_reset()
     timing_stat_max_us = INT64_MIN;
     timing_stat_sum_us = 0;
     timing_stat_count = 0;
+    timing_stat_late_count = 0;
 }
 
 //returns false if no frames were timed since the last call
-inline bool timing_stats_get(int64_t *min_us, int64_t *max_us, int64_t *avg_us, int64_t *count)
+inline bool timing_stats_get(int64_t *min_us, int64_t *max_us, int64_t *avg_us, int64_t *count, int64_t *late_count)
 {
     if (timing_stat_count == 0)
         return false;
@@ -60,6 +62,7 @@ inline bool timing_stats_get(int64_t *min_us, int64_t *max_us, int64_t *avg_us, 
     *max_us = timing_stat_max_us;
     *avg_us = timing_stat_sum_us / timing_stat_count;
     *count = timing_stat_count;
+    *late_count = timing_stat_late_count;
     timing_stats_reset();
     return true;
 }
@@ -88,6 +91,7 @@ inline void timing_wait_until_us(int64_t until_us)
         if (wait_time_left > timing_stat_max_us) timing_stat_max_us = wait_time_left;
         timing_stat_sum_us += wait_time_left;
         timing_stat_count++;
+        if (wait_time_left < 0) timing_stat_late_count++;
 
 
         if (wait_time_left>0 && wait_time_left<2000000)
