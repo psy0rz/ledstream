@@ -120,13 +120,13 @@ menu "LEDSTREAM CONFIG"
 
     config LEDSTREAM_FIRMWARE_UPGRADE_URL
         string "Firmware Upgrade URL"
-        default "http://192.168.13.135:8080/ledstream.bin"
+        default ""
         help
             URL of server which hosts the firmware image.
 
     config LEDSTREAM_LEDDER_URL
         string "Ledder URL"
-        default "http://192.168.13.154:3000/stream"
+        default "http://192.168.1.123:3000/stream"
         help
             URL of the ledder server that streams the led animations.
 
