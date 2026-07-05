@@ -15,17 +15,15 @@ const char* FILESERVER_TAG = "fileserver";
 typedef struct
 {
     FILE* file;
-    void* buffer; // DMA-capable aligned buffer
+    uint8_t* buffer; // DMA-capable aligned buffer
     size_t buffered; // Valid bytes in buffer
-    // size_t file_pos; // Current file position
     bool write_mode; // Read/write mode flag
-    size_t buffer_pos; // Read position for read mode
 } fileserver_ctx;
 
 // Allocate aligned buffer (critical for SPI DMA)
-static void* alloc_aligned_buffer()
+static uint8_t* alloc_aligned_buffer()
 {
-    return heap_caps_aligned_alloc(64, FLASH_BLOCK_SIZE, MALLOC_CAP_DMA);
+    return static_cast<uint8_t*>(heap_caps_aligned_alloc(64, FLASH_BLOCK_SIZE, MALLOC_CAP_DMA));
 }
 
 // Open stream in specified mode
@@ -69,20 +67,20 @@ inline void fileserver_write(fileserver_ctx* ctx, const void* data, size_t size)
     if (ctx == nullptr)
         return;
 
+    const uint8_t* src = static_cast<const uint8_t*>(data);
     while (size > 0)
     {
         const size_t free_space = FLASH_BLOCK_SIZE - ctx->buffered;
         const size_t copy_size = (size > free_space) ? free_space : size;
-        // ESP_LOGI(FILESERVER_TAG, "buffering %d bytes", copy_size);
 
-        memcpy(ctx->buffer + ctx->buffered, data, copy_size);
+        memcpy(ctx->buffer + ctx->buffered, src, copy_size);
         ctx->buffered += copy_size;
-        data += copy_size;
+        src += copy_size;
         size -= copy_size;
 
         if (ctx->buffered == FLASH_BLOCK_SIZE)
         {
-            ESP_LOGI(FILESERVER_TAG, "writing");
+            ESP_LOGD(FILESERVER_TAG, "writing block");
             fwrite(ctx->buffer, 1, FLASH_BLOCK_SIZE, ctx->file);
             ctx->buffered = 0;
         }
@@ -95,13 +93,11 @@ inline bool fileserver_read(fileserver_ctx* ctx)
     if (ctx == nullptr)
         return false;
 
-    // ESP_LOGI(FILESERVER_TAG, "reading");
-
     ctx->buffered = fread(ctx->buffer, 1, FLASH_BLOCK_SIZE, ctx->file);
-    // ESP_LOGI(FILESERVER_TAG, "done");
-    ctx->buffer_pos = 0;
 
-    return (ctx->buffered == FLASH_BLOCK_SIZE);
+    //a recording usually ends on a partial block: still return it, the caller
+    //gets false on the next call when fread returns 0
+    return (ctx->buffered > 0);
 }
 
 // Close stream and free resources

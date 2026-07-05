@@ -54,8 +54,7 @@ Backends: `leds_ws2812.cpp` (FastLED, persistent `CRGB leds[CHANNELS][LEDS_PER_C
 
 - **`ledstreamer_http.hpp`** — the normal path. Connects to `LEDDER_URL/<MAC>` and reads a never-ending HTTP response. The server's `Mode` response header selects: `0` live-stream, `1` record (bytes are both decoded and written to flash via `fileserver`), `2` replay-from-flash. Modes 0/1 call `qois_resetStream()` because ledder resets its encoder state per connection.
 - **`ledstreamer_flash.hpp`** — loops `/littlefs/stream.bin`; every replay restart calls `qois_resetStream()` (a recording starts at the beginning of a connection, so this is exact).
-- **`ledstreamer_udp.hpp`** — DEPRECATED and currently incompatible with the stream dialect (lossy transport + mid-stream resync vs. persistent decoder state). Don't revive without ledder resetting its encoder per frame. Not started from `app_main`.
-- `ota.hpp` — esp_https_ota against `FIRMWARE_UPGRADE_URL`; `timing.hpp`/`timesync.hpp` — frames carry a server-side display timestamp; the esp syncs a local offset to it and busy-waits each frame to the right moment.
+- `ota.hpp` — esp_https_ota against `FIRMWARE_UPGRADE_URL`; `timing.hpp` — frames carry a server-side display timestamp; the esp syncs a local offset to it and waits each frame to the right moment. (An old UDP streamer was removed in July 2026 — incompatible with the stream dialect: lossy transport + mid-stream resync vs. persistent decoder state. Don't revive from git history without ledder resetting its encoder per frame.)
 
 ### QOIS decoder (`main/qois.hpp`)
 

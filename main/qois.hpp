@@ -67,16 +67,9 @@ static int qois_bytes_index __attribute__((aligned(4)));
 static int qois_op __attribute__((aligned(4)));
 static bool qois_wait_for_op __attribute__((aligned(4)));
 
-//    int px_len;
 static bool qois_wait_for_header __attribute__((aligned(4)));
 
-//    CRGB *pixels;
 static int64_t qois_show_time_us __attribute__((aligned(4))) = 0;
-static int64_t qois_time_offset_us __attribute__((aligned(4))) = 0;
-
-// int64_t qois_local_time_offset = 0;
-// int64_t qois_local_show_time = 0;
-
 
 static uint16_t qois_frame_bytes_left __attribute__((aligned(4)));
 
@@ -84,7 +77,6 @@ static uint16_t qois_frame_bytes_left __attribute__((aligned(4)));
 //get ready for next frame
 inline void IRAM_ATTR qois_reset()
 {
-    //        ESP_LOGD(UDPBUFFER_TAG, "start frame");
 
     qois_px.rgba.r = 0;
     qois_px.rgba.g = 0;
@@ -116,54 +108,9 @@ inline void qois_resetStream()
 }
 
 
-#define QOIS_TIME_STEP_US 100
-#define QOIS_TIME_MAX_DIFF_US 500000
-
-//does timing and displaying of actual descoded buffer
+//does timing and displaying of actual decoded buffer
 inline void IRAM_ATTR qois_show()
 {
-    int64_t now = esp_timer_get_time(); //100
-    int64_t local_show_time = qois_time_offset_us +qois_show_time_us; //91+10=101
-
-    // int64_t diff = local_show_time - now;//101-100=1
-    //
-    //
-    // if (abs(diff) > QOIS_TIME_MAX_DIFF_US)
-    // {
-    //     //difference too big, step correction
-    //     ESP_LOGI(QOISTAG, "Resetting local time offset");
-    //     qois_time_offset_us = now-qois_show_time_us+16000; //start by lagging 1 frame (16ms)
-    //     local_show_time = now;
-    // }
-    // else
-    // {
-    //     //we never want to be too late, so keep increasing the offset until this is the case.
-    //     if (diff < 0)
-    //     {
-    //         ESP_LOGI(QOISTAG, "%lld mS late", -diff/1000);
-    //         qois_time_offset_us = qois_time_offset_us + QOIS_TIME_STEP_US;
-    //     }
-    // }
-
-    //use task delay:
-    // TickType_t xLastWakeTime;
-    // xLastWakeTime = xTaskGetTickCount();
-    //
-    // int32_t wait=(local_show_time-esp_timer_get_time())/1000/portTICK_PERIOD_MS;
-    // if (wait>0)
-    // {
-    //     // ESP_LOGI(QOISTAG, "%d tick", wait);
-    //     vTaskDelayUntil( &xLastWakeTime, wait );
-    // }
-
-    //busyloop delay
-    // ESP_LOGI(QOISTAG, "%lld ms", (local_show_time-esp_timer_get_time())/1000);
-    // while (esp_timer_get_time()<local_show_time)
-    // {
-    //
-    // }
-
-    //esp timer delay
     timing_wait_until_us(qois_show_time_us);
 
     leds_show();
@@ -223,7 +170,6 @@ inline IRAM_ATTR void qois_decodeBytes(const uint8_t buffer[], uint16_t buffer_l
             qois_show_time_us = (*(uint16_t*)&qois_bytes[4]) * 1000;
 
 
-            //            ESP_LOGD(UDPBUFFER_TAG, "got header: showtime=%u, frame_length=%u", show_time, frame_bytes_left);
             continue;
         }
 
@@ -253,7 +199,6 @@ inline IRAM_ATTR void qois_decodeBytes(const uint8_t buffer[], uint16_t buffer_l
 
         if (qois_op == QOI_OP_RGB)
         {
-            //            ESP_LOGD(UDPBUFFER_TAG, "RGB");
 
             qois_px.rgba.r = qois_bytes[0];
             qois_px.rgba.g = qois_bytes[1];
@@ -270,7 +215,6 @@ inline IRAM_ATTR void qois_decodeBytes(const uint8_t buffer[], uint16_t buffer_l
         }
         else if ((qois_op & QOI_MASK_2) == QOI_OP_INDEX)
         {
-            //            ESP_LOGD(UDPBUFFER_TAG, "index");
             qois_px = qois_index[qois_op];
 
             //INDEX must not update the color index (see decoder contract)
@@ -280,14 +224,12 @@ inline IRAM_ATTR void qois_decodeBytes(const uint8_t buffer[], uint16_t buffer_l
         }
         else if ((qois_op & QOI_MASK_2) == QOI_OP_DIFF)
         {
-            //            ESP_LOGD(UDPBUFFER_TAG, "diff");
             qois_px.rgba.r += ((qois_op >> 4) & 0x03) - 2;
             qois_px.rgba.g += ((qois_op >> 2) & 0x03) - 2;
             qois_px.rgba.b += (qois_op & 0x03) - 2;
         }
         else if ((qois_op & QOI_MASK_2) == QOI_OP_LUMA)
         {
-            //            ESP_LOGD(UDPBUFFER_TAG, "luma");
             int b2 = qois_bytes[0];
             int vg = (qois_op & 0x3f) - 32;
             qois_px.rgba.r += vg - 8 + ((b2 >> 4) & 0x0f);
@@ -314,7 +256,6 @@ inline IRAM_ATTR void qois_decodeBytes(const uint8_t buffer[], uint16_t buffer_l
 
         qois_px.rgba.a = 255;
         qois_index[QOI_COLOR_HASH(qois_px) % 64] = qois_px;
-        //        ESP_LOGD(UDPBUFFER_TAG, "write pixel %d", px_pos);
 
         leds_setNextPixel(qois_px.rgba.r, qois_px.rgba.g, qois_px.rgba.b);
         qois_wait_for_op = true;

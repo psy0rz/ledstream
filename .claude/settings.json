@@ -19,7 +19,17 @@
       "Bash(python3 -)",
       "Bash(grep -n \"fileno\\\\|uart\\\\|usb_serial\\\\|static .*=\\\\|dumbmode\\\\|allocated\" /Users/edwineefting/esp/esp-idf/components/console/linenoise/linenoise.c | head -40)",
       "Read(//Users/edwineefting/esp/esp-idf/components/console/linenoise/**)",
-      "Bash(grep -n \"ENTER\\\\|case 13\\\\|case 10\\\\|'\\\\\\\\\\\\\\\\r'\\\\|'\\\\\\\\\\\\\\\\n'\" /Users/edwineefting/esp/esp-idf/components/console/linenoise/linenoise.c | head -20)"
+      "Bash(grep -n \"ENTER\\\\|case 13\\\\|case 10\\\\|'\\\\\\\\\\\\\\\\r'\\\\|'\\\\\\\\\\\\\\\\n'\" /Users/edwineefting/esp/esp-idf/components/console/linenoise/linenoise.c | head -20)",
+      "Bash(git submodule *)",
+      "Bash(docker --version)",
+      "Bash(make -C /Users/edwineefting/ledstream/test/host test)",
+      "Bash(./dockerrun idf.py -D SDKCONFIG=sdkconfig.datux fullclean build)",
+      "Bash(echo \"exit: $?\")",
+      "Bash(sed -i '' '/ESP_LOGD\\(UDPBUFFER_TAG/d' qois.hpp)",
+      "Bash(sed -i '' '/^    \\\\/\\\\/        ESP_LOGD/d;' qois.hpp)",
+      "Bash(git rm *)",
+      "Bash(S=/private/tmp/claude-501/-Users-edwineefting-ledstream/42485ae8-9ccd-45e8-bdab-153a5c5a5029/scratchpad; tail -2 $S/tasks/../../tasks/btnd7tuka.output 2>/dev/null; grep -c \"warning\" $S/build-datux2.log; grep \"warning\" $S/build-datux2.log | head; tail -2 $S/build-datux2.log; git diff sdkconfig.datux | head)",
+      "Read(//private/tmp/claude-501/-Users-edwineefting-ledstream/42485ae8-9ccd-45e8-bdab-153a5c5a5029/tasks/**)"
     ]
   }
 }

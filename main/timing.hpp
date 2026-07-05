@@ -4,7 +4,10 @@
 
 #ifndef TIMING_HPP
 #define TIMING_HPP
-#include <timing.hpp>
+
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "esp_timer.h"
 
 static esp_timer_handle_t oneshot_timer;
 
@@ -56,18 +59,9 @@ inline void timing_wait_until_us(int64_t until_us)
 
         if (wait_time_left>0 && wait_time_left<2000000)
         {
-            // ESP_LOGI("timing", "timing wait until us %d", until_us);
             timing_source_task_handle = xTaskGetCurrentTaskHandle();
             ESP_ERROR_CHECK(esp_timer_start_once(oneshot_timer, wait_time_left));
             ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
-            // ESP_LOGI("timing", "done");
-        }
-        else
-        {
-            //lag 1 ms extra
-            // timing_last_until_us=timing_last_time_us+100000;
-            // timing_source_task_handle = NULL;
-            // timing_last_time_us=timing_last_time_us-1000;
         }
     }
 
@@ -80,13 +74,11 @@ inline void timing_wait_until_us(int64_t until_us)
 
 inline void timing_init()
 {
-    const esp_timer_create_args_t timer_args = {
-        .callback = &timer_callback,
-        .name = "oneshot_timer"
-    };
+    esp_timer_create_args_t timer_args = {};
+    timer_args.callback = &timer_callback;
+    timer_args.name = "oneshot_timer";
 
     ESP_ERROR_CHECK(esp_timer_create(&timer_args, &oneshot_timer));
-    // ESP_ERROR_CHECK(esp_timer_start_once(oneshot_timer, timer_interval)); // Start timer initially
 }
 
 

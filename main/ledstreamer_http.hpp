@@ -5,8 +5,6 @@
 #define LEDSTREA_HTTP_HPP
 
 #include <fileserver.hpp>
-// #include <ledstreamer_flash.hpp>
-
 #include <ledstreamer_flash.hpp>
 
 #include "qois.hpp"
@@ -34,13 +32,10 @@ inline void IRAM_ATTR stream()
     stream_live = false;
     http_connected=false;
 
-    esp_http_client_config_t config = {
-        .url = url,
-        .timeout_ms=60000,
-        .event_handler = [](esp_http_client_event_t* evt)
-
-
-
+    esp_http_client_config_t config = {};
+    config.url = url;
+    config.timeout_ms = 60000;
+    config.event_handler = [](esp_http_client_event_t* evt)
         {
             switch (evt->event_id)
             {
@@ -113,12 +108,9 @@ inline void IRAM_ATTR stream()
                 break;
             }
             return ESP_OK;
-        },
+        };
 
-    };
     esp_http_client_handle_t client = esp_http_client_init(&config);
-    http_connected=false;
-
 
     if (esp_http_client_perform(client) == ESP_OK)
         ESP_LOGI(LEDSTREAMER_HTTP_TAG, "Stream ended");
@@ -128,6 +120,7 @@ inline void IRAM_ATTR stream()
 
     esp_http_client_cleanup(client);
     fileserver_close(ledstreamer_http_file_ctx);
+    http_connected = false;
 
     //on disconnect, start replaying from flash
     ledstreamer_flash_start();
@@ -143,7 +136,8 @@ inline void IRAM_ATTR stream()
     {
         lastAttempt = esp_timer_get_time();
         stream();
-        if (abs(esp_timer_get_time() - lastAttempt) < 1000000)
+        //don't retry more than once per second
+        if (esp_timer_get_time() - lastAttempt < 1000000)
         {
             vTaskDelay(1000 / portTICK_PERIOD_MS);
         }

@@ -113,38 +113,4 @@ void leds_clear()
 }
 
 
-// notify user via led 0 of channel 0 (async, return immeadatly)
-//void async_notify(CRGB rgb, int on, int total) {
-//    static bool lastState = false;
-//
-//    if (duty_cycle(on, total) != lastState) {
-//        lastState = !lastState;
-//
-//        if (lastState)
-//            leds[0][0] = rgb;
-//        else
-//            leds[0][0] = CRGB::Black;
-//        FastLED.show();
-//    }
-//}
-
-//sets status led
-//void status_led(CRGB rgb)
-//{
-//    leds[0][0] = rgb;
-//    FastLED.show();
-//
-//}
-//
-//
-//// notify user via led 0 of channel 0 (sync, returns after one blink cycle)
-//void blink_led(CRGB rgb, int on, int total) {
-//    status_led(rgb);
-//    vTaskDelay(on / portTICK_PERIOD_MS);
-//    status_led(CRGB::Black);
-//    vTaskDelay((total - on) / portTICK_PERIOD_MS);
-//}
-//
-
-
 #endif
