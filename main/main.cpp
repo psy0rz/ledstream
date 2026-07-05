@@ -2,6 +2,9 @@
 #include "wifi.hpp"
 #include "ethernet.h"
 #include "ota.hpp"
+#include "settings.hpp"
+#include "console.hpp"
+#include "settings.hpp"
 
 // #include "leds.hpp"
 
@@ -101,11 +104,15 @@ extern "C" __attribute__((unused)) void app_main(void)
     }
     ESP_ERROR_CHECK(ret);
 
+    //settings (NVS with Kconfig defaults) + serial/tcp configuration console
+    settings_init();
+
      // Initialize TCP/IP network interface (should be called only once in application)
      ESP_ERROR_CHECK(esp_netif_init());
      // Create default event loop that running in background
      ESP_ERROR_CHECK(esp_event_loop_create_default());
 
+     console_init();
 
      wifi_init_sta();
      fileserver_init();
@@ -119,8 +126,12 @@ extern "C" __attribute__((unused)) void app_main(void)
      ethernet_init();   
 #endif
 
-    OTAUpdater ota_updater = OTAUpdater();
-    ota_updater.init();
+    if (strlen(settings_get("ota_url"))>0)
+    {
+        //static: the ota task keeps a pointer to this instance
+        static OTAUpdater ota_updater = OTAUpdater();
+        ota_updater.init();
+    }
 
 
     //main task

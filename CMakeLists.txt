@@ -6,6 +6,7 @@ include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 
 
 list(APPEND COMPONENTS "esp_lcd" "main" "esp_http_client" "esp_https_ota"
+        "console"
         "ESP32-HUB75-MatrixPanel-DMA"
 )
 

@@ -12,6 +12,16 @@ menu "LEDSTREAM CONFIG"
         string "Wifi Password"
         default ""
 
+    config LEDSTREAM_CONSOLE_PASS
+        string "Remote console password"
+        default ""
+        help
+            Password for the remote (tcp port 23) configuration console.
+            While empty the remote console refuses connections; set a
+            password at runtime via the serial console ('set console_pass ...')
+            or bake a default in here. Settings like wifi/urls can be
+            overridden at runtime via this console (stored in NVS).
+
     config LEDSTREAM_STATUS_LED_PIN
         int "Wifi status LED pin"
         range -1 LEDSTREAM_GPIO_RANGE_MAX

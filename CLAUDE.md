@@ -32,7 +32,11 @@ There is no CI. The only automated test is the host-side decoder test (see below
 
 Almost everything is header-only `.hpp` in `main/` (inline functions, file-scope `static` state, `IRAM_ATTR` on hot paths — a deliberate speed optimization, e.g. `qois.hpp` says "no longer a class, so we can optimize for speed").
 
-`app_main` (`main/main.cpp`): NVS → netif/event loop → `fileserver_init` → `leds_init` → wifi (+ optional ethernet) → `timing_init` → starts the http-streamer and flash-replay tasks. (`led_test()`/`timing_test()` are commented-in-place hardware test loops.)
+`app_main` (`main/main.cpp`): NVS → `settings_init` → netif/event loop → `console_init` → wifi → `fileserver_init` → `leds_init` (+ optional ethernet) → `timing_init` → starts the http-streamer and flash-replay tasks. (`led_test()`/`timing_test()` are commented-in-place hardware test loops.)
+
+### Runtime settings + console (`main/settings.hpp`, `main/console.hpp`)
+
+Wifi credentials, `ledder_url`, `ota_url` and `console_pass` are runtime settings: NVS value if set, else the Kconfig compile-time default (so `sdkconfig.<name>` files are per-board factory defaults). Add a setting = one line in `settings_defs[]`; changes apply after reboot. One `esp_console` command table (each setting is its own command — `wifi_ssid <value>` sets, bare `wifi_ssid` shows — plus `list`/`unset`/`defaults`/`info`/`reboot`; add commands via `console_register()`) is exposed on the serial REPL (uart or usb-serial-jtag, per sdkconfig) and on tcp port 23 (`nc`/`telnet` compatible), the latter gated by the `console_pass` setting — while it is empty (the default), remote access is refused until a password is set via serial or baked in via `CONFIG_LEDSTREAM_CONSOLE_PASS`. Remote output works by pointing the tcp task's per-task stdio at the socket, so command handlers must use `printf`, not `ESP_LOG`.
 
 ### Universal led interface (`main/leds.hpp`)
 
