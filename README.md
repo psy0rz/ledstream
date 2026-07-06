@@ -7,13 +7,15 @@
 
 # Build instructions
 
-**NOTE: make sure to use git clone --recursive**
-
+Clone this project:
+```
+git clone --recursive https://github.com/psy0rz/ledstream
+```
 To all the commands below, you can add `-D SDKCONFIG=somename` so you can have multiple configs.
 
 In the menuconfig below, go to LEDSTREAM CONFIG and configure your WIFI settings and ledder url. Should be http://ledderserver:3000/stream
 
-## method 1: Build via docker
+## method 1: Build via docker (only on linux)
 
 NOTE: if you're using MacOS you cant flash the image from docker, its easier to use method 2 below.
 
@@ -39,7 +41,7 @@ I usually use this for my HUB75 displays, so there is a script for it.
 ```
 
 
-## method 2: Build with esp-idf toolkit
+## method 2: Build with esp-idf toolkit (linux/MacOS)
 
 **Important: You need version esp-idf toolkit version 4.4. Version 5 will not work!**
 
@@ -77,7 +79,7 @@ idf.py -D SDKCONFIG=somename flash monitor
 
 
 
-## method 3: In Jetbrains Clion
+## method 3: In Jetbrains Clion (for developers)
 
 
 Install the esp-idf toolkit like in the previous example.
