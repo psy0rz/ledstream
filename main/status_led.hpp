@@ -15,7 +15,7 @@ static void status_led_task(void *pvParameter) {
     while(1) {
         //all ok heartbeat
         int on_time=100;
-        int off_time=900;
+        int off_time=1900;
 
         if (wifi_disconnected)
         {

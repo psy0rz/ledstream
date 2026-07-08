@@ -24,18 +24,23 @@ inline void timer_callback(void* arg)
 
 //Use esp timer to wait until specified time in ms.
 //Note that this time is the remote time and comes from ledstreamer, so we try to sync up with it.
+//
+//The client adds no playout delay of its own: the server renders and sends the
+//first ~500ms of frames as fast as it can, so the jitter cushion is the backlog
+//sitting in the network pipe. The first frame is shown immediately and anchors
+//the schedule; the burst frames then arrive early and each waits for its slot.
+//
+//The server never drops frames -- it keeps pushing until TCP back pressure stops
+//it -- and frame timestamps are synthetic (always frame-interval apart). So when
+//we fall behind (network too slow), the right move is to keep the original
+//anchor and render as fast as frames arrive (effective wait 0) until we've
+//caught back up to the schedule; we never re-anchor to "forgive" the delay.
 
-//one-shot playout delay: how far behind "instant" we start the very first frame of a
-//stream. Since the wait below is purely differential (each frame is scheduled relative
-//to the previous one, not to an absolute clock), this initial offset just shifts the
-//whole stream's display schedule later by a fixed amount -- it doesn't accumulate -- and
-//gives that much slack to absorb network jitter/stalls before a frame's wait goes
-//negative (late).
-#define TIMING_PLAYOUT_DELAY_US (150*1000)
-
-int64_t timing_last_until_us = 0;
-int64_t timing_last_time_us=0;
-int64_t lag=0;
+//fixed anchor pair, set once per stream (see timing_should_reset below): all
+//per-frame targets are computed relative to this pair, so per-frame scheduling
+//jitter can never compound into long-term drift.
+int64_t timing_anchor_local_us = 0;
+int64_t timing_anchor_until_us = 0;
 
 bool timing_should_reset=true;
 
@@ -82,44 +87,39 @@ inline void timing_wait_until_us(int64_t until_us)
     {
         timing_should_reset=false;
 
-        //build up the initial playout cushion before showing the first frame
-        timing_source_task_handle = xTaskGetCurrentTaskHandle();
-        ESP_ERROR_CHECK(esp_timer_start_once(oneshot_timer, TIMING_PLAYOUT_DELAY_US));
-        ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+        //show the first frame immediately and anchor the stream's schedule here:
+        //from now on every frame's target is computed relative to this fixed
+        //(local, remote) pair, never re-derived from the previous frame's actual
+        //(jittered) wake time. The server's initial fast-rendered burst arrives
+        //"early" against this anchor and forms the jitter cushion in the pipe.
+        timing_anchor_local_us = esp_timer_get_time();
+        timing_anchor_until_us = until_us;
     }
     else
     {
-        //how long we should wait
-        int64_t wait_time_us = until_us - timing_last_until_us;
-
-
-        //how much time is already gone (due to processing)
-        int64_t time_used=esp_timer_get_time()-timing_last_time_us;
+        //absolute target for this frame, derived from the fixed stream anchor
+        int64_t target_local_us = timing_anchor_local_us + (until_us - timing_anchor_until_us);
 
         //how long should we still wait?
-        int64_t wait_time_left=wait_time_us-time_used;
+        int64_t wait_time_left = target_local_us - esp_timer_get_time();
 
-        // ESP_LOGI("timing", "waittime %lld uS, used %lld uS, left %lld uS", wait_time_us,time_used, wait_time_left);
+        // ESP_LOGI("timing", "left %lld uS", wait_time_left);
 
+        //stats
         if (wait_time_left < timing_stat_min_us) timing_stat_min_us = wait_time_left;
         if (wait_time_left > timing_stat_max_us) timing_stat_max_us = wait_time_left;
         timing_stat_sum_us += wait_time_left;
         timing_stat_count++;
         if (wait_time_left < 0) timing_stat_late_count++;
 
-
-        if (wait_time_left>0 && wait_time_left<2000000)
+        if (wait_time_left>0)
         {
+            //wait for wait_time_left uS
             timing_source_task_handle = xTaskGetCurrentTaskHandle();
             ESP_ERROR_CHECK(esp_timer_start_once(oneshot_timer, wait_time_left));
             ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
         }
     }
-
-
-    timing_last_until_us = until_us;
-    timing_last_time_us=esp_timer_get_time();
-
 }
 
 
