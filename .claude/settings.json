@@ -30,7 +30,8 @@
       "Bash(git rm *)",
       "Bash(S=/private/tmp/claude-501/-Users-edwineefting-ledstream/42485ae8-9ccd-45e8-bdab-153a5c5a5029/scratchpad; tail -2 $S/tasks/../../tasks/btnd7tuka.output 2>/dev/null; grep -c \"warning\" $S/build-datux2.log; grep \"warning\" $S/build-datux2.log | head; tail -2 $S/build-datux2.log; git diff sdkconfig.datux | head)",
       "Read(//private/tmp/claude-501/-Users-edwineefting-ledstream/42485ae8-9ccd-45e8-bdab-153a5c5a5029/tasks/**)",
-      "Bash(timeout 300 ./dockerrun ./esps3idf -D SDKCONFIG=sdkconfig.datux build)"
+      "Bash(timeout 300 ./dockerrun ./esps3idf -D SDKCONFIG=sdkconfig.datux build)",
+      "Bash(make -C test/host test)"
     ]
   }
 }
