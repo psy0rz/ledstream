@@ -23,11 +23,7 @@ inline void ledstreamer_flash_start()
     if (!ledstreamer_flash_running)
     {
         ESP_LOGI(LEDSTREAMER_FLASH_TAG, "starting replay");
-        while (!ledstreamer_flash_running)
-        {
-            ledstreamer_flash_run = true;
-            vTaskDelay(100 / portTICK_PERIOD_MS);
-        }
+        ledstreamer_flash_run = true;
     }
 }
 
@@ -67,8 +63,7 @@ inline void ledstreamer_flash_task(void* arg)
             //no recording on flash: same as stopped mode, do nothing with a blank screen
             leds_clear();
             leds_show();
-            for (int i = 0; i < 100 && ledstreamer_flash_run; i++)
-                vTaskDelay(100 / portTICK_PERIOD_MS);
+            ledstreamer_flash_run=false;
         }
         else
         {
