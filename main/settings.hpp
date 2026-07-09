@@ -31,6 +31,7 @@ static const settings_def_t settings_defs[] = {
         {"ledder_url",   CONFIG_LEDSTREAM_LEDDER_URL,           false, "ledder stream url"},
         {"ota_url",      CONFIG_LEDSTREAM_FIRMWARE_UPGRADE_URL, false, "firmware upgrade url"},
         {"console_pass", CONFIG_LEDSTREAM_CONSOLE_PASS,         true,  "remote console password (empty = remote console disabled)"},
+        {"buffer",       CONFIG_LEDSTREAM_BUFFER_MS,            false, "playout buffer in ms (applied on next stream start)"},
 };
 #define SETTINGS_COUNT (sizeof(settings_defs) / sizeof(settings_defs[0]))
 

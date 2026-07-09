@@ -22,6 +22,14 @@ menu "LEDSTREAM CONFIG"
             or bake a default in here. Settings like wifi/urls can be
             overridden at runtime via this console (stored in NVS).
 
+    config LEDSTREAM_BUFFER_MS
+        string "Playout buffer (ms)"
+        default "300"
+        help
+            Delay the stream's playout anchor by this many milliseconds so
+            incoming frames can buffer up before display starts. Runtime
+            setting 'buffer'; applied on the next stream (re)start.
+
     config LEDSTREAM_STATUS_LED_PIN
         int "Wifi status LED pin"
         range -1 LEDSTREAM_GPIO_RANGE_MAX
