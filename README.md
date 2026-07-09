@@ -5,6 +5,52 @@
 * Only runs on vanilla ESP32
 * Use with <https://github.com/psy0rz/ledder>. (wiki: https://github.com/psy0rz/ledder/wiki/Ledstream-via-ESP32 )
 
+## Commandline interface
+
+Ledstream now has a commandline interface for basic settings and monitoring.
+
+You can reach it via serial or telnet if you've set a console_pass:
+
+```
+ledstream> help
+help
+  Print the list of registered commands
+
+wifi_ssid  [value]
+  wifi SSID (empty = wifi disabled)
+
+wifi_pass  [value]
+  wifi password
+
+ledder_url  [value]
+  ledder stream url
+
+ota_url  [value]
+  firmware upgrade url
+
+console_pass  [value]
+  remote console password (empty = remote console disabled)
+
+list
+  list all settings
+
+unset  <key>
+  revert a setting to its compile-time default
+
+defaults
+  revert all settings to compile-time defaults
+
+info
+  show firmware/network/system info
+
+reboot
+  restart the device
+
+stats
+  print wifi + timing_wait_until stats every second (until reboot)
+```
+
+
 # Build instructions
 
 Clone this project:
