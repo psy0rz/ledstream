@@ -30,15 +30,15 @@ inline void ledstreamer_flash_start()
 // stop looping from flash
 inline void ledstreamer_flash_stop()
 {
+    //always clear the run flag: while stopped the task polls it only once a
+    //second, so a recent ledstreamer_flash_start() may not have set 'running'
+    //yet -- leaving 'run' set would start a replay concurrently with the live
+    //stream (both racing on the shared frame timer)
+    ledstreamer_flash_run = false;
     if (ledstreamer_flash_running)
-    {
         ESP_LOGI(LEDSTREAMER_FLASH_TAG, "stopping replay");
-        while (ledstreamer_flash_running)
-        {
-            ledstreamer_flash_run = false;
-            vTaskDelay(100 / portTICK_PERIOD_MS);
-        }
-    }
+    while (ledstreamer_flash_running)
+        vTaskDelay(10 / portTICK_PERIOD_MS);
 }
 
 // Task function
@@ -69,7 +69,8 @@ inline void ledstreamer_flash_task(void* arg)
         {
             ESP_LOGI(LEDSTREAMER_FLASH_TAG, "replaying from flash");
             //running
-            timing_reset();
+            //no playout buffer: the data comes from local flash, not the network
+            timing_reset(false);
             //recorded streams start at the beginning of a connection, so every
             //replay loop must restart the decoder from the same fresh state
             qois_resetStream();

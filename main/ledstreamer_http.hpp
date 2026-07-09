@@ -142,7 +142,6 @@ inline void stream()
         if (stream_mode == 0)
         {
             ESP_LOGI(LEDSTREAMER_HTTP_TAG, "Live streaming");
-            vTaskDelay(1000 / portTICK_PERIOD_MS);
             ledstreamer_flash_stop();
             stream_drain();
             //the ledder encoder starts from a fresh state per connection
