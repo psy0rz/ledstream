@@ -18,6 +18,7 @@ typedef struct
     uint8_t* buffer; // DMA-capable aligned buffer
     size_t buffered; // Valid bytes in buffer
     bool write_mode; // Read/write mode flag
+    bool read_error; // fread failed (corrupt filesystem), not just EOF
 } fileserver_ctx;
 
 // Allocate aligned buffer (critical for SPI DMA)
@@ -98,6 +99,13 @@ inline bool fileserver_read(fileserver_ctx* ctx)
 
     ctx->buffered = fread(ctx->buffer, 1, FLASH_BLOCK_SIZE, ctx->file);
     // ESP_LOGE(FILESERVER_TAG, "read lag uS: %lld", (long long)(esp_timer_get_time()-s));
+
+    if (ctx->buffered < FLASH_BLOCK_SIZE && ferror(ctx->file))
+    {
+        ESP_LOGE(FILESERVER_TAG, "read error on %s, filesystem corrupt?", STREAM_FILE);
+        ctx->read_error = true;
+        return false;
+    }
 
     //a recording usually ends on a partial block: still return it, the caller
     //gets false on the next call when fread returns 0
