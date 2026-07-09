@@ -27,8 +27,8 @@
 const char* LEDSTREAMER_HTTP_TAG = "ledstreamer_http";
 
 //jitter cushion between socket and decoder (internal ram)
-#define LEDSTREAMER_HTTP_BUFFER_SIZE (32 * 1024)
-#define LEDSTREAMER_HTTP_CHUNK_SIZE 2048
+#define LEDSTREAMER_HTTP_BUFFER_SIZE (168 * 1024)
+#define LEDSTREAMER_HTTP_CHUNK_SIZE 4096
 
 char url[200];
 
@@ -49,6 +49,12 @@ static StreamBufferHandle_t stream_buffer = nullptr;
 //on xtensa). Equal means the consumer is idle and the buffer is empty.
 static volatile uint32_t stream_bytes_produced = 0;
 static volatile uint32_t stream_bytes_consumed = 0;
+
+//bytes currently waiting in the jitter cushion (for the console 'stats' command)
+inline size_t ledstreamer_http_buffer_used()
+{
+    return stream_buffer ? xStreamBufferBytesAvailable(stream_buffer) : 0;
+}
 
 //wait until the consumer has processed everything the reader put in the buffer
 inline void stream_drain()
