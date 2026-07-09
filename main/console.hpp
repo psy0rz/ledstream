@@ -240,6 +240,9 @@ static void console_broadcast_line(const char *msg) {
 
 static TaskHandle_t stats_task_handle = NULL;
 
+//defined in ledstreamer_http.hpp (included after us in main.cpp)
+inline size_t ledstreamer_http_buffer_used();
+
 [[noreturn]] static void stats_task(void *arg) {
     while (true) {
         vTaskDelay(pdMS_TO_TICKS(1000));
@@ -247,15 +250,17 @@ static TaskHandle_t stats_task_handle = NULL;
         wifi_ap_record_t ap;
         int rssi = (esp_wifi_sta_get_ap_info(&ap) == ESP_OK) ? ap.rssi : 0;
 
+        float buf_kb = ledstreamer_http_buffer_used() / 1024.0f;
+
         int64_t min_us, max_us, avg_us, count, late_count;
         char line[160];
         if (timing_stats_get(&min_us, &max_us, &avg_us, &count, &late_count))
             snprintf(line, sizeof(line),
-                     "stats: rssi=%d  wait left min/avg/max = %lld/%lld/%lld us (n=%lld, late=%lld)\n",
-                     rssi, (long long) min_us, (long long) avg_us, (long long) max_us, (long long) count,
+                     "stats: rssi=%d  buf=%.1fKB  wait left min/avg/max = %lld/%lld/%lld us (n=%lld, late=%lld)\n",
+                     rssi, buf_kb, (long long) min_us, (long long) avg_us, (long long) max_us, (long long) count,
                      (long long) late_count);
         else
-            snprintf(line, sizeof(line), "stats: rssi=%d  no frames\n", rssi);
+            snprintf(line, sizeof(line), "stats: rssi=%d  buf=%.1fKB  no frames\n", rssi, buf_kb);
 
         console_broadcast_line(line);
     }
