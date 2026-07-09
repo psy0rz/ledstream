@@ -16,43 +16,6 @@ bool ledstreamer_flash_run = false;
 bool ledstreamer_flash_running = false;
 
 
-// Task function
-inline void ledstreamer_flash_task(void* arg)
-{
-    fileserver_ctx* ctx = nullptr;
-
-    while (true)
-    {
-        //stopped
-        ledstreamer_flash_running = false;
-        while (!ledstreamer_flash_run)
-        {
-            vTaskDelay(1000 / portTICK_PERIOD_MS);
-        }
-        ledstreamer_flash_running = true;
-
-        // ESP_LOGI(LEDSTREAMER_FLASH_TAG, "running from flash");
-        ctx = fileserver_open(false);
-        if (ctx == nullptr)
-        {
-            vTaskDelay(10000 / portTICK_PERIOD_MS);
-        }
-        else
-        {
-            ESP_LOGI(LEDSTREAMER_FLASH_TAG, "replaying from flash");
-            //running
-            timing_reset();
-            //recorded streams start at the beginning of a connection, so every
-            //replay loop must restart the decoder from the same fresh state
-            qois_resetStream();
-            while (ledstreamer_flash_run && fileserver_read(ctx))
-            {
-                qois_decodeBytes(static_cast<const uint8_t*>(ctx->buffer), ctx->buffered, 0);
-            }
-            fileserver_close(ctx);
-        }
-    }
-}
 
 //start looping from flash
 inline void ledstreamer_flash_start()
@@ -81,6 +44,57 @@ inline void ledstreamer_flash_stop()
         }
     }
 }
+
+// Task function
+inline void ledstreamer_flash_task(void* arg)
+{
+    fileserver_ctx* ctx = nullptr;
+
+    while (true)
+    {
+        //stopped
+        ledstreamer_flash_running = false;
+        while (!ledstreamer_flash_run)
+        {
+            vTaskDelay(1000 / portTICK_PERIOD_MS);
+        }
+        ledstreamer_flash_running = true;
+
+        // ESP_LOGI(LEDSTREAMER_FLASH_TAG, "running from flash");
+        ctx = fileserver_open(false);
+        if (ctx == nullptr)
+        {
+            //no recording on flash: same as stopped mode, do nothing with a blank screen
+            leds_clear();
+            leds_show();
+            for (int i = 0; i < 100 && ledstreamer_flash_run; i++)
+                vTaskDelay(100 / portTICK_PERIOD_MS);
+        }
+        else
+        {
+            ESP_LOGI(LEDSTREAMER_FLASH_TAG, "replaying from flash");
+            //running
+            timing_reset();
+            //recorded streams start at the beginning of a connection, so every
+            //replay loop must restart the decoder from the same fresh state
+            qois_resetStream();
+            while (ledstreamer_flash_run && fileserver_read(ctx))
+            {
+                qois_decodeBytes(static_cast<const uint8_t*>(ctx->buffer), ctx->buffered, 0);
+            }
+            const bool read_error = ctx->read_error;
+            fileserver_close(ctx);
+            if (read_error)
+            {
+                //unreadable recording: same as stopped mode, do nothing with a blank screen
+                leds_clear();
+                leds_show();
+                ledstreamer_flash_run=false;
+            }
+        }
+    }
+}
+
 
 inline void ledstreamer_flash_init()
 {

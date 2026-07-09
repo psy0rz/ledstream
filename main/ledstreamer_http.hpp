@@ -159,7 +159,6 @@ inline void stream()
         //play
         else if (stream_mode == 2)
         {
-            ESP_LOGI(LEDSTREAMER_HTTP_TAG, "Replaying");
             ledstreamer_flash_start();
         }
         else
