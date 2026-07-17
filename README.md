@@ -159,7 +159,7 @@ A nice table for pinouts:
 
 ![](https://github.com/psy0rz/ledstream/blob/main/doc/hub75%20pins.png)
 
-Will add more info here later.
+More info at: https://github.com/mrcodetastic/ESP32-HUB75-MatrixPanel-DMA
 
 ## Hardware tips
 
