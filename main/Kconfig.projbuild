@@ -241,6 +241,33 @@ menu "LEDSTREAM CONFIG"
         default -1
         depends on LEDSTREAM_MODE_WS2812
 
+    choice
+            prompt "Color order"
+            default LEDSTREAM_COLOR_ORDER_GRB
+            depends on LEDSTREAM_MODE_WS2812
+            help
+                Physical wire color order of the WS2812/WS2811 strip.
+
+        config LEDSTREAM_COLOR_ORDER_RGB
+            bool "RGB"
+
+        config LEDSTREAM_COLOR_ORDER_RBG
+            bool "RBG"
+
+        config LEDSTREAM_COLOR_ORDER_GRB
+            bool "GRB"
+
+        config LEDSTREAM_COLOR_ORDER_GBR
+            bool "GBR"
+
+        config LEDSTREAM_COLOR_ORDER_BRG
+            bool "BRG"
+
+        config LEDSTREAM_COLOR_ORDER_BGR
+            bool "BGR"
+
+    endchoice
+
     ########################################## HUB75 stuff
 
     config LEDSTREAM_WIDTH

@@ -27,7 +27,7 @@
 const char* LEDSTREAMER_HTTP_TAG = "ledstreamer_http";
 
 //jitter cushion between socket and decoder (internal ram)
-#define LEDSTREAMER_HTTP_BUFFER_SIZE (168 * 1024)
+#define LEDSTREAMER_HTTP_BUFFER_SIZE (64 * 1024)
 #define LEDSTREAMER_HTTP_CHUNK_SIZE 4096
 
 char url[200];
