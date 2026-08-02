@@ -133,8 +133,7 @@ The pinout should be ok as well.
 
 More info here: https://github.com/mrcodetastic/ESP32-HUB75-MatrixPanel-DMA/issues/433
 
-![](https://user-images.githubusercontent.com/11134981/230600938-c8f494e9-6769-4325-ba41-d43bf16a6e33.jpg)
-
+<img src="https://github.com/mrfaptastic/ESP32-HUB75-MatrixPanel-DMA/assets/81171228/43d7ff36-2446-478e-986e-dfa8e44e5c6c" width="500">
 
 
 
