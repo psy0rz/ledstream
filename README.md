@@ -129,9 +129,12 @@ More info at: https://github.com/mrcodetastic/ESP32-HUB75-MatrixPanel-DMA
 
 This board is supported out of the box. Just use ./esps3idf-hdwf2 to menuconfig and flash via the weird USB cable. It needs USB-C to USB-A via a usb hub it seems.
 
-![](https://user-images.githubusercontent.com/11134981/230600938-c8f494e9-6769-4325-ba41-d43bf16a6e33.jpg)
+The pinout should be ok as well. 
 
 More info here: https://github.com/mrcodetastic/ESP32-HUB75-MatrixPanel-DMA/issues/433
+
+![](https://user-images.githubusercontent.com/11134981/230600938-c8f494e9-6769-4325-ba41-d43bf16a6e33.jpg)
+
 
 
 
