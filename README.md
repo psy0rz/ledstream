@@ -62,40 +62,13 @@ To all the commands below, you can add `-D SDKCONFIG=somename` so you can have m
 
 In the menuconfig below, go to LEDSTREAM CONFIG and configure your WIFI settings and ledder url. Should be http://ledderserver:3000/stream
 
-## method 1: Build via docker (only on linux)
-
-NOTE: if you're using MacOS you cant flash the image from docker, its easier to use method 2 below.
-
-This is usually the easiest way, if you already have docker.
-
-### Configure/build/flash:
-```
-./dockerrun idf.py -D SDKCONFIG=somename menuconfig
-./dockerrun idf.py -D SDKCONFIG=somename build
-./dockerrun idf.py -D SDKCONFIG=somename partition-table-flash
-./dockerrun idf.py -D SDKCONFIG=somename flash monitor
-```
-
-### Esp32s3
-
-I usually use this for my HUB75 displays, so there is a script for it.
-
-```
-./dockerrun ./esps3idf -D SDKCONFIG=somename menuconfig
-./dockerrun ./esps3idf -D SDKCONFIG=somename build
-./dockerrun ./esps3idf -D SDKCONFIG=somename partition-table-flash
-./dockerrun ./esps3idf -D SDKCONFIG=somename flash monitor
-```
-
-
-## method 2: Build with esp-idf toolkit (linux/MacOS)
+## Build with esp-idf toolkit (linux/MacOS)
 
 **Important: You need version esp-idf toolkit version 4.4. Version 5 will not work!**
 
-This example uses Linux and a regular ESP32, full instructions are here: https://docs.espressif.com/projects/esp-idf/en/latest/esp32/get-started/linux-macos-setup.html#get-started-configure
+This example uses Linux/MacOS and a regular ESP32, full instructions are here: https://docs.espressif.com/projects/esp-idf/en/latest/esp32/get-started/linux-macos-setup.html#get-started-configure
   
-Quick and dirty copypasta:
-
+Quick and dirty copypasta to get the esp-idf build toolkit:
 ```
 mkdir ~/esp
 cd ~/esp
@@ -123,19 +96,10 @@ idf.py -D SDKCONFIG=somename partition-table-flash
 idf.py -D SDKCONFIG=somename flash monitor
 ```
 
+Use ./esps3idf instead of idf.py if you have a esp32-s3
 
+Use ./esps3idf-hdwf2 if you have a Huidu board, see below.
 
-
-## method 3: In Jetbrains Clion (for developers)
-
-
-Install the esp-idf toolkit like in the previous example.
-
-In clion you can go to Build,Exectution,Deployment -> Toolchains and add a toolchain named esp.
-
-Choose to let it load the environment from the file ~/esp/esp-idf/export.sh
-
-Now clion understands and autocompletes all the ESP-idf stuff! 
 
 # Connect hardware
 
@@ -190,3 +154,16 @@ If you use that many leds keep this in mind:
 
 Follow the wiki at the ledder project for this: 
 https://github.com/psy0rz/ledder/wiki/Ledstream-via-ESP32
+
+
+
+# Using Jetbrain Clion (for developers)
+
+Install the esp-idf toolkit like in the previous example.
+
+In clion you can go to Build,Exectution,Deployment -> Toolchains and add a toolchain named esp.
+
+Choose to let it load the environment from the file ~/esp/esp-idf/export.sh
+
+Now clion understands and autocompletes all the ESP-idf stuff! 
+
