@@ -2,7 +2,7 @@
 
 * Control up to 8 channels x 512 leds (WS2812) @ ~50fps (higher framerate if you use less leds per chan)
 * Control up to 64 x 64 pixel HUB75 display panels @60 fps.
-* Steams realtimec animations from ledder via http and QOI compression.
+* Steams realtime animations from ledder via http and QOI compression.
 * Only runs on vanilla ESP32 and ESP32-S3 
 * Use with <https://github.com/psy0rz/ledder>. (wiki: https://github.com/psy0rz/ledder/wiki/Ledstream-via-ESP32 )
 * Telnet and console interface for configuration.
