@@ -97,6 +97,8 @@ idf.py -D SDKCONFIG=somename partition-table-flash
 idf.py -D SDKCONFIG=somename flash monitor
 ```
 
+NOTE: only hub75 is currently supported on esp32-s3. if you need ws2812 support, use a regular esp32 for now.
+
 Use ./esps3idf instead of idf.py if you have a esp32-s3
 
 Use ./esps3idf-hdwf2 if you have a Huidu board, see below.
@@ -127,6 +129,8 @@ A nice table for pinouts:
 More info at: https://github.com/mrcodetastic/ESP32-HUB75-MatrixPanel-DMA
 
 ## HUB75 board Huidu WD-WF2
+
+NOTE: only hub75 is currently supported on esp32-s3
 
 This board is supported out of the box. Just use ./esps3idf-hdwf2 to menuconfig and flash via the weird USB cable. It needs USB-C to USB-A via a usb hub it seems.
 
