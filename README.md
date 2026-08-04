@@ -1,56 +1,10 @@
 # Stream led animations to an ESP. 
 
-* Control up to 8 channels x 512 leds (WS2812) @ ~50fps (higher framerate if you use less leds per chan)
-* Control up to 64 x 64 pixel HUB75 display panels @60 fps.
 * Steams realtime animations from ledder via http and QOI compression.
-* Only runs on vanilla ESP32 and ESP32-S3 
+* Control up to 8 channels x 512 leds (WS2812) @ ~50fps. (Only on regular esp32, not on s3 yet)
+* Control up to 64 x 64 pixel HUB75 display panels @60 fps. (esp32-s3 recommended)
 * Use with <https://github.com/psy0rz/ledder>. (wiki: https://github.com/psy0rz/ledder/wiki/Ledstream-via-ESP32 )
 * Telnet and console interface for configuration.
-
-## Commandline interface
-
-Ledstream now has a commandline interface for basic settings and monitoring.
-
-You can reach it via serial or telnet if you've set a console_pass:
-
-```
-ledstream> help
-help
-  Print the list of registered commands
-
-wifi_ssid  [value]
-  wifi SSID (empty = wifi disabled)
-
-wifi_pass  [value]
-  wifi password
-
-ledder_url  [value]
-  ledder stream url
-
-ota_url  [value]
-  firmware upgrade url
-
-console_pass  [value]
-  remote console password (empty = remote console disabled)
-
-list
-  list all settings
-
-unset  <key>
-  revert a setting to its compile-time default
-
-defaults
-  revert all settings to compile-time defaults
-
-info
-  show firmware/network/system info
-
-reboot
-  restart the device
-
-stats
-  print wifi + timing_wait_until stats every second (until reboot)
-```
 
 
 # Build instructions
@@ -161,6 +115,53 @@ If you use that many leds keep this in mind:
 
 Follow the wiki at the ledder project for this: 
 https://github.com/psy0rz/ledder/wiki/Ledstream-via-ESP32
+
+## Commandline interface
+
+Ledstream now has a commandline interface for basic settings and monitoring.
+
+You can reach it via serial or telnet if you've set a console_pass:
+
+```
+ledstream> help
+help
+  Print the list of registered commands
+
+wifi_ssid  [value]
+  wifi SSID (empty = wifi disabled)
+
+wifi_pass  [value]
+  wifi password
+
+ledder_url  [value]
+  ledder stream url
+
+ota_url  [value]
+  firmware upgrade url
+
+console_pass  [value]
+  remote console password (empty = remote console disabled)
+
+list
+  list all settings
+
+unset  <key>
+  revert a setting to its compile-time default
+
+defaults
+  revert all settings to compile-time defaults
+
+info
+  show firmware/network/system info
+
+reboot
+  restart the device
+
+stats
+  print wifi + timing_wait_until stats every second (until reboot)
+```
+
+
 
 
 
