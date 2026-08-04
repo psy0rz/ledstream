@@ -17,6 +17,8 @@ To all the commands below, you can add `-D SDKCONFIG=somename` so you can have m
 
 In the menuconfig below, go to LEDSTREAM CONFIG and configure your WIFI settings and ledder url. Should be http://ledderserver:3000/stream
 
+(you can also change these settings via CLI or telnet later)
+
 ## Build with esp-idf toolkit (linux/MacOS)
 
 **Important: You need version esp-idf toolkit version 4.4. Version 5 will not work!**
