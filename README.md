@@ -64,6 +64,8 @@ Use ./esps3idf-hdwf2 if you have a Huidu board, see below.
 
 ## WS2812 leds
 
+Supported hardware: ESP32
+
 The easiest way to start it one of those 8x32 WS2812 matrixes:
 
 ![img.png](img.png)
@@ -74,9 +76,9 @@ Once you get the hang of it you can configure up to 8 channels, with each 2 of t
 
 You can configure ledder to handle the correct layout and orientation.
 
-## HUB75 leds 64x32
+## HUB75 led panels
 
-Currently only 64x32 HUB75 leds have been tested.
+Supported hardware: ESP32, ESP32s3
 
 A nice table for pinouts:
 
@@ -97,7 +99,6 @@ More info here: https://github.com/mrcodetastic/ESP32-HUB75-MatrixPanel-DMA/issu
 <img src="https://github.com/mrfaptastic/ESP32-HUB75-MatrixPanel-DMA/assets/81171228/43d7ff36-2446-478e-986e-dfa8e44e5c6c" width="500">
 
 
-
 ## Hardware tips
 
 If you use that many leds keep this in mind:
@@ -105,12 +106,10 @@ If you use that many leds keep this in mind:
  * Connect a capacitor of 100uF of more directly between GND and 3v3 on the ESP itself,  to prevent bad wifi performance issues.
  * Use a power supply that can handle the load  (up to 15A per display!)
  * If you use a power supply, connect the power supply to the middle 2 leads. 
- * Or just use USB poewr and set max current via menu config. (USB power can handle at least 1000mA)
- * If you get glitches use a level shifter like the SN74AHCT125N. (dont use the bidirectional onces, those suck) For one simple display you can get away with it, but for multiple displays it gets problematic.
+ * Or just use USB power and set max current via menu config. (USB power can handle at least 1000mA)
  * Use a esp32 with buildin ethernet like the WT32-ETH01 to handle the bandwidth:
 
 ![img_1.png](img_1.png)
-
 
 
 # Configure ledder
