@@ -287,6 +287,11 @@ menu "LEDSTREAM CONFIG"
         default 1
         depends on LEDSTREAM_MODE_HUB75
 
+    config LEDSTREAM_CLKPHASE
+        bool "HUB75 clock phase (mxconfig.clkphase)"
+        default y
+        depends on LEDSTREAM_MODE_HUB75
+
 
 
     config LEDSTREAM_R1

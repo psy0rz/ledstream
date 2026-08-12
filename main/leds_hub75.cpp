@@ -50,7 +50,11 @@ void leds_init()
     HUB75_I2S_CFG mxconfig(CONFIG_LEDSTREAM_WIDTH, CONFIG_LEDSTREAM_HEIGHT, CONFIG_LEDSTREAM_CHAIN, _pins);
 
 
-    mxconfig.clkphase=false;
+#if CONFIG_LEDSTREAM_CLKPHASE
+    mxconfig.clkphase = true;
+#else
+    mxconfig.clkphase = false;
+#endif
 
     //panel updates are written into the live DMA buffer unsynchronized to the panel
     //scan, so a new frame becomes visible at the next scan pass: a quantization of up
