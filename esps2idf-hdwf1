@@ -1,0 +1,9 @@
+#!/bin/bash
+
+#For HD-WF2 boards 
+#See: https://github.com/mrcodetastic/ESP32-HUB75-MatrixPanel-DMA/issues/433
+
+
+set -e
+
+idf.py -B ./build-esp32s2-hdwf1 -DIDF_TARGET="esp32s2" -DCOMPONENTS="ESP32-HUB75-MatrixPanel-DMA" -DSDKCONFIG=sdkconfig.esp32s2-hdwf1 $@
