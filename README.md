@@ -101,6 +101,7 @@ Supported by ledstream out of the box:
 ```
 * Reset it, a new serial port should appear that you can use to to automated flashing from now on.
 
+Thanks to: https://github.com/mrcodetastic/ESP32-HUB75-MatrixPanel-DMA/issues/433
 
 
 ## Hardware tips
