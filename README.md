@@ -92,14 +92,31 @@ More info at: https://github.com/mrcodetastic/ESP32-HUB75-MatrixPanel-DMA
 
 Supported by ledstream out of the box:
 
-* Use a USB-C to USB-A cable via an usb hub.
+* Use a USB-C to USB-A cable via an usb hub, or a USB-A to USB-A cable.
 * First time force it into download mode by shorting the 2 pads (GPIO0). Otherwise you will see no serial port!
-* Use the preconifgured script to build:
+* Use the preconifgured script to build (which correct serial port path):
 ```
-./esps3idf-hdwf2 build flash monitor
+./esps3idf-hdwf2 flash -p /dev/tty.usbmodem01
+```
+* Remove it from usb and reattach it.
+* A new serial port should appear that you can use to to automated flashing from now on.
 
+Thanks to: https://github.com/mrcodetastic/ESP32-HUB75-MatrixPanel-DMA/issues/433
+
+
+## HUB75 board Huidu WD-WF1 (Has ESP32-S2 built-in)
+
+Supported by ledstream out of the box:
+
+* Use a USB-C to USB-A cable via an usb hub, or a USB-A to USB-A cable.
+* First time force it into download mode by shorting the 2 pads (GPIO0). Otherwise you will see no serial port!
+* Use the preconifgured script to build (which correct serial port path):
 ```
-* Reset it, a new serial port should appear that you can use to to automated flashing from now on.
+./esps2idf-hdwf1 flash -p /dev/tty.usbmodem01
+```
+* Remove it from usb and reattach it.
+* A new serial port should appear that you can use to to automated flashing from now on.
+* Since this uses USB CDC mode its a bit fiddly to get into serial console: Usually i have to reattach it a few times while i keep *./esps2idf-hdwf1 monitor -p /dev/tty...* running.
 
 Thanks to: https://github.com/mrcodetastic/ESP32-HUB75-MatrixPanel-DMA/issues/433
 
