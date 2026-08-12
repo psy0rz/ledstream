@@ -10,7 +10,7 @@ list(APPEND COMPONENTS "esp_lcd" "main" "esp_http_client" "esp_https_ota"
         "ESP32-HUB75-MatrixPanel-DMA"
 )
 
-if(NOT "$ENV{IDF_TARGET}" STREQUAL "esp32s3")
+if("$ENV{IDF_TARGET}" STREQUAL "esp32")
     list(APPEND COMPONENTS "FastLED-idf")
 endif()
 
