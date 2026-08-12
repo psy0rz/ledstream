@@ -20,14 +20,16 @@
 #include <ledstreamer_flash.hpp>
 
 #include "freertos/stream_buffer.h"
+#include "esp_system.h"
 
 #include "qois.hpp"
 #include "settings.hpp"
 
 const char* LEDSTREAMER_HTTP_TAG = "ledstreamer_http";
 
-//jitter cushion between socket and decoder (internal ram)
-#define LEDSTREAMER_HTTP_BUFFER_SIZE (64 * 1024)
+//jitter cushion between socket and decoder (internal ram), sized as a
+//percentage of free heap at init time rather than a fixed byte count
+#define LEDSTREAMER_HTTP_BUFFER_PERCENT 50
 #define LEDSTREAMER_HTTP_CHUNK_SIZE 4096
 
 char url[200];
@@ -246,7 +248,10 @@ inline void ledstreamer_http_init()
     snprintf(url, sizeof(url), "%s/%02X%02X%02X%02X%02X%02X",
              settings_get("ledder_url"), mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
 
-    stream_buffer = xStreamBufferCreate(LEDSTREAMER_HTTP_BUFFER_SIZE, 1);
+    size_t stream_buffer_size = esp_get_free_heap_size() * LEDSTREAMER_HTTP_BUFFER_PERCENT / 100;
+    ESP_LOGI(LEDSTREAMER_HTTP_TAG, "Reserving %u bytes for jitter cushion (%d%% of free heap)",
+             (unsigned)stream_buffer_size, LEDSTREAMER_HTTP_BUFFER_PERCENT);
+    stream_buffer = xStreamBufferCreate(stream_buffer_size, 1);
     assert(stream_buffer != nullptr);
 
     xTaskCreatePinnedToCore(ledstreamer_http_task, "ledstreamer_http_task", 4096, nullptr, 10, nullptr, 0);
