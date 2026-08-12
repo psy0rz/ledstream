@@ -86,17 +86,21 @@ A nice table for pinouts:
 
 More info at: https://github.com/mrcodetastic/ESP32-HUB75-MatrixPanel-DMA
 
-## HUB75 board Huidu WD-WF2
-
-NOTE: only hub75 is currently supported on esp32-s3
-
-This board is supported out of the box. Just use ./esps3idf-hdwf2 to menuconfig and flash via the weird USB cable. It needs USB-C to USB-A via a usb hub it seems.
-
-The pinout should be ok as well. 
-
-More info here: https://github.com/mrcodetastic/ESP32-HUB75-MatrixPanel-DMA/issues/433
+## HUB75 board Huidu WD-WF2 (Has ESP32-S3 built-in)
 
 <img src="https://github.com/mrfaptastic/ESP32-HUB75-MatrixPanel-DMA/assets/81171228/43d7ff36-2446-478e-986e-dfa8e44e5c6c" width="500">
+
+Supported by ledstream out of the box:
+
+* Use a USB-C to USB-A cable via an usb hub.
+* First time force it into download mode by shorting the 2 pads (GPIO0). Otherwise you will see no serial port!
+* Use the preconifgured script to build:
+```
+./esps3idf-hdwf2 build flash monitor
+
+```
+* Reset it, a new serial port should appear that you can use to to automated flashing from now on.
+
 
 
 ## Hardware tips
