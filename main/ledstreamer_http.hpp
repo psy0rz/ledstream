@@ -27,16 +27,17 @@
 
 const char* LEDSTREAMER_HTTP_TAG = "ledstreamer_http";
 
-//jitter cushion between socket and decoder (internal ram), sized as a
-//percentage of free heap at init time rather than a fixed byte count
-#define LEDSTREAMER_HTTP_BUFFER_PERCENT 50
+//jitter cushion between socket and decoder (internal ram): all free heap at init
+//time minus a fixed reservation, rather than a fixed size or a percentage
 #define LEDSTREAMER_HTTP_CHUNK_SIZE 4096
 
-//the cushion is allocated once at boot and never freed, so it must leave room for the
-//https clients that only run later: an mbedtls handshake allocates its record buffers
-//(MBEDTLS_SSL_IN/OUT_CONTENT_LEN) plus the cert bundle at connect time, and fails with
-//MBEDTLS_ERR_SSL_ALLOC_FAILED (-0x7f00) when the cushion has eaten the heap
-#define LEDSTREAMER_HTTP_HEAP_RESERVED_FOR_TLS 48000
+//the cushion is allocated once at boot and never freed, so it must leave room for
+//everything that only allocates later. The biggest known consumer is an https client:
+//an mbedtls handshake allocates its record buffers (MBEDTLS_SSL_IN/OUT_CONTENT_LEN)
+//plus the cert bundle at connect time, and fails with MBEDTLS_ERR_SSL_ALLOC_FAILED
+//(-0x7f00) when the cushion has eaten the heap. Sized generously on top of that for
+//ota/remote-config/fileserver/console traffic and lwip+wifi buffer growth under load.
+#define LEDSTREAMER_HTTP_HEAP_RESERVED 96000
 
 //"<ledder_url>/<id>": both are settings, so size for two full-length values plus the slash
 char url[SETTINGS_MAX_VALUE * 2 + 2];
@@ -273,18 +274,12 @@ inline void ledstreamer_http_init()
     }
 
     size_t free_heap = esp_get_free_heap_size();
-    size_t stream_buffer_size = free_heap * LEDSTREAMER_HTTP_BUFFER_PERCENT / 100;
-
-    size_t heap_left_over = free_heap - stream_buffer_size;
-    if (heap_left_over < LEDSTREAMER_HTTP_HEAP_RESERVED_FOR_TLS)
-    {
-        size_t shrunk_size = free_heap > LEDSTREAMER_HTTP_HEAP_RESERVED_FOR_TLS
-                                 ? free_heap - LEDSTREAMER_HTTP_HEAP_RESERVED_FOR_TLS
-                                 : LEDSTREAMER_HTTP_CHUNK_SIZE * 2;
-        ESP_LOGW(LEDSTREAMER_HTTP_TAG, "Only %u bytes free, shrinking jitter cushion from %u to %u bytes",
-                 (unsigned)free_heap, (unsigned)stream_buffer_size, (unsigned)shrunk_size);
-        stream_buffer_size = shrunk_size;
-    }
+    size_t stream_buffer_size = LEDSTREAMER_HTTP_CHUNK_SIZE * 2;
+    if (free_heap > LEDSTREAMER_HTTP_HEAP_RESERVED + stream_buffer_size)
+        stream_buffer_size = free_heap - LEDSTREAMER_HTTP_HEAP_RESERVED;
+    else
+        ESP_LOGW(LEDSTREAMER_HTTP_TAG, "Only %u bytes free, using minimal jitter cushion of %u bytes",
+                 (unsigned)free_heap, (unsigned)stream_buffer_size);
 
     ESP_LOGI(LEDSTREAMER_HTTP_TAG, "Reserving %u bytes for jitter cushion (%u bytes heap free)",
              (unsigned)stream_buffer_size, (unsigned)free_heap);

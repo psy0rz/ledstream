@@ -106,6 +106,8 @@ Thanks to: https://github.com/mrcodetastic/ESP32-HUB75-MatrixPanel-DMA/issues/43
 
 ## HUB75 board Huidu WD-WF1 (Has ESP32-S2 built-in)
 
+NOTE: i would recommends the WD-WF2: more memory, better ESP, less fiddly serial console.
+
 <img width="596" height="446" alt="image" src="https://github.com/user-attachments/assets/d995229b-377f-4a54-a657-2870fb8f28d9" width=500 />
 
 
@@ -119,7 +121,8 @@ Supported by ledstream out of the box:
 ```
 * Remove it from usb and reattach it.
 * A new serial port should appear that you can use to to automated flashing from now on.
-* Since this uses USB CDC mode its a bit fiddly to get into serial console: Usually i have to reattach it a few times while i keep *./esps2idf-hdwf1 monitor -p /dev/tty...* running.
+* Since this uses USB CDC mode its a bit fiddly to get into serial console with idf.py, since it resets the device. Use picocom or something instead.
+
 
 Thanks to: https://github.com/mrcodetastic/HD-WF1-WF2-LED-MatrixPanel-DMA
 
