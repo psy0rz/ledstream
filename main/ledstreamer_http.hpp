@@ -32,6 +32,12 @@ const char* LEDSTREAMER_HTTP_TAG = "ledstreamer_http";
 #define LEDSTREAMER_HTTP_BUFFER_PERCENT 50
 #define LEDSTREAMER_HTTP_CHUNK_SIZE 4096
 
+//the cushion is allocated once at boot and never freed, so it must leave room for the
+//https clients that only run later: an mbedtls handshake allocates its record buffers
+//(MBEDTLS_SSL_IN/OUT_CONTENT_LEN) plus the cert bundle at connect time, and fails with
+//MBEDTLS_ERR_SSL_ALLOC_FAILED (-0x7f00) when the cushion has eaten the heap
+#define LEDSTREAMER_HTTP_HEAP_RESERVED_FOR_TLS 48000
+
 //"<ledder_url>/<id>": both are settings, so size for two full-length values plus the slash
 char url[SETTINGS_MAX_VALUE * 2 + 2];
 
@@ -266,9 +272,22 @@ inline void ledstreamer_http_init()
                  settings_get("ledder_url"), mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
     }
 
-    size_t stream_buffer_size = esp_get_free_heap_size() * LEDSTREAMER_HTTP_BUFFER_PERCENT / 100;
-    ESP_LOGI(LEDSTREAMER_HTTP_TAG, "Reserving %u bytes for jitter cushion (%d%% of free heap)",
-             (unsigned)stream_buffer_size, LEDSTREAMER_HTTP_BUFFER_PERCENT);
+    size_t free_heap = esp_get_free_heap_size();
+    size_t stream_buffer_size = free_heap * LEDSTREAMER_HTTP_BUFFER_PERCENT / 100;
+
+    size_t heap_left_over = free_heap - stream_buffer_size;
+    if (heap_left_over < LEDSTREAMER_HTTP_HEAP_RESERVED_FOR_TLS)
+    {
+        size_t shrunk_size = free_heap > LEDSTREAMER_HTTP_HEAP_RESERVED_FOR_TLS
+                                 ? free_heap - LEDSTREAMER_HTTP_HEAP_RESERVED_FOR_TLS
+                                 : LEDSTREAMER_HTTP_CHUNK_SIZE * 2;
+        ESP_LOGW(LEDSTREAMER_HTTP_TAG, "Only %u bytes free, shrinking jitter cushion from %u to %u bytes",
+                 (unsigned)free_heap, (unsigned)stream_buffer_size, (unsigned)shrunk_size);
+        stream_buffer_size = shrunk_size;
+    }
+
+    ESP_LOGI(LEDSTREAMER_HTTP_TAG, "Reserving %u bytes for jitter cushion (%u bytes heap free)",
+             (unsigned)stream_buffer_size, (unsigned)free_heap);
     stream_buffer = xStreamBufferCreate(stream_buffer_size, 1);
     assert(stream_buffer != nullptr);
 
