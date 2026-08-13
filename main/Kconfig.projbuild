@@ -158,6 +158,14 @@ menu "LEDSTREAM CONFIG"
         help
             URL of the ledder server that streams the led animations.
 
+    config LEDSTREAM_ID
+        string "Display ID"
+        default ""
+        help
+            Identifies this display to the ledder server: it is appended to the
+            ledder URL instead of the wifi MAC address. Leave blank to use the
+            MAC address. Runtime setting 'id'.
+
 
     choice
             prompt "Led controller type"

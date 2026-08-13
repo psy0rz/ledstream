@@ -31,6 +31,7 @@ static const settings_def_t settings_defs[] = {
         {"wifi_ssid2",   CONFIG_LEDSTREAM_WIFI_SSID2,           false, "fallback wifi SSID, used when wifi_ssid is not in range"},
         {"wifi_pass2",   CONFIG_LEDSTREAM_WIFI_PASS2,           true,  "fallback wifi password"},
         {"ledder_url",   CONFIG_LEDSTREAM_LEDDER_URL,           false, "ledder stream url"},
+        {"id",           CONFIG_LEDSTREAM_ID,                   false, "display id used in the ledder url (empty = use mac address)"},
         {"ota_url",      CONFIG_LEDSTREAM_FIRMWARE_UPGRADE_URL, false, "firmware upgrade url"},
         {"config_url",   CONFIG_LEDSTREAM_CONFIG_URL,           false, "url of a text file with console commands, checked every minute (empty = disabled)"},
         {"console_pass", CONFIG_LEDSTREAM_CONSOLE_PASS,         true,  "remote console password (empty = remote console disabled)"},

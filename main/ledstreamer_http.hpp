@@ -241,12 +241,19 @@ inline void stream()
 
 inline void ledstreamer_http_init()
 {
-    uint8_t mac[6];
-    esp_read_mac(mac, ESP_MAC_WIFI_STA); // Get the MAC address
-
-    // Format the MAC address as a string
-    snprintf(url, sizeof(url), "%s/%02X%02X%02X%02X%02X%02X",
-             settings_get("ledder_url"), mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+    //the display identifies itself with the 'id' setting, or its mac address when that is empty
+    const char* display_id = settings_get("id");
+    if (display_id[0] != '\0')
+    {
+        snprintf(url, sizeof(url), "%s/%s", settings_get("ledder_url"), display_id);
+    }
+    else
+    {
+        uint8_t mac[6];
+        esp_read_mac(mac, ESP_MAC_WIFI_STA);
+        snprintf(url, sizeof(url), "%s/%02X%02X%02X%02X%02X%02X",
+                 settings_get("ledder_url"), mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+    }
 
     size_t stream_buffer_size = esp_get_free_heap_size() * LEDSTREAMER_HTTP_BUFFER_PERCENT / 100;
     ESP_LOGI(LEDSTREAMER_HTTP_TAG, "Reserving %u bytes for jitter cushion (%d%% of free heap)",
