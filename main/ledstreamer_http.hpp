@@ -32,7 +32,8 @@ const char* LEDSTREAMER_HTTP_TAG = "ledstreamer_http";
 #define LEDSTREAMER_HTTP_BUFFER_PERCENT 50
 #define LEDSTREAMER_HTTP_CHUNK_SIZE 4096
 
-char url[200];
+//"<ledder_url>/<id>": both are settings, so size for two full-length values plus the slash
+char url[SETTINGS_MAX_VALUE * 2 + 2];
 
 fileserver_ctx* ledstreamer_http_file_ctx = nullptr;
 
