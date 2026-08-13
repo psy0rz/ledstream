@@ -142,6 +142,8 @@ static void remote_config_apply(char *text) {
                 ESP_LOGW(REMOTE_CONFIG_TAG, "config applied, rebooting");
                 vTaskDelay(pdMS_TO_TICKS(250));
                 esp_restart();
+            } else {
+                ESP_LOGI(REMOTE_CONFIG_TAG, "no config changes on %s", settings_get("config_url"));
             }
         }
 
