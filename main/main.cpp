@@ -106,6 +106,10 @@ extern "C" __attribute__((unused)) void app_main(void)
      console_init();
 
      esp_log_level_set("wifi", ESP_LOG_WARN);
+     //the http client and the certificate bundle log a few info lines per request, and
+     //remote_config does a request every minute
+     esp_log_level_set("HTTP_CLIENT", ESP_LOG_WARN);
+     esp_log_level_set("esp-x509-crt-bundle", ESP_LOG_WARN);
      wifi_init_sta();
      fileserver_init();
      leds_init();
