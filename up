@@ -1,0 +1,18 @@
+#!/bin/bash
+
+#just an example on how you could deploy firmware.
+
+set -e
+
+#build all the stuff
+./esps3idf-hdwf2 build
+./esps2idf-hdwf1 build
+./esps3idf build
+
+
+#upload all the firmware to webserver
+for F in build-*; do
+
+	scp $F/ledstream.bin docker5:/var/lib/docker/volumes/boot_datux_data/firmware/$F
+done
+

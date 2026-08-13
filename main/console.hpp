@@ -135,6 +135,25 @@ static int cmd_reboot(int argc, char **argv) {
     return 0;
 }
 
+static int cmd_sleep(int argc, char **argv) {
+    if (argc != 2) {
+        printf("usage: sleep <minutes>\n");
+        return 1;
+    }
+
+    int minutes = atoi(argv[1]);
+    if (minutes <= 0) {
+        printf("minutes must be a positive number\n");
+        return 1;
+    }
+
+    //no console, wifi, ota or remote config until the rtc timer fires, so say so
+    printf("blanking display and deep sleeping for %d minutes...\n", minutes);
+    fflush(stdout);
+    deep_sleep(minutes);
+    return 0;
+}
+
 inline void console_register(const char *command, const char *help, esp_console_cmd_func_t func,
                              const char *hint = NULL) {
     esp_console_cmd_t cmd = {};
@@ -572,6 +591,8 @@ inline void console_init() {
     console_register("defaults", "revert all settings to compile-time defaults", &cmd_defaults);
     console_register("info", "show firmware/network/system info", &cmd_info);
     console_register("reboot", "restart the device", &cmd_reboot);
+    console_register("sleep", "blank the display and deep sleep for n minutes (wakes with a reboot)",
+                     &cmd_sleep, "<minutes>");
     console_register("stats", "print wifi + timing_wait_until stats every second (until reboot)", &cmd_stats);
 
     ESP_ERROR_CHECK(esp_console_start_repl(repl));

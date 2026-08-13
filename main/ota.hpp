@@ -14,6 +14,7 @@
 #include "esp_https_ota.h"
 #include "wifi.hpp"
 #include "settings.hpp"
+#include "esp_crt_bundle.h"
 
 
 
@@ -68,6 +69,9 @@ private:
         esp_err_t err;
         esp_http_client_config_t config = {};
         config.url = settings_get("ota_url");
+
+        //verify https servers against the idf certificate bundle (ignored for plain http)
+        config.crt_bundle_attach = esp_crt_bundle_attach;
 
         esp_https_ota_config_t ota_config = {};
         ota_config.http_config = &config;
