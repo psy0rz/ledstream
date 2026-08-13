@@ -12,6 +12,16 @@ menu "LEDSTREAM CONFIG"
         string "Wifi Password"
         default ""
 
+    config LEDSTREAM_WIFI_SSID2
+        string "Fallback wifi SSID"
+        default ""
+        help
+            Used when the primary SSID is not in range. Leave blank to disable.
+
+    config LEDSTREAM_WIFI_PASS2
+        string "Fallback wifi Password"
+        default ""
+
     config LEDSTREAM_CONSOLE_PASS
         string "Remote console password"
         default ""
@@ -131,6 +141,16 @@ menu "LEDSTREAM CONFIG"
         default ""
         help
             URL of server which hosts the firmware image.
+
+    config LEDSTREAM_CONFIG_URL
+        string "Remote config URL"
+        default ""
+        help
+            URL of a plain text file containing console commands, one per line
+            (empty lines and lines starting with '#' are ignored). It is
+            downloaded every minute; whenever its content differs from the last
+            applied version all commands are executed and the device reboots.
+            Leave blank to disable.
 
     config LEDSTREAM_LEDDER_URL
         string "Ledder URL"

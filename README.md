@@ -159,14 +159,26 @@ wifi_ssid  [value]
 wifi_pass  [value]
   wifi password
 
+wifi_ssid2  [value]
+  fallback wifi SSID, used when wifi_ssid is not in range
+
+wifi_pass2  [value]
+  fallback wifi password
+
 ledder_url  [value]
   ledder stream url
 
 ota_url  [value]
   firmware upgrade url
 
+config_url  [value]
+  url of a text file with console commands, checked every minute (empty = disabled)
+
 console_pass  [value]
   remote console password (empty = remote console disabled)
+
+buffer  [value]
+  playout buffer in ms (applied on next stream start)
 
 list
   list all settings
@@ -186,6 +198,33 @@ reboot
 stats
   print wifi + timing_wait_until stats every second (until reboot)
 ```
+
+## Remote provisioning
+
+Setting up a lot of devices, or fixing one that is mounted somewhere unreachable, doesn't
+need a serial cable:
+
+* **Fallback wifi**: set `wifi_ssid2`/`wifi_pass2` (or bake them into your sdkconfig). When
+  the primary SSID isn't in range at all, ledstream joins the fallback network instead. As
+  soon as the primary reappears (after a disconnect/reboot) it goes back to it.
+* **Config file**: set `config_url` to a plain text file on a webserver, containing one
+  console command per line. Empty lines and lines starting with `#` are ignored:
+
+```
+# hall installation
+wifi_ssid venue-iot
+wifi_pass hunter2
+ledder_url http://10.0.0.5:3000/stream
+console_pass letmein
+```
+
+  Ledstream downloads that file every minute. As long as it doesn't change, nothing
+  happens. When it does change, all commands are executed and the device reboots to apply
+  them. So a device with only the fallback wifi + `config_url` baked in flashes once and
+  configures itself.
+
+  Note that the file is only applied once per change: if a command in it is wrong, fix the
+  file (the change is what triggers the next run). Keep it under 4KB.
 
 
 

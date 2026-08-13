@@ -4,6 +4,7 @@
 #include "ota.hpp"
 #include "settings.hpp"
 #include "console.hpp"
+#include "remote_config.hpp"
 
 #include "qois.hpp"
 #include "status_led.hpp"
@@ -116,6 +117,9 @@ extern "C" __attribute__((unused)) void app_main(void)
 
      ethernet_init();   
 #endif
+
+    //provisioning: apply console commands from config_url whenever that file changes
+    remote_config_init();
 
     if (strlen(settings_get("ota_url"))>0)
     {

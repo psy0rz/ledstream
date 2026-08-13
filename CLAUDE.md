@@ -36,7 +36,14 @@ Almost everything is header-only `.hpp` in `main/` (inline functions, file-scope
 
 ### Runtime settings + console (`main/settings.hpp`, `main/console.hpp`)
 
-Wifi credentials, `ledder_url`, `ota_url` and `console_pass` are runtime settings: NVS value if set, else the Kconfig compile-time default (so `sdkconfig.<name>` files are per-board factory defaults). Add a setting = one line in `settings_defs[]`; changes apply after reboot. One `esp_console` command table (each setting is its own command — `wifi_ssid <value>` sets, bare `wifi_ssid` shows — plus `list`/`unset`/`defaults`/`info`/`reboot`; add commands via `console_register()`) is exposed on the serial REPL (uart or usb-serial-jtag, per sdkconfig) and on tcp port 23 (`nc`/`telnet` compatible), the latter gated by the `console_pass` setting — while it is empty (the default), remote access is refused until a password is set via serial or baked in via `CONFIG_LEDSTREAM_CONSOLE_PASS`. Remote output works by pointing the tcp task's per-task stdio at the socket, so command handlers must use `printf`, not `ESP_LOG`.
+Wifi credentials (primary + `wifi_ssid2`/`wifi_pass2` fallback), `ledder_url`, `ota_url`, `config_url` and `console_pass` are runtime settings: NVS value if set, else the Kconfig compile-time default (so `sdkconfig.<name>` files are per-board factory defaults). Add a setting = one line in `settings_defs[]`; changes apply after reboot. One `esp_console` command table (each setting is its own command — `wifi_ssid <value>` sets, bare `wifi_ssid` shows — plus `list`/`unset`/`defaults`/`info`/`reboot`; add commands via `console_register()`) is exposed on the serial REPL (uart or usb-serial-jtag, per sdkconfig) and on tcp port 23 (`nc`/`telnet` compatible), the latter gated by the `console_pass` setting — while it is empty (the default), remote access is refused until a password is set via serial or baked in via `CONFIG_LEDSTREAM_CONSOLE_PASS`. Remote output works by pointing the tcp task's per-task stdio at the socket, so command handlers must use `printf`, not `ESP_LOG`.
+
+### Provisioning (`main/wifi.hpp`, `main/remote_config.hpp`)
+
+Two runtime settings make a device recoverable without a serial cable:
+
+- **Fallback wifi**: the scan is no longer SSID-filtered; `SCAN_DONE` picks the strongest AP of `wifi_ssid`, and only if that SSID is not in range at all falls back to `wifi_ssid2`/`wifi_pass2`. `wifi_use_network()` writes ssid+password+bssid into the sta config right before connecting, so a reconnect can switch networks.
+- **Remote config**: with `config_url` set, `remote_config.hpp` downloads that text file every minute (max 4KB) and hashes it (FNV-1a) against the last applied hash in NVS (key `config_hash`, deliberately not a `settings_defs[]` entry). On a change it runs every non-empty, non-`#` line through `console_run_line()` and reboots. The hash is stored *before* running the commands, so a broken file can't cause a reboot loop.
 
 ### Universal led interface (`main/leds.hpp`)
 

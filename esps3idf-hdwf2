@@ -6,4 +6,6 @@
 
 set -e
 
+
+
 idf.py -B ./build-esp32s3-hdwf2 -DIDF_TARGET="esp32s3" -DCOMPONENTS="ESP32-HUB75-MatrixPanel-DMA" -DSDKCONFIG=sdkconfig.esp32s3-hdwf2 $@
