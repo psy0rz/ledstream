@@ -11,6 +11,7 @@
 
 #include "settings.hpp"
 #include "console.hpp"
+#include "wifi.hpp"
 
 // Provisioning over http: downloads the text file at the 'config_url' setting once a
 // minute. Every line is a console command (see console.hpp); lines that are empty or
@@ -35,7 +36,10 @@ static const char *REMOTE_CONFIG_TAG = "remote_config";
 
 #define REMOTE_CONFIG_MAX_SIZE 4096
 #define REMOTE_CONFIG_INTERVAL_MS 60000
-#define REMOTE_CONFIG_FIRST_DELAY_MS 10000
+
+//how long the first check waits for wifi before trying anyway (ethernet-only boards
+//never get the wifi bit, and a failed download just retries a minute later)
+#define REMOTE_CONFIG_WIFI_TIMEOUT_MS 30000
 
 //nvs key in the settings namespace, written by us instead of by the user, so it is
 //deliberately not a settings_defs[] entry
@@ -111,7 +115,9 @@ static void remote_config_apply(char *text) {
 }
 
 [[noreturn]] static void remote_config_task(void *args) {
-    vTaskDelay(pdMS_TO_TICKS(REMOTE_CONFIG_FIRST_DELAY_MS)); //give the network time to come up
+    //check as soon as we have an ip, instead of guessing a delay
+    if (!wifi_wait_connected(REMOTE_CONFIG_WIFI_TIMEOUT_MS))
+        ESP_LOGI(REMOTE_CONFIG_TAG, "no wifi (yet), checking anyway");
 
     while (true) {
         int length = remote_config_download(settings_get("config_url"));
