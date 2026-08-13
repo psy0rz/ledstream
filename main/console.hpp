@@ -209,8 +209,9 @@ static bool console_read_line(char *buf, int max) {
 //live at fd level: a minimal VFS device "/dev/telnet" wrapping the client socket.
 static struct {
     int sock;
-    int state;    //0=data 1=after IAC 2=after IAC+verb 3=in subneg 4=subneg after IAC
-    bool last_cr; //to swallow the LF/NUL a client sends after CR
+    int state;             //0=data 1=after IAC 2=after IAC+verb 3=in subneg 4=subneg after IAC
+    bool last_cr;          //to swallow the LF/NUL a client sends after CR
+    volatile bool socket_open; //cleared by telnet_vfs_read when the client goes away
 } telnet_client;
 
 //set once a client's stdio is wired up, cleared on disconnect; lets background
@@ -280,8 +281,10 @@ static ssize_t telnet_vfs_read(int fd, void *dst, size_t size) {
     char *buf = (char *) dst;
     while (true) {
         int r = recv(telnet_client.sock, buf, size, 0);
-        if (r <= 0)
+        if (r <= 0) {
+            telnet_client.socket_open = false;
             return r;
+        }
         int out = 0;
         for (int i = 0; i < r; i++) {
             unsigned char ch = (unsigned char) buf[i];
@@ -420,6 +423,13 @@ static void console_session(bool use_linenoise) {
         const char *line;
         char *edited = NULL;
         if (use_linenoise) {
+            //linenoise reports a closed connection as an *empty line*, not as NULL
+            //(linenoiseEdit returns the length read so far when read() hits eof), so
+            //without this check the session would spin here forever on a gone client:
+            //never returning to accept() and hammering linenoise's global history state
+            //while the serial repl is using it too.
+            if (!telnet_client.socket_open)
+                return;
             edited = linenoise(CONSOLE_PROMPT);
             if (!edited) {
                 if (feof(stdin) || ferror(stdin))
@@ -488,6 +498,7 @@ static void console_session(bool use_linenoise) {
         telnet_client.sock = sock;
         telnet_client.state = 0;
         telnet_client.last_cr = false;
+        telnet_client.socket_open = true;
 
         //stdio is per-task in esp-idf: pointing this task's stdin/stdout at the
         //client makes getchar()/linenoise and every command's printf() talk to it.
