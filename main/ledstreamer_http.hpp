@@ -89,6 +89,16 @@ inline void stream_drain()
     }
 }
 
+//stop decoding and recording, and wait until the consumer is done with what it
+//already had (a decode in progress can sleep until its frame's display time).
+//used before a reboot, so nothing draws over the blanked display.
+inline void ledstreamer_http_stop()
+{
+    stream_live = false;
+    stream_flashing = false;
+    stream_drain();
+}
+
 inline void stream()
 {
     if (wifi_disconnected)

@@ -111,7 +111,7 @@ private:
         err = esp_https_ota_finish(ota_handle);
         if (err == ESP_OK) {
             ESP_LOGI(TAG, "OTA update completed. Restarting...");
-            esp_restart();
+            reboot();
         } else {
             ESP_LOGE(TAG, "OTA update failed");
         }

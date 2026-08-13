@@ -19,6 +19,7 @@
 
 #include "settings.hpp"
 #include "timing.hpp"
+#include "utils.hpp"
 
 // Configuration console. One esp_console command table, reachable two ways:
 //  - serial REPL on the normal console uart/usb (with line editing and history)
@@ -130,8 +131,7 @@ static int cmd_info(int argc, char **argv) {
 static int cmd_reboot(int argc, char **argv) {
     printf("rebooting...\n");
     fflush(stdout);
-    vTaskDelay(pdMS_TO_TICKS(250));
-    esp_restart();
+    reboot();
     return 0;
 }
 

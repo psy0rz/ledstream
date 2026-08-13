@@ -12,6 +12,7 @@
 
 #include "settings.hpp"
 #include "console.hpp"
+#include "utils.hpp"
 #include "wifi.hpp"
 
 // Provisioning over http: downloads the text file at the 'config_url' setting once a
@@ -140,8 +141,7 @@ static void remote_config_apply(char *text) {
                 remote_config_apply(remote_config_text);
 
                 ESP_LOGW(REMOTE_CONFIG_TAG, "config applied, rebooting");
-                vTaskDelay(pdMS_TO_TICKS(250));
-                esp_restart();
+                reboot();
             } else {
                 ESP_LOGI(REMOTE_CONFIG_TAG, "no config changes on %s", settings_get("config_url"));
             }
