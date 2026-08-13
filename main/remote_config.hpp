@@ -7,6 +7,7 @@
 #include "esp_log.h"
 #include "esp_system.h"
 #include "esp_http_client.h"
+#include "esp_crt_bundle.h"
 #include "nvs.h"
 
 #include "settings.hpp"
@@ -52,6 +53,8 @@ static int remote_config_download(const char *url) {
     esp_http_client_config_t http_config = {};
     http_config.url = url;
     http_config.timeout_ms = 10000;
+    //verify https servers against the idf certificate bundle (ignored for plain http)
+    http_config.crt_bundle_attach = esp_crt_bundle_attach;
 
     esp_http_client_handle_t client = esp_http_client_init(&http_config);
     if (client == NULL)
@@ -153,7 +156,9 @@ inline void remote_config_init() {
     }
     ESP_LOGI(REMOTE_CONFIG_TAG, "checking %s every %d seconds",
              settings_get("config_url"), REMOTE_CONFIG_INTERVAL_MS / 1000);
-    xTaskCreate(&remote_config_task, "remote_config", 8192, nullptr, 1, nullptr);
+    //lowest priority, like the ota task: a once-a-minute download must never compete
+    //with the streamer/decoder tasks (priority 10) for cpu
+    xTaskCreate(&remote_config_task, "remote_config", 8192, nullptr, tskIDLE_PRIORITY, nullptr);
 }
 
 #endif //LEDSTREAM_REMOTE_CONFIG_HPP
