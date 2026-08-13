@@ -1,0 +1,7 @@
+# 2MB-flash layout (esp32s2-hdwf1): no room for two 1M OTA slots next to a
+# ~1M app, so a single factory app plus the ledstream recording partition.
+# Name,   Type, SubType,  Offset,   Size,  Flags
+nvs,      data, nvs,      0x9000,  0x4000
+phy_init, data, phy,      0xf000,  0x1000
+factory,  app,  factory,  0x10000, 1408K
+ledstream, data, spiffs,     ,     576K,

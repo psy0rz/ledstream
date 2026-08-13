@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#For HD-WF2 boards 
+#For HD-WF1 boards 
 #See: https://github.com/mrcodetastic/ESP32-HUB75-MatrixPanel-DMA/issues/433
 
 
