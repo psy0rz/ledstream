@@ -495,6 +495,7 @@ static void console_session(bool use_linenoise) {
 
         //char mode (real telnet client) gets the full linenoise; nc gets line mode
         bool telnet_mode = telnet_negotiate(sock);
+        ESP_LOGI(CONSOLE_TAG, "%s mode", telnet_mode ? "telnet char (line editing)" : "line");
         telnet_client.sock = sock;
         telnet_client.state = 0;
         telnet_client.last_cr = false;
@@ -513,12 +514,25 @@ static void console_session(bool use_linenoise) {
         setvbuf(io, NULL, _IONBF, 0);
         stdin = stdout = stderr = io;
 
+        //esp_console_start_repl() probes the *serial* terminal once at boot and switches
+        //linenoise to dumb mode when nothing answers within 200ms (no terminal attached).
+        //That flag is global, and dumb mode means no editing, no backspace and no tab
+        //completion -- while a telnet client in char mode is a real terminal. So claim
+        //line editing back for the duration of the session, and hand the serial repl
+        //back whatever it decided on afterwards.
+        bool serial_is_dumb = linenoiseIsDumbMode();
+        if (telnet_mode)
+            linenoiseSetDumbMode(0);
+
         if (console_login()) {
             telnet_client_connected = true;
             console_session(telnet_mode);
             telnet_client_connected = false;
         }
         printf("bye\n");
+
+        if (telnet_mode)
+            linenoiseSetDumbMode(serial_is_dumb);
 
         fclose(io);
         if (telnet_mode)

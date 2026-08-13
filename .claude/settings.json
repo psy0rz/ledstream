@@ -31,7 +31,11 @@
       "Bash(S=/private/tmp/claude-501/-Users-edwineefting-ledstream/42485ae8-9ccd-45e8-bdab-153a5c5a5029/scratchpad; tail -2 $S/tasks/../../tasks/btnd7tuka.output 2>/dev/null; grep -c \"warning\" $S/build-datux2.log; grep \"warning\" $S/build-datux2.log | head; tail -2 $S/build-datux2.log; git diff sdkconfig.datux | head)",
       "Read(//private/tmp/claude-501/-Users-edwineefting-ledstream/42485ae8-9ccd-45e8-bdab-153a5c5a5029/tasks/**)",
       "Bash(timeout 300 ./dockerrun ./esps3idf -D SDKCONFIG=sdkconfig.datux build)",
-      "Bash(make -C test/host test)"
+      "Bash(make -C test/host test)",
+      "Bash(cd ~/esp/esp-idf && sed -n '100,122p' components/driver/usb_serial_jtag.c; grep -n \"rxfifo_flush\" -A 8 components/hal/esp32s3/include/hal/usb_serial_jtag_ll.h)",
+      "Read(//Users/edwineefting/esp/esp-idf/**)",
+      "Bash(cd ~/esp/esp-idf && grep -rn \"USB_SERIAL_JTAG\\\\|USB_RST\\\\|usb_serial_jtag\" components/esp_system/port/soc/esp32s3/system_internal.c)",
+      "Bash(cd ~/esp/esp-idf && sed -n '1,140p' components/esp_system/port/soc/esp32s3/system_internal.c | grep -n \"reset\\\\|RST\\\\|periph\" )"
     ]
   }
 }
