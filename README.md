@@ -6,6 +6,9 @@
 * Use with <https://github.com/psy0rz/ledder>. (wiki: https://github.com/psy0rz/ledder/wiki/Ledstream-via-ESP32 )
 * Telnet and console interface for configuration.
 
+<img width="1536" height="2048" alt="0CBD1C7C-7CA1-4BF8-A162-70E19D957510_1_102_o" src="https://github.com/user-attachments/assets/d3646168-d46b-45db-87f1-0c399bdbb8f7" />
+
+
 
 # Build instructions
 
